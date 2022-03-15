@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=messanger
+      - POSTGRES_PASSWORD=messanger
+      - POSTGRES_DATABASE=messanger
+  redis:
+    image: redis:latest
+  server:
+    depends_on:
+      - db
+      - redis
+    build: .
+    ports:
+      - "65100:65100"

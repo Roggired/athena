@@ -1,0 +1,15 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:postgresql://db/messanger
+    username: messanger
+    password: messanger
+
+logging:
+  level:
+    root: INFO
+
+server:
+  port: 65100

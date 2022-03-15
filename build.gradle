@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'ru.yofik'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 sourceCompatibility = '11'
 
 configurations {
