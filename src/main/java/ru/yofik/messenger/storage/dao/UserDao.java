@@ -6,7 +6,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
-import ru.yofik.messenger.model.domain.user.User;
+import ru.yofik.messenger.model.user.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

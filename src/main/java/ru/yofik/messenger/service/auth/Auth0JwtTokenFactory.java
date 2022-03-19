@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.yofik.messenger.model.domain.user.Access;
+import ru.yofik.messenger.model.user.Access;
 
 @Component
 public class Auth0JwtTokenFactory implements JwtTokenFactory {

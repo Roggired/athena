@@ -1,4 +1,4 @@
-package ru.yofik.messenger.model.view;
+package ru.yofik.messenger.api.view;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

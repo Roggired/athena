@@ -1,4 +1,4 @@
-package ru.yofik.messenger.model.response.v1;
+package ru.yofik.messenger.api.response.v1;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

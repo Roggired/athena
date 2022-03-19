@@ -1,9 +1,9 @@
-package ru.yofik.messenger.controller.v1;
+package ru.yofik.messenger.api.controller.v1;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.yofik.messenger.model.request.v1.RegisterUserV1Request;
-import ru.yofik.messenger.model.response.v1.RegisterUserV1Response;
+import ru.yofik.messenger.api.request.v1.RegisterUserV1Request;
+import ru.yofik.messenger.api.response.v1.RegisterUserV1Response;
 import ru.yofik.messenger.service.auth.AuthService;
 
 import javax.validation.Valid;

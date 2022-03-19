@@ -1,4 +1,4 @@
-package ru.yofik.messenger.model.domain.user;
+package ru.yofik.messenger.model.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

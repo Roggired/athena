@@ -1,4 +1,4 @@
-package ru.yofik.messenger.config;
+package ru.yofik.messenger.api.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

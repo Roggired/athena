@@ -1,6 +1,6 @@
-package ru.yofik.messenger.model.response.v1;
+package ru.yofik.messenger.api.response.v1;
 
-import ru.yofik.messenger.model.view.AccessView;
+import ru.yofik.messenger.api.view.AccessView;
 
 public class RegisterUserV1Response extends MessengerV1Response {
     public RegisterUserV1Response(AccessView accessView) {

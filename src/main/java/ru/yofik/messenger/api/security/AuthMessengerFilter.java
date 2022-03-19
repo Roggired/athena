@@ -1,4 +1,4 @@
-package ru.yofik.messenger.config;
+package ru.yofik.messenger.api.security;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -6,8 +6,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.yofik.messenger.model.domain.user.Access;
-import ru.yofik.messenger.service.auth.AuthService;
+import ru.yofik.messenger.model.user.Access;
+import ru.yofik.messenger.service.auth.AuthServiceImpl;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,11 +17,11 @@ import java.io.IOException;
 
 @Component
 public class AuthMessengerFilter extends OncePerRequestFilter {
-    private final AuthService authService;
+    private final AuthServiceImpl authServiceImpl;
 
 
-    public AuthMessengerFilter(AuthService authService) {
-        this.authService = authService;
+    public AuthMessengerFilter(AuthServiceImpl authServiceImpl) {
+        this.authServiceImpl = authServiceImpl;
     }
 
 
@@ -34,7 +34,7 @@ public class AuthMessengerFilter extends OncePerRequestFilter {
         }
 
         final String token = header.split(" ")[1].trim();
-        var optionalUser = authService.identifyUser(new Access(token));
+        var optionalUser = authServiceImpl.identifyUser(new Access(token));
 
         if (optionalUser.isEmpty()) {
             filterChain.doFilter(request, response);

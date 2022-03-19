@@ -1,4 +1,4 @@
-package ru.yofik.messenger.controller.v1;
+package ru.yofik.messenger.api.controller.v1;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

@@ -1,7 +1,6 @@
-package ru.yofik.messenger.controller.v1;
+package ru.yofik.messenger.api.exception;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +10,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import ru.yofik.messenger.controller.v1.helper.ErrorMessageHelper;
-import ru.yofik.messenger.model.response.v1.MessengerErrorV1Response;
-import ru.yofik.messenger.model.response.v1.MessengerV1Response;
+import ru.yofik.messenger.api.response.v1.MessengerErrorV1Response;
+import ru.yofik.messenger.api.response.v1.MessengerV1Response;
 import ru.yofik.messenger.service.exception.ElementAlreadyExistsException;
+
+import java.util.stream.Collectors;
 
 @ControllerAdvice
 @Slf4j
@@ -44,7 +44,7 @@ public class V1ControllerAdvice {
     ) {
         final String errorMessage;
         if (exception.getCause() != null && exception.getCause() instanceof MismatchedInputException) {
-            errorMessage = ErrorMessageHelper.buildErrorMessageForMismatchedInputException(
+            errorMessage = buildErrorMessageForMismatchedInputException(
                     (MismatchedInputException) exception.getCause()
             );
         } else {
@@ -76,5 +76,29 @@ public class V1ControllerAdvice {
         return ResponseEntity.internalServerError().body(
                 new MessengerErrorV1Response(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error")
         );
+    }
+
+
+    private String buildErrorMessageForMismatchedInputException(MismatchedInputException exception) {
+        final var pathItemStrings = exception.getPath().stream()
+                .map(reference -> {
+                    final String pathItemString;
+                    if (reference.getFieldName() != null) {
+                        pathItemString = "." + reference.getFieldName();
+                    } else if (reference.getIndex() > -1) {
+                        pathItemString = "[" + reference.getIndex() + "]";
+                    } else {
+                        pathItemString = "";
+                    }
+                    return pathItemString;
+                })
+                .collect(Collectors.toList());
+
+        var pathString = String.join("", pathItemStrings);
+        if (pathString.startsWith(".")) {
+            pathString = pathString.substring(1);
+        }
+
+        return "Invalid value for " + pathString;
     }
 }
