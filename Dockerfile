@@ -1,5 +1,5 @@
 FROM openjdk:11
-ARG JAR_FILE="build/libs/messenger-0.0.1.jar"
+ARG JAR_FILE="build/libs/messenger-0.1.0.war"
 RUN mkdir /deployments/
-COPY ${JAR_FILE} "/deployments/app.jar"
-ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/deployments/app.jar"]
+COPY ${JAR_FILE} "/deployments/app.war"
+ENTRYPOINT ["java","-jar","-Dspring.profiles.active=dev","/deployments/app.war"]

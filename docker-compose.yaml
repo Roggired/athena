@@ -3,12 +3,9 @@ version: "3.8"
 services:
   db:
     build: db/
-  redis:
-    image: redis:latest
   server:
     depends_on:
       - db
-      - redis
     build: .
     ports:
       - "65100:65100"
