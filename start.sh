@@ -1,4 +1,4 @@
-docker-compose down
 ./gradlew build
-docker-compose build
-docker-compose up
+./db/start-db.sh
+./gradlew db:update -PrunList=messenger
+java -jar auth/build/libs/auth-0.1.0.war
