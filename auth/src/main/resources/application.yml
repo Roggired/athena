@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
+    type: com.zaxxer.hikari.HikariDataSource
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  devtools:
+    restart:
+      enabled: true

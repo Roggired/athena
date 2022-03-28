@@ -1,11 +1,15 @@
 ## Messenger v.0.1.0
 
 ## Version Notes
+v.0.1.0
+- HTTPS support for auth
 
 ## Requirements
 
 - Openjdk 11
 - Docker
+- Postman (for testing REST API)
+- Jasypt 1.9.3
 
 ## Usage
 
@@ -38,7 +42,38 @@ sudo netstat -tulp | grep 5432
 ```bash
 ./gradlew db:update
 ```
-
+3. For development on localhost you need to update `/etc/hosts`:
+```bash
+127.0.0.1 yofik.messenger.auth
+```
+4. Create SSL certificates for local HTTPS requests:
+```bash
+mkdir ~/.cert
+mkdir ~/.cert/yofik-messenger/
+cp generate-certs.sh ~/.cert/yofik-messenger/
+cd ~/.cert
+./generate-certs.sh
+cd PROJECT_ROOT
+cd auth/
+mkdir certs
+cp ~/.cert/yofik-messenger/Server-keystore.p12 certs
+cp ~/.cert/yofik-messenger/Server-truststore.p12 certs
+```
+5. Provide clientJpaDto certs to the clientJpaDto (maybe Postman File->Settings->Certificates):
+```bash
+~/.cert/yofik-messenger/CA-self-signed-certificate.pem
+~/.cert/yofik-messenger/Client-certificate.crt
+~/.cert/yofik-messenger/Client-private-key.key
+```
+6. If you want, you can change `yofik.security.jwe-key` option in `application-dev.yml`:
+- Download and unzip Jasypt dist (https://github.com/jasypt/jasypt/releases/tag/jasypt-1.9.3)
+- Generate random jwe-key like byte array (at least 256 bytes) and encode it with `Base64` 
+or use `/api/v1/clients/key` to generate such key
+```bash
+cd JASYPT_INSTALLATION/bin
+chmod u+x encrypt.sh
+./encrypt.sh input="NEW_BASE_JWE_KEY" password=JASYPT_PASSWORD algorithm=PBEWithMD5AndDES
+```
 ----
 
 Start (installed project):
@@ -57,5 +92,8 @@ database using Liquibase:
 ```
 4. Run services which you need in separate terminals:
 ```bash
-java -jar MODULE_NAME/build/libs/MODULE_NAME-VERSION.war
+cd SERVICE_NAME
+java -jar -Djasypt.encryptor.password=supersecretz build/libs/SERVICE_NAME-VERSION.war
 ```
+Also, to provide Jasypt password (for IDEA configuration or production build) you can set up the environment
+variable JASYPT_ENCRYPTOR_PASSWORD

@@ -20,20 +20,37 @@ repositories {
 }
 
 dependencies {
+    //security
     implementation 'com.auth0:java-jwt:3.19.0'
+    implementation 'org.bitbucket.b_c:jose4j:0.7.11'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+    implementation 'org.jasypt:jasypt:1.9.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security.oauth:spring-security-oauth2:2.5.1.RELEASE'
+
+    // web
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.0.Final'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-    implementation 'org.springframework.boot:spring-boot-configuration-processor'
-
-    compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.postgresql:postgresql'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    // dev tools
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    compileOnly "org.springframework.boot:spring-boot-devtools"
+    compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // tomcat
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+    // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 
 configurations['implementation'].exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-logging')
