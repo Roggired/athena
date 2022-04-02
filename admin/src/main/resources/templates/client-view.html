@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="page :: commonHeader(_, ~{::link}, _)">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/client-view.css}">
+</head>
+<body>
+    <div class="background">
+        <div th:replace="page :: header"></div>
+        <div class="client-info">
+            <span class="subtitle-font">Клиент</span>
+            <div class="horizontal-spliterator td-6"></div>
+            <div class="flex-row td-h-1">
+                <span class="regular-font td-1">ID :</span>
+                <span class="regular-font td-4" th:text="${client.getId()}"></span>
+            </div>
+            <div class="flex-row td-h-1">
+                <span class="regular-font td-1">Название :</span>
+                <span class="regular-font td-4" th:text="${client.getName()}"></span>
+            </div>
+            <div class="flex-row td-h-1">
+                <span class="regular-font td-1">Активен :</span>
+                <span class="regular-font td-4" th:text="${client.getActive()}"></span>
+            </div>
+            <div class="flex-row td-h-1">
+                <span class="regular-font td-1">Разрешения :</span>
+                <span class="regular-font td-4" th:text="${client.getClientPermissions()}"></span>
+            </div>
+        </div>
+        <div class="horizontal-spliterator td-6"></div>
+        <div id="token-info" style="display: none;">
+        </div>
+        <div class="flex-column" th:fragment="success" th:if="${token != null}" th:remove="tag">
+            <div class="regular-font td-6 td-h-1">Сгенерированный токен клиента:</div>
+            <div class="low-font td-6" style="word-wrap: anywhere;" th:text="${token}"></div>
+        </div>
+        <div class="flex-row td-5">
+            <button class="btn btn-font"
+                    th:onclick="|replaceAjaxQuery('@{/admin-panel/client/{id}/token(id=${#numbers.formatInteger(client.getId(), 1)})}', 'token-info', 'POST')|"
+            >
+                Новый ключ
+            </button>
+            <button class="btn btn-del btn-font"
+                    th:onclick="|goTo('@{/admin-panel/client/{id}/delete(id=${#numbers.formatInteger(client.getId(), 1)})}')|"
+            >
+                Удалить
+            </button>
+            <button class="btn btn-font"
+                    th:onclick="|goTo('@{/admin-panel/client/{id}/deactivate(id=${#numbers.formatInteger(client.getId(), 1)})}')|"
+            >
+                Деактивировать
+            </button>
+            <button class="btn btn-font"
+                    th:onclick="|goTo('@{/admin-panel/client/{id}/activate(id=${#numbers.formatInteger(client.getId(), 1)})}')|"
+            >
+                Активировать
+            </button>
+        </div>
+        <div th:replace="page :: footer"></div>
+    </div>
+</body>
+</html>

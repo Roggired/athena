@@ -1,4 +1,6 @@
 rootProject.name = 'messenger'
 include 'auth'
 include 'db'
+include 'admin'
+include 'common'
 

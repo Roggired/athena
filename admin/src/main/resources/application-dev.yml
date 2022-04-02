@@ -1,11 +1,5 @@
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/messenger
-    username: messenger
-    password: messenger
-
 server:
-  port: 8081
+  port: 8082
   ssl:
     enabled: true
     protocol: TLS
@@ -22,9 +16,3 @@ jasypt:
   encryptor:
     password: ${JASYPT_ENCRYPTOR_PASSWORD:}
     algorithm: PBEWithMD5AndDES
-    iv-generator-classname: org.jasypt.iv.NoIvGenerator
-
-yofik:
-  security:
-    jwe-key: ENC(AFU0CPRBYMRRmKZEVXylhi5prPEQO/ocPlzim0x8ZrA=)
-    admin-password: ENC(JiDCOAk77HU4etGWYul/4g==)

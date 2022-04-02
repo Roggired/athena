@@ -5,15 +5,9 @@ plugins {
     id 'war'
 }
 
-group = 'ru.yofik.connect'
-version = '0.1.0'
+group 'ru.yofik.athena'
+version '0.1.0'
 sourceCompatibility = '11'
-
-configurations {
-    compileOnly {
-        extendsFrom annotationProcessor
-    }
-}
 
 repositories {
     mavenCentral()
@@ -21,17 +15,16 @@ repositories {
 
 dependencies {
     //security
-    implementation 'org.bitbucket.b_c:jose4j:0.7.11'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
-    implementation 'org.jasypt:jasypt:1.9.3'
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // web
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.0.Final'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.httpcomponents:fluent-hc:4.5.13'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
     // gson
     implementation 'com.google.code.gson:gson:2.9.0'
@@ -49,10 +42,13 @@ dependencies {
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // project
+    implementation project(":common")
 }
 
 configurations['implementation'].exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-logging')
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }

@@ -1,0 +1,260 @@
+/*Основные фрагменты*/
+/*-----------------------------------------------------------------------*/
+.background {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+.header {
+    width: 100vw;
+    height: 10vh;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: var(--text-or-icons-color);
+}
+
+.footer {
+    width: 100vw;
+    height: 10vh;
+    text-align: center;
+    background-color: var(--primary-color);
+    color: var(--text-or-icons-color);
+}
+/*-----------------------------------------------------------------------*/
+
+
+
+/*Flex классы*/
+/*-----------------------------------------------------------------------*/
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: flex-start;
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-justify-between {
+    justify-content: space-between;
+}
+/*-----------------------------------------------------------------------*/
+
+
+
+/*Классы ширины элементов*/
+/*-----------------------------------------------------------------------*/
+.td-g {
+    height: 30px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align: center;
+}
+
+.td-10 {
+    width: 100vw;
+}
+
+.td-9 {
+    width: 90vw;
+}
+
+.td-8 {
+    width: 80vw;
+}
+
+.td-7 {
+    width: 70vw;
+}
+
+.td-6 {
+    width: 60vw;
+}
+
+.td-5 {
+    width: 50vw;
+}
+
+.td-4 {
+    width: 40vw;
+}
+
+.td-3 {
+    width: 30vw;
+}
+
+.td-2 {
+    width: 20vw;
+}
+
+.td-1 {
+    width: 10vw;
+}
+
+.td-h-1 {
+    height: 30px;
+}
+
+.td-h-2 {
+    height: 60px;
+}
+
+.td-h-3 {
+    height: 90px;
+}
+
+.td-h-4 {
+    height: 120px;
+}
+
+.td-h-5 {
+    height: 150px;
+}
+
+.td-h-6 {
+    height: 180px;
+}
+
+.td-h-7 {
+    height: 210px;
+}
+
+.td-h-8 {
+    height: 240px;
+}
+
+.td-h-9 {
+    height: 270px;
+}
+
+.td-h-10 {
+    height: 300px;
+}
+/*-----------------------------------------------------------------------*/
+
+
+
+/*Шрифты*/
+/*-----------------------------------------------------------------------*/
+.title-font {
+    font-family: Ubuntu serif;
+    font-size: 36px;
+}
+
+.subtitle-font {
+    font-family: Ubuntu serif;
+    font-size: 32px;
+}
+
+.regular-font {
+    font-family: Ubuntu serif;
+    font-size: 24px;
+}
+
+.low-font {
+    font-family: Ubuntu serif;
+    font-size: 14px;
+}
+
+.btn-font {
+    font-family: Ubuntu serif;
+    font-size: 18px;
+    font-weight: bold;
+}
+/*-----------------------------------------------------------------------*/
+
+
+
+/*Кнопки*/
+/*-----------------------------------------------------------------------*/
+.btn {
+    background-color: var(--primary-dark-color);
+    border: 0 solid;
+    border-radius: 30px;
+    color: var(--text-or-icons-color);
+    height: 50px;
+    width: 200px;
+}
+
+.btn:hover {
+    background-color: var(--accent-color);
+}
+
+.btn-del {
+    background-color: var(--delete-color);
+}
+
+.btn-del:hover {
+    background-color: var(--delete-accent-color);
+}
+
+.link {
+    text-decoration: none;
+    color: var(--text-or-icons-color);
+}
+/*-----------------------------------------------------------------------*/
+
+
+
+/*Input-ы*/
+/*-----------------------------------------------------------------------*/
+.form-input {
+    margin-left: 5px;
+    border: 1px solid black;
+}
+
+.form-input-error {
+    border-left: 5px solid var(--delete-color);
+    margin-left: 0;
+}
+/*-----------------------------------------------------------------------*/
+
+
+
+/*Тосты*/
+/*-----------------------------------------------------------------------*/
+.toast {
+    position: absolute;
+    right: 20px;
+    top: 150px;
+    width: 300px;
+    height: 80px;
+    background-color: var(--primary-dark-color);
+    color: var(--text-or-icons-color);
+    border: 0;
+    border-radius: 30px;
+    text-align: center;
+    line-height: 80px;
+}
+/*-----------------------------------------------------------------------*/
+
+
+
+/*Разное*/
+/*-----------------------------------------------------------------------*/
+.horizontal-spliterator {
+    margin-top: 15px;
+    margin-bottom: 30px;
+    height: 3px;
+    background-color: black;
+}
+/*-----------------------------------------------------------------------*/

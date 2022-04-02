@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="page :: commonHeader(_, ~{::link}, _)">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/client-new.css}">
+</head>
+<body>
+    <div class="background">
+        <div th:replace="page :: header"></div>
+        <div class="client-info">
+            <span class="subtitle-font">Новый клиент</span>
+            <div class="horizontal-spliterator td-6"></div>
+            <div class="client-form">
+                <div th:fragment="client-form" th:remove="tag">
+                    <form id="client-form" th:object="${client}" th:action="@{/admin-panel/client/}">
+                        <div class="flex-row td-h-2">
+                            <label class="regular-font td-1">Название :</label>
+                            <input type="text"
+                                   class="form-input regular-font td-4 td-h-1"
+                                   th:field="*{name}"
+                                   th:classappend="${#fields.hasErrors('name')} ? form-input-error"
+                            />
+                        </div>
+                        <div class="flex-row td-h-2">
+                            <label class="regular-font td-1">Разрешения :</label>
+                            <input type="text"
+                                   class="form-input regular-font td-4 td-h-1"
+                                   th:field="*{clientPermissions}"
+                                   th:classappend="${#fields.hasErrors('clientPermissions')} ? form-input-error"/>
+                        </div>
+                        <div class="flex-row" th:each="clientPermission : ${clientPermissions}">
+                            <div class="td-1">
+                                <ul>
+                                    <li class="regular-font" th:text="${clientPermission.name()}"></li>
+                                </ul>
+                            </div>
+                            <div class="td-4">
+                            </div>
+                        </div>
+                        <div class="horizontal-spliterator td-6" style="margin-top: 30px;"></div>
+                        <div class="flex-row">
+                            <input type="submit" class="btn btn-font" value="Создать" onclick="formAjaxQuery('client-form')"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="flex-column client-form" th:fragment="success" th:if="${token != null}" th:remove="tag">
+                    <div class="regular-font td-6 td-h-2">Новый клиент создан успешно!</div>
+                    <div class="regular-font td-6 td-h-2">Сгенерированный токен клиента:</div>
+                    <div class="low-font td-6" style="word-wrap: anywhere;" th:text="${token}"></div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="page :: footer"></div>
+    </div>
+</body>
+</html>
