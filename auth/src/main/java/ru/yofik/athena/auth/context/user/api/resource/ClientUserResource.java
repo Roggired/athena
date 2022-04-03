@@ -1,7 +1,10 @@
 package ru.yofik.athena.auth.context.user.api.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.yofik.athena.auth.context.user.api.request.ActivateUserRequest;
 import ru.yofik.athena.auth.context.user.api.request.AuthorizeUserRequest;
 import ru.yofik.athena.auth.context.user.service.UserService;
@@ -19,10 +22,10 @@ public class ClientUserResource {
 
 
     @PostMapping("/invitations")
-    public AuthV1Response activateUser(@Valid @RequestBody ActivateUserRequest request) {
+    public AuthV1Response activateUser(@Valid @RequestBody ActivateUserRequest request, HttpServletRequest servletRequest) {
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_UPDATED,
-                userService.activate(request)
+                userService.activate(request, servletRequest.getHeader("User-Agent"))
         );
     }
 

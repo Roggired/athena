@@ -14,7 +14,6 @@ import ru.yofik.athena.admin.context.client.model.ClientPermission;
 import ru.yofik.athena.admin.context.client.service.ClientService;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashSet;

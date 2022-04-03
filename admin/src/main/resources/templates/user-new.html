@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="page :: commonHeader(_, ~{::link}, _)">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/client-new.css}">
+</head>
+<body>
+<div class="background">
+    <div th:replace="page :: header"></div>
+    <div class="client-info">
+        <span class="subtitle-font">Новый пользователь</span>
+        <div class="horizontal-spliterator td-6"></div>
+        <div class="client-form">
+            <div th:fragment="client-form" th:remove="tag">
+                <form id="client-form" th:object="${user}" th:action="@{/admin-panel/user/}">
+                    <div class="flex-row td-h-2">
+                        <label class="regular-font td-1">Имя :</label>
+                        <input type="text"
+                               class="form-input regular-font td-4 td-h-1"
+                               name="name"
+                               th:field="*{name}"
+                               th:classappend="${#fields.hasErrors('name')} ? form-input-error"
+                        />
+                    </div>
+                    <div class="flex-row td-h-2">
+                        <label class="regular-font td-1">Логин :</label>
+                        <input type="text"
+                               class="form-input regular-font td-4 td-h-1"
+                               name="login"
+                               th:field="*{login}"
+                               th:classappend="${#fields.hasErrors('login')} ? form-input-error"/>
+                    </div>
+                    <div class="horizontal-spliterator td-6" style="margin-top: 30px;"></div>
+                    <div class="flex-row">
+                        <input type="submit"
+                               class="btn btn-font"
+                               value="Создать"
+                               onclick="formAjaxQuery('client-form')"
+                        />
+                    </div>
+                </form>
+            </div>
+            <div class="flex-column client-form" th:fragment="success" th:if="${invitation != null}" th:remove="tag">
+                <div class="regular-font td-6 td-h-2">Новый пользователь создан успешно!</div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="page :: footer"></div>
+</div>
+</body>
+</html>

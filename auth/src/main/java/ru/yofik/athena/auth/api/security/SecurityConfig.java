@@ -3,7 +3,6 @@ package ru.yofik.athena.auth.api.security;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
@@ -17,6 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().cors().disable();
 
         http.addFilterAfter(new AthenaBearerAuthenticationFilter(), ExceptionTranslationFilter.class);
+        http.sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.maximumSessions(1));
 
         http.authorizeRequests()
                 .antMatchers("/api/v1/clients/**")
@@ -28,7 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v1/users/**")
                 .hasAnyAuthority(ClientPermission.AUTHORIZE_USER.name())
                 .antMatchers("/api/v1/teapot")
-                .authenticated();
+                .hasAnyAuthority(ClientPermission.ADMIN.name(), ClientPermission.AUTHORIZE_USER.name());
     }
 
     @Override

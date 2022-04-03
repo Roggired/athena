@@ -15,10 +15,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().cors().disable();
 
         http.authenticationProvider(new AthenaAuthenticationProvider());
-        http.addFilterBefore(new AthenaAuthenticationFilter(), ExceptionTranslationFilter.class);
+        http.addFilterAfter(new AthenaAuthenticationFilter(), ExceptionTranslationFilter.class);
+        http.sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.maximumSessions(1));
 
         http.authorizeRequests()
-                .antMatchers("/**")
+                .antMatchers("/athena/logout")
+                    .hasAuthority("ADMIN")
+                .antMatchers("/admin-panel")
+                    .hasAuthority("ADMIN")
+                .antMatchers("/admin-panel/**")
                     .hasAuthority("ADMIN");
     }
 

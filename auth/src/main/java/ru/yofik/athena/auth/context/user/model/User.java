@@ -57,7 +57,15 @@ public class User {
     }
 
     public void lock(Lock lock) {
+        if (lock == null) {
+            throw new IllegalArgumentException();
+        }
+
         this.lock = lock;
+    }
+
+    public void unlock() {
+        this.lock = null;
     }
 
     public UserView toView() {

@@ -9,7 +9,7 @@ CREATE TABLE users(
     name VARCHAR(63) NOT NULL,
     login VARCHAR(63) NOT NULL UNIQUE,
     lock_id BIGINT REFERENCES user_lock(id) ON DELETE CASCADE,
-    allowed_device_id VARCHAR(255) NOT NULL,
+    allowed_device_id VARCHAR(255),
     created_at TIMESTAMP NOT NULL,
     activated BOOLEAN NOT NULL
 );

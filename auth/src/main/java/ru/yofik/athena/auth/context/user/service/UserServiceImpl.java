@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String activate(ActivateUserRequest request) {
+    public String activate(ActivateUserRequest request, String deviceId) {
         var invitation = invitationRepository.findByCode(request.code);
         if (invitation.isEmpty() || invitation.get().getCount() <= 0) {
             log.warn(() -> "No such invitation");
@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
         }
 
         var user = getUserById(invitation.get().getUserId());
+        user.setAllowedDeviceId(deviceId);
         user.setActivated(true);
         user.getInvitation().touch();
         save(user);
@@ -80,7 +81,7 @@ public class UserServiceImpl implements UserService {
             throw new ResourceAlreadyExistsException("User with login: " + request.login + " already exists");
         }
 
-        var user = userFactory.createNew(request.name, request.login, request.allowedDeviceId);
+        var user = userFactory.createNew(request.name, request.login);
         save(user);
     }
 
@@ -102,6 +103,13 @@ public class UserServiceImpl implements UserService {
     public void lock(long id, LockReason lockReason) {
         var user = getUserById(id);
         lock(user, lockReason);
+    }
+
+    @Override
+    public void unlock(long id) {
+        var user = getUserById(id);
+        user.unlock();
+        save(user);
     }
 
     private void lock(User user, LockReason lockReason) {
@@ -129,13 +137,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ClientUserView authorize(AuthorizeUserRequest request, String deviceId) {
-        User user;
+        User tokenUser;
+        User dbUser;
         try {
-            user = tokenVerifier.verify(new Token(request.accessToken.toCharArray(), Token.Type.JWE), User.class);
+            tokenUser = tokenVerifier.verify(new Token(request.accessToken.toCharArray(), Token.Type.JWE), User.class);
+            dbUser = getUserById(tokenUser.getId());
 
-            if (!user.getAllowedDeviceId().equals(deviceId)) {
-                log.warn(() -> "Someone stole user access token!");
-                lock(user, LockReason.INVALID_DEVICE_ID);
+            if (!dbUser.getAllowedDeviceId().equals(deviceId)) {
+                log.warn(() -> "Someone stole user " + dbUser.getLogin() + " access token!");
+                lock(dbUser, LockReason.INVALID_DEVICE_ID);
+                throw new UnauthenticatedException();
+            }
+
+            if (!dbUser.isActivated()) {
+                log.warn(() -> "User: " + dbUser.getLogin() + " is deactivated");
                 throw new UnauthenticatedException();
             }
         } catch (InvalidTokenException e) {
@@ -143,17 +158,18 @@ public class UserServiceImpl implements UserService {
             throw new UnauthenticatedException();
         }
 
-        return user.toClientView();
+        return dbUser.toClientView();
     }
 
     private User getUserById(long id) {
-        var user = userRepository.findById(id);
-        if (user.isEmpty()) {
+        var userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
             log.warn(() -> "User with id: " + id + " doesn't exist");
             throw new ResourceNotFoundException();
         }
 
-        return userFactory.from(user.get());
+        var user = userOptional.get();
+        return userFactory.from(user);
     }
 
     private void save(User user) {

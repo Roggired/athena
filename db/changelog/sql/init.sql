@@ -1,11 +1,5 @@
 CREATE SEQUENCE hibernate_sequence;
 
-CREATE TABLE users (
-    id BIGSERIAL PRIMARY KEY,
-    login TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL
-);
-
 CREATE TABLE client (
     id BIGINT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,

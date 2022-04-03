@@ -10,6 +10,4 @@ public class CreateUserRequest {
     public String name;
     @NotBlank
     public String login;
-    @NotBlank
-    public String allowedDeviceId;
 }

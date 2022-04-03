@@ -18,5 +18,5 @@ public interface ClientService {
     void deleteClient(long id);
     Token login(String password);
     void logout();
-    void iAmTeapot();
+    void iAmTeapot(char[] token);
 }

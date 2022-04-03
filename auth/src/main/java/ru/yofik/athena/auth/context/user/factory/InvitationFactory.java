@@ -16,6 +16,10 @@ public class InvitationFactory {
     }
 
     public Invitation from(InvitationRedisDto invitationRedisDto) {
+        if (invitationRedisDto == null) {
+            return null;
+        }
+
         return new Invitation(
                 invitationRedisDto.getCode(),
                 invitationRedisDto.getCount(),
@@ -24,6 +28,10 @@ public class InvitationFactory {
     }
 
     public InvitationRedisDto toRedisDto(Invitation invitation) {
+        if (invitation == null) {
+            return null;
+        }
+
         return new InvitationRedisDto(
                 invitation.getCode(),
                 invitation.getCount(),

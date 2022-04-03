@@ -3,6 +3,10 @@ spring:
     url: jdbc:postgresql://localhost:5432/messenger
     username: messenger
     password: messenger
+  redis:
+    host: localhost
+    port: 6379
+    ssl: false
 
 server:
   port: 8081

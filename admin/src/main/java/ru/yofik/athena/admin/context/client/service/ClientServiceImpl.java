@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 public class ClientServiceImpl implements ClientService {
     private final ClientApi clientApi;
     private final ClientFactory clientFactory;
-    private final char[] token;
     private final AdminKeyStorage adminKeyStorage;
 
 
@@ -28,24 +27,17 @@ public class ClientServiceImpl implements ClientService {
         this.clientApi = clientApi;
         this.clientFactory = clientFactory;
         this.adminKeyStorage = adminKeyStorage;
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null) {
-            token = new char[0];
-        } else {
-            token = adminKeyStorage.get((String) authentication.getCredentials());
-        }
     }
 
 
     @Override
     public Client getClient(long id) {
-        return getClientImpl(id, token);
+        return getClientImpl(id, getToken());
     }
 
     @Override
     public List<Client> getAllClients() {
-        return clientApi.findAll(token)
+        return clientApi.findAll(getToken())
                 .stream()
                 .sorted((a, b) -> (int) (a.getId() - b.getId()))
                 .collect(Collectors.toList());
@@ -54,27 +46,27 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public Token createClient(String name, Set<String> clientPermissions) {
         var client = clientFactory.of(name, clientPermissions);
-        return clientApi.create(client, token);
+        return clientApi.create(client, getToken());
     }
 
     @Override
     public Token generateNewToken(long id) {
-        return clientApi.generateNewToken(id, token);
+        return clientApi.generateNewToken(id, getToken());
     }
 
     @Override
     public void activateClient(long id) {
-        clientApi.setActivateTo(id, true, token);
+        clientApi.setActivateTo(id, true, getToken());
     }
 
     @Override
     public void deactivateClient(long id) {
-        clientApi.setActivateTo(id, false, token);
+        clientApi.setActivateTo(id, false, getToken());
     }
 
     @Override
     public void deleteClient(long id) {
-        clientApi.deleteBy(id, token);
+        clientApi.deleteBy(id, getToken());
     }
 
     @Override
@@ -85,14 +77,24 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void logout() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
+        if (authentication != null && authentication.isAuthenticated()) {
             adminKeyStorage.remove((String) authentication.getCredentials());
         }
     }
 
     @Override
-    public void iAmTeapot() {
+    public void iAmTeapot(char[] token) {
         clientApi.iAmTeapot(token);
+    }
+
+    private char[] getToken() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return new char[0];
+        } else {
+            return adminKeyStorage.get((String) authentication.getCredentials());
+        }
     }
 
     private Client getClientImpl(long id, char[] token) {

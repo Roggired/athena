@@ -1,4 +1,4 @@
-rootProject.name = 'messenger'
+rootProject.name = 'athena'
 include 'auth'
 include 'db'
 include 'admin'

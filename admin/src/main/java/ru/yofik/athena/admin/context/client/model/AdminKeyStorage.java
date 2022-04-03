@@ -11,15 +11,15 @@ import java.util.Map;
 public class AdminKeyStorage {
     private final Map<String, char[]> sessionMap = new HashMap<>();
 
-    public void add(String session, char[] token) {
+    public synchronized void add(String session, char[] token) {
         sessionMap.put(session, token);
     }
 
-    public void remove(String session) {
+    public synchronized void remove(String session) {
         sessionMap.remove(session);
     }
 
-    public char[] get(String session) {
+    public synchronized char[] get(String session) {
         if (!sessionMap.containsKey(session)) {
             return new char[0];
         }

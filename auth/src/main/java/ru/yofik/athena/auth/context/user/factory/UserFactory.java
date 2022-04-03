@@ -20,14 +20,13 @@ public class UserFactory {
     }
 
     public User createNew(String name,
-                          String login,
-                          String allowedDeviceId) {
+                          String login) {
 
         return new User(
                 0,
                 name,
                 login,
-                allowedDeviceId,
+                null,
                 ZonedDateTime.now()
         );
     }

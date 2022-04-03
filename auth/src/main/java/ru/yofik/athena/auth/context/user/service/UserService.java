@@ -15,11 +15,12 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    String activate(ActivateUserRequest request);
+    String activate(ActivateUserRequest request, String deviceId);
     void create(CreateUserRequest request);
     UserView get(long id);
     List<UserShortView> getAll();
     void lock(long id, LockReason lockReason);
+    void unlock(long id);
     InvitationView createInvitation(CreateInvitationRequest request);
     void delete(long id);
     ClientUserView authorize(AuthorizeUserRequest request, String deviceId);

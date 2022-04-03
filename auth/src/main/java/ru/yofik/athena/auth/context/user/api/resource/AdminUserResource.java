@@ -53,12 +53,21 @@ public class AdminUserResource {
         );
     }
 
-    @PutMapping("/{id}/locks")
+    @PostMapping("/{id}/lock")
     public AuthV1Response lockUserManually(@PathVariable("id") long id) {
         userService.lock(id, LockReason.ADMIN_MANUALLY);
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_UPDATED,
                 "User has been locked by admin"
+        );
+    }
+
+    @DeleteMapping("/{id}/lock")
+    public AuthV1Response unlockUser(@PathVariable("id") long id) {
+        userService.unlock(id);
+        return AuthV1Response.of(
+                AuthV1ResponseStatus.RESOURCE_UPDATED,
+                "User has been unlocked"
         );
     }
 

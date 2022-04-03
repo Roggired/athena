@@ -18,6 +18,10 @@ public class LockFactory {
     }
 
     public Lock from(LockJpaDto lockJpaDto) {
+        if (lockJpaDto == null) {
+            return null;
+        }
+
         return new Lock(
                 lockJpaDto.getId(),
                 lockJpaDto.getDate(),
@@ -26,6 +30,10 @@ public class LockFactory {
     }
 
     public LockJpaDto toJpaDto(Lock lock) {
+        if (lock == null) {
+            return null;
+        }
+
         return new LockJpaDto(
                 lock.getId(),
                 lock.getDate(),
