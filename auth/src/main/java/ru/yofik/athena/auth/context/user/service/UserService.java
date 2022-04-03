@@ -6,16 +6,13 @@ import ru.yofik.athena.auth.context.user.api.request.AuthorizeUserRequest;
 import ru.yofik.athena.auth.context.user.api.request.CreateInvitationRequest;
 import ru.yofik.athena.auth.context.user.api.request.CreateUserRequest;
 import ru.yofik.athena.auth.context.user.model.LockReason;
-import ru.yofik.athena.auth.context.user.view.ClientUserView;
-import ru.yofik.athena.auth.context.user.view.InvitationView;
-import ru.yofik.athena.auth.context.user.view.UserShortView;
-import ru.yofik.athena.auth.context.user.view.UserView;
+import ru.yofik.athena.auth.context.user.view.*;
 
 import java.util.List;
 
 @Service
 public interface UserService {
-    String activate(ActivateUserRequest request, String deviceId);
+    AccessTokenView activate(ActivateUserRequest request, String deviceId);
     void create(CreateUserRequest request);
     UserView get(long id);
     List<UserShortView> getAll();

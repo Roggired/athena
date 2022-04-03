@@ -2,7 +2,9 @@
 
 ## Version Notes
 v.0.1.0
-- HTTPS support for auth
+- Auth, Admin, Messenger services which implements only text messages functionalities
+- Sending messages via HTTPS request
+- Receiving messages via single notification websocket
 
 ## Requirements
 
@@ -97,3 +99,42 @@ java -jar -Djasypt.encryptor.password=supersecretz build/libs/SERVICE_NAME-VERSI
 ```
 Also, to provide Jasypt password (for IDEA configuration or production build) you can set up the environment
 variable JASYPT_ENCRYPTOR_PASSWORD
+
+## SSL note
+
+If you want, you can easily disable SSL for messenger and admin services (web interface). To do so, you need 
+to create directories: `messenger/config` and `admin/config`. After that copy files `application-dev.yml` from 
+each module and place in associated config directory and disable ssl.
+
+## API reference
+
+REST api docs can be found on `http://localhost:8080/swagger-ui.html`
+
+WebSocket api is described below in `WebSocket API` section
+
+## WebSocket API
+
+`ws://localhost:8080/ws-api/v1/notifications` - notification websocket.
+Subscribe message:
+```json
+{
+  "command": "SUBSCRIBE_ON_NOTIFICATIONS"
+}
+```
+
+Messenger service will send a message for each message to user this socket is associated to:
+```json
+{
+  "command": "RECEIVE_NOTIFICATION",
+  "argument": "<MessageView as JSON here. See ru.yofik.athena.messenger.context.chat.view.MessageView> Example: {id:26,text:Hello, world!,senderId:14,chatId:19,date:2022-04-09T16:06:25.998397} "
+}
+```
+
+NOTE:
+1. To connect to the server via websocket, a client sends special HTTP request (handshake). As soon as this
+request is HTTP, we can use the `Authorization` header to secure websocket endpoints. So, when you are trying to 
+connect, you need to specify `Authorization` header as below:
+`Authorization: Bearer <client-token> <access-token>`
+2. After the connection is established, Messenger service will not expect any authentication information as soon as 
+websockets are long-lived connections.
+

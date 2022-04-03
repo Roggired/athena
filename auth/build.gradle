@@ -5,7 +5,7 @@ plugins {
     id 'war'
 }
 
-group = 'ru.yofik.connect'
+group = 'ru.yofik.athena'
 version = '0.1.0'
 sourceCompatibility = '11'
 

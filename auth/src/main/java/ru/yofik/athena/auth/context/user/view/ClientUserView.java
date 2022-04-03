@@ -8,6 +8,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class ClientUserView {
+    public long id;
     public String name;
     public String login;
 }

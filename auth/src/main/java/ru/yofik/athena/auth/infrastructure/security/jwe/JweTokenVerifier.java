@@ -1,6 +1,8 @@
 package ru.yofik.athena.auth.infrastructure.security.jwe;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import lombok.extern.log4j.Log4j2;
 import org.jose4j.jwa.AlgorithmConstraints;
 import org.jose4j.jwe.ContentEncryptionAlgorithmIdentifiers;
@@ -17,11 +19,14 @@ import ru.yofik.athena.auth.infrastructure.security.TokenVerifier;
 import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.ZonedDateTime;
 
 @Component
 @Log4j2
 public class JweTokenVerifier<T> implements TokenVerifier<T> {
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(ZonedDateTime.class, (JsonDeserializer<ZonedDateTime>) (json, typeOfT, context) -> ZonedDateTime.parse(json.getAsString()))
+            .create();
 
     @Value("${yofik.security.jwe-key}")
     private String stringKey;

@@ -1,0 +1,71 @@
+plugins {
+    id 'org.springframework.boot' version '2.6.6'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+    id 'war'
+}
+
+group = 'ru.yofik.athena'
+version = '0.1.0'
+sourceCompatibility = '11'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    //security
+    implementation 'org.bitbucket.b_c:jose4j:0.7.11'
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+    implementation 'org.jasypt:jasypt:1.9.3'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    // web
+    implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.0.Final'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+    implementation 'org.apache.httpcomponents:fluent-hc:4.5.13'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // websocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+    // gson
+    implementation 'com.google.code.gson:gson:2.9.0'
+
+    // dev tools
+    implementation 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
+    compileOnly "org.springframework.boot:spring-boot-devtools"
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // tomcat
+    providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+
+    // test
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // Documentation
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
+    implementation("org.springdoc:springdoc-openapi-security:1.6.6")
+
+    // project
+    implementation project(":common")
+}
+
+configurations['implementation'].exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-logging')
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

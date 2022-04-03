@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.yofik.athena.auth.infrastructure.response.AuthV1Response;
 import ru.yofik.athena.auth.infrastructure.response.AuthV1ResponseStatus;
 
+import java.io.IOException;
+import java.net.SocketException;
+
 @ControllerAdvice
 @Log4j2
 public class GlobalExceptionHandler {
@@ -67,8 +70,8 @@ public class GlobalExceptionHandler {
                 .body(AuthV1Response.of(AuthV1ResponseStatus.UNEXPECTED_ERROR, exception.getMessage()));
     }
 
-    @ExceptionHandler
-    public ResponseEntity<? extends AuthV1Response> handleRuntimeException(RuntimeException exception) {
+    @ExceptionHandler(value = {RuntimeException.class, NullPointerException.class, SocketException.class, IOException.class})
+    public ResponseEntity<? extends AuthV1Response> handleRuntimeException(Throwable exception) {
         log.warn("", exception);
         return ResponseEntity
                 .status(AuthV1ResponseStatus.UNEXPECTED_ERROR.getHttpStatusCode())

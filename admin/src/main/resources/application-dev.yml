@@ -1,7 +1,7 @@
 server:
   port: 8082
   ssl:
-    enabled: true
+    enabled: false
     protocol: TLS
     enabled-protocols: TLSv1.2
     key-store: certs/Server-keystore.p12

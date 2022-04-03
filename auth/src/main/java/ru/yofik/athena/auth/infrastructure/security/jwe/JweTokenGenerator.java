@@ -1,6 +1,9 @@
 package ru.yofik.athena.auth.infrastructure.security.jwe;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSerializer;
 import lombok.extern.log4j.Log4j2;
 import org.jose4j.jwe.ContentEncryptionAlgorithmIdentifiers;
 import org.jose4j.jwe.JsonWebEncryption;
@@ -16,11 +19,14 @@ import ru.yofik.athena.auth.infrastructure.security.TokenGenerator;
 import javax.annotation.PostConstruct;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.time.ZonedDateTime;
 
 @Component
 @Log4j2
 public class JweTokenGenerator<T> implements TokenGenerator<T> {
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(ZonedDateTime.class, (JsonSerializer<ZonedDateTime>) (src, typeOfSrc, context) -> new JsonPrimitive(src.toString()))
+            .create();
 
 
     @Value("${yofik.security.jwe-key}")

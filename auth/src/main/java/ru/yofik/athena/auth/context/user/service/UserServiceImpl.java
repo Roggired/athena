@@ -10,6 +10,7 @@ import ru.yofik.athena.auth.context.user.api.request.ActivateUserRequest;
 import ru.yofik.athena.auth.context.user.api.request.AuthorizeUserRequest;
 import ru.yofik.athena.auth.context.user.api.request.CreateInvitationRequest;
 import ru.yofik.athena.auth.context.user.api.request.CreateUserRequest;
+import ru.yofik.athena.auth.context.user.dto.InvitationRedisDto;
 import ru.yofik.athena.auth.context.user.factory.InvitationFactory;
 import ru.yofik.athena.auth.context.user.factory.LockFactory;
 import ru.yofik.athena.auth.context.user.factory.UserFactory;
@@ -17,15 +18,13 @@ import ru.yofik.athena.auth.context.user.model.LockReason;
 import ru.yofik.athena.auth.context.user.model.User;
 import ru.yofik.athena.auth.context.user.repository.InvitationRepository;
 import ru.yofik.athena.auth.context.user.repository.UserRepository;
-import ru.yofik.athena.auth.context.user.view.ClientUserView;
-import ru.yofik.athena.auth.context.user.view.InvitationView;
-import ru.yofik.athena.auth.context.user.view.UserShortView;
-import ru.yofik.athena.auth.context.user.view.UserView;
+import ru.yofik.athena.auth.context.user.view.*;
 import ru.yofik.athena.auth.infrastructure.security.InvalidTokenException;
 import ru.yofik.athena.auth.infrastructure.security.Token;
 import ru.yofik.athena.auth.infrastructure.security.TokenGenerator;
 import ru.yofik.athena.auth.infrastructure.security.TokenVerifier;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -57,10 +56,15 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public String activate(ActivateUserRequest request, String deviceId) {
-        var invitation = invitationRepository.findByCode(request.code);
+    public AccessTokenView activate(ActivateUserRequest request, String deviceId) {
+        var tmp = new ArrayList<InvitationRedisDto>();
+        invitationRepository.findAll()
+                        .forEach(tmp::add);
+        log.info("All invitations: " + System.lineSeparator() + tmp.stream().map(el -> el == null ? "null" : el.toString()).collect(Collectors.joining(System.lineSeparator())));
+        log.info("Activate request: " + request);
+        var invitation = invitationRepository.findById(request.code);
         if (invitation.isEmpty() || invitation.get().getCount() <= 0) {
-            log.warn(() -> "No such invitation");
+            log.warn(() -> "No such invitation: " + (invitation.isPresent() ? invitation.get() : "empty"));
             throw new InvalidDataException("Invalid invitation");
         }
 
@@ -70,7 +74,7 @@ public class UserServiceImpl implements UserService {
         user.getInvitation().touch();
         save(user);
 
-        return new String(tokenGenerator.generateToken(user).getData());
+        return new AccessTokenView(new String(tokenGenerator.generateToken(user).getData()));
     }
 
     @Override

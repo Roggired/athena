@@ -83,6 +83,7 @@ public class User {
 
     public ClientUserView toClientView() {
         return new ClientUserView(
+                id,
                 name,
                 login
         );

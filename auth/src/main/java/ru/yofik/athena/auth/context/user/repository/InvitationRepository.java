@@ -7,7 +7,6 @@ import ru.yofik.athena.auth.context.user.dto.InvitationRedisDto;
 import java.util.Optional;
 
 @Repository
-public interface InvitationRepository extends CrudRepository<InvitationRedisDto, Long> {
-    Optional<InvitationRedisDto> findByCode(String code);
+public interface InvitationRepository extends CrudRepository<InvitationRedisDto, String> {
     Optional<InvitationRedisDto> findByUserId(long userId);
 }

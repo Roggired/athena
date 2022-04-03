@@ -3,4 +3,6 @@ include 'auth'
 include 'db'
 include 'admin'
 include 'common'
+include 'messenger'
+include 'websocket-test'
 

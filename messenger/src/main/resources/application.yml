@@ -1,0 +1,13 @@
+spring:
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
+
+yofik:
+  api:
+    auth-host: yofik.messenger.auth
+    auth-port: 8081
+  security:
+    client-token: <client-token>

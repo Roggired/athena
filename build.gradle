@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'ru.yofik'
+group = 'ru.yofik.athena'
 version = '0.1.0'
 sourceCompatibility = '11'
 
