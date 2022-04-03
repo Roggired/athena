@@ -25,6 +25,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers("/api/v1/admin/**")
                 .hasAuthority(ClientPermission.ADMIN.name())
+                .antMatchers("/api/v1/users/**")
+                .hasAnyAuthority(ClientPermission.AUTHORIZE_USER.name())
                 .antMatchers("/api/v1/teapot")
                 .authenticated();
     }
@@ -32,12 +34,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(new AthenaSecurityAuthenticationProvider());
-    }
-
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-//        web.debug(true);
-//        web.ignoring()
-//                .antMatchers("/api/v1/admin/**");
     }
 }

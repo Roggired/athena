@@ -5,4 +5,5 @@
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
 
     <include file="db/changelog/sql/init.sql"/>
+    <include file="db/changelog/sql/ATHENA-3-authorize-user.sql"/>
 </databaseChangeLog>
