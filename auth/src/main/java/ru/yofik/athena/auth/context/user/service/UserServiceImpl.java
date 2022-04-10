@@ -57,11 +57,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AccessTokenView activate(ActivateUserRequest request, String deviceId) {
-        var tmp = new ArrayList<InvitationRedisDto>();
-        invitationRepository.findAll()
-                        .forEach(tmp::add);
-        log.info("All invitations: " + System.lineSeparator() + tmp.stream().map(el -> el == null ? "null" : el.toString()).collect(Collectors.joining(System.lineSeparator())));
-        log.info("Activate request: " + request);
         var invitation = invitationRepository.findById(request.code);
         if (invitation.isEmpty() || invitation.get().getCount() <= 0) {
             log.warn(() -> "No such invitation: " + (invitation.isPresent() ? invitation.get() : "empty"));

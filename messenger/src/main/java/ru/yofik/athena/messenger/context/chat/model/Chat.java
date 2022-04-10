@@ -29,7 +29,6 @@ public class Chat {
         this.name = name;
         this.users.addAll(users);
         this.messages.addAll(messages);
-        messages.sort((a, b) -> Comparators.comparable().compare(a.getDate(), b.getDate()));
     }
 
     public Chat(String name) {
@@ -48,7 +47,6 @@ public class Chat {
 
     public void addMessage(Message message) {
         messages.add(message);
-        messages.sort((a, b) -> Comparators.comparable().compare(a.getDate(), b.getDate()));
     }
 
     public void removeMessage(Message message) {
@@ -63,6 +61,7 @@ public class Chat {
                         .map(User::toView)
                         .collect(Collectors.toList()),
                 messages.stream()
+                        .sorted((a, b) -> Comparators.comparable().compare(b.getDate(), a.getDate()))
                         .map(Message::toView)
                         .findFirst()
                         .orElse(null)
@@ -77,6 +76,7 @@ public class Chat {
                         .map(User::toView)
                         .collect(Collectors.toList()),
                 messages.stream()
+                        .sorted((a, b) -> Comparators.comparable().compare(a.getDate(), b.getDate()))
                         .map(Message::toView)
                         .collect(Collectors.toList())
         );

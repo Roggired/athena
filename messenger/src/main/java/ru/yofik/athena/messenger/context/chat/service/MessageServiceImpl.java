@@ -51,7 +51,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
         var athenaWSMessage = new AthenaWSMessage(
                 AthenaWSCommand.RECEIVE_NOTIFICATION,
-                new Gson().toJson(message.toView())
+                message.toView()
         );
 
         for (var targetUser : chat.getUsers()) {
