@@ -1,6 +1,10 @@
-## Messenger v.0.1.0
+## Messenger v.0.1.1
 
 ## Version Notes
+v.0.1.1
+- Fix message order and last message problem
+- Improve presentation of AthenaWSMessage. Now argument is pretty formatted
+
 v.0.1.0
 - Auth, Admin, Messenger services which implements only text messages functionalities
 - Sending messages via HTTPS request
