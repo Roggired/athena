@@ -46,8 +46,9 @@ public class ClientThymeleafController {
         adminKeyStorage.add(athenaSession, token.getToken());
         var cookie = new Cookie(AthenaAuthenticationFilter.COOKIE_NAME, athenaSession);
         cookie.setPath("/");
-        cookie.setMaxAge(30*60);
-        cookie.setSecure(true);
+        cookie.setMaxAge(30 * 60);
+//        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setHttpOnly(true);
         servletResponse.addCookie(cookie);
         return "redirect:/admin-panel";
@@ -80,7 +81,9 @@ public class ClientThymeleafController {
 
     @GetMapping("/admin-panel/client/new")
     public String newClient(Model model) {
-        model.addAttribute("client", new Client(0L, "New client", true, new HashSet<>() {{add(ClientPermission.AUTHORIZE_USER.name());}}));
+        model.addAttribute("client", new Client(0L, "New client", true, new HashSet<>() {{
+            add(ClientPermission.AUTHORIZE_USER.name());
+        }}));
         model.addAttribute("clientPermissions", ClientPermission.values());
         model.addAttribute("login", true);
         return "client-new";
