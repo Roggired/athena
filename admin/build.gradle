@@ -39,6 +39,10 @@ dependencies {
     // tomcat
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
+    // Documentation
+    implementation("org.springdoc:springdoc-openapi-ui:1.6.6")
+    implementation("org.springdoc:springdoc-openapi-security:1.6.6")
+
     // test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
