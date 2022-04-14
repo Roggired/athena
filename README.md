@@ -1,6 +1,11 @@
-## Messenger v.0.1.1
+## Messenger v.0.1.2
 
 ## Version Notes
+v.0.1.2
+- Add RestApi for admin service
+- Now authentication cookie in admin service is not secure
+- Add Swagger OpenApi v3 for admin service (available on http://localhost:8082/swagger-ui.html)
+
 v.0.1.1
 - Fix message order and last message problem
 - Improve presentation of AthenaWSMessage. Now argument is pretty formatted
@@ -92,14 +97,27 @@ database using Liquibase:
 ```bash
 ./gradlew db:update
 ```
+for Windows:
+```bat
+gradlew.bat db:update
+```
 3. Build the project:
 ```bash
 ./gradlew build
+```
+for Windows:
+```bat
+gradlew.bat build
 ```
 4. Run services which you need in separate terminals:
 ```bash
 cd SERVICE_NAME
 java -jar -Djasypt.encryptor.password=supersecretz build/libs/SERVICE_NAME-VERSION.war
+```
+for Windows:
+```bat
+cd SERVICE_NAME
+java -jar -Djasypt.encryptor.password=supersecretz build\libs\SERVICE_NAME-VERSION.war
 ```
 Also, to provide Jasypt password (for IDEA configuration or production build) you can set up the environment
 variable JASYPT_ENCRYPTOR_PASSWORD
@@ -112,7 +130,8 @@ each module and place in associated config directory and disable ssl.
 
 ## API reference
 
-REST api docs can be found on `http://localhost:8080/swagger-ui.html`
+REST api docs can be found on `http://localhost:8080/swagger-ui.html` for messenger and 
+on `http://localhost:8082/swagger-ui.html` for admin
 
 WebSocket api is described below in `WebSocket API` section
 
