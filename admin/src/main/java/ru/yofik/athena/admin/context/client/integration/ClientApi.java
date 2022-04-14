@@ -13,6 +13,5 @@ public interface ClientApi {
     Token generateNewToken(long id, char[] token);
     void setActivateTo(long id, boolean newValue, char[] token);
     void deleteBy(long id, char[] token);
-    Token login(String password);
     void iAmTeapot(char[] token);
 }

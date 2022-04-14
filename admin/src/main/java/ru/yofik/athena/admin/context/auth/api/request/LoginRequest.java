@@ -1,4 +1,4 @@
-package ru.yofik.athena.admin.context.client.api.request;
+package ru.yofik.athena.admin.context.auth.api.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

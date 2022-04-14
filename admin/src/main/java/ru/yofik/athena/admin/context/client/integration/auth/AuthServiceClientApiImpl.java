@@ -2,36 +2,26 @@ package ru.yofik.athena.admin.context.client.integration.auth;
 
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import ru.yofik.athena.admin.api.exception.AuthenticationException;
-import ru.yofik.athena.admin.api.exception.ForbiddenException;
 import ru.yofik.athena.admin.context.client.integration.ClientApi;
 import ru.yofik.athena.admin.context.client.integration.auth.request.CreateClientAuthRequest;
-import ru.yofik.athena.admin.context.client.integration.auth.request.LoginRequest;
 import ru.yofik.athena.admin.context.client.integration.auth.response.NewTokenAuthResponse;
 import ru.yofik.athena.admin.context.client.model.Client;
+import ru.yofik.athena.admin.context.client.model.ClientPermission;
 import ru.yofik.athena.admin.context.client.model.Token;
-import ru.yofik.athena.admin.infrastructure.restApi.AbstractRestTemplateApi;
-import ru.yofik.athena.common.AuthV1Response;
+import ru.yofik.athena.admin.infrastructure.restApi.AbstractAuthServiceApi;
 import ru.yofik.athena.common.AuthV1ResponseParser;
 import ru.yofik.athena.common.AuthV1ResponseStatus;
 
-import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
-public class AuthServiceClientApi extends AbstractRestTemplateApi implements ClientApi {
-    @Value("${yofik.api.auth-host}")
-    private String authHost;
-    @Value("${yofik.api.auth-port}")
-    private int authPort;
-
+public class AuthServiceClientApiImpl extends AbstractAuthServiceApi implements ClientApi {
     @Override
     public Optional<Client> findById(long id, char[] token) {
         var response = executeRestTemplate(
@@ -74,7 +64,13 @@ public class AuthServiceClientApi extends AbstractRestTemplateApi implements Cli
                 createURI("/api/v1/admin/clients"),
                 HttpMethod.POST,
                 token,
-                new CreateClientAuthRequest(client.getName(), client.getClientPermissions())
+                new CreateClientAuthRequest(
+                        client.getName(),
+                        client.getClientPermissions()
+                                .stream()
+                                .map(ClientPermission::toString)
+                                .collect(Collectors.toSet())
+                )
         );
         var authV1Response = getAuthV1Response(response);
 
@@ -137,23 +133,6 @@ public class AuthServiceClientApi extends AbstractRestTemplateApi implements Cli
     }
 
     @Override
-    public Token login(String password) {
-        var response = executeRestTemplate(
-                createURI("/api/v1/admin/login"),
-                HttpMethod.POST,
-                new LoginRequest(password)
-        );
-        var authV1Response = getAuthV1Response(response);
-
-        if (AuthV1ResponseParser.isStatus(authV1Response, AuthV1ResponseStatus.RESOURCE_RETURNED)) {
-            return new Token(AuthV1ResponseParser.parsePayload(authV1Response, NewTokenAuthResponse.class).token.toCharArray());
-        }
-
-        log.warn(() -> "Auth Service response: " + authV1Response);
-        throw new RuntimeException("Can't login admin");
-    }
-
-    @Override
     public void iAmTeapot(char[] token) {
         var response = executeRestTemplate(
                 createURI("/api/v1/teapot"),
@@ -167,27 +146,5 @@ public class AuthServiceClientApi extends AbstractRestTemplateApi implements Cli
             log.warn(() -> "Can't be teapot");
             throw new RuntimeException("Can't be teapot");
         }
-    }
-
-    private AuthV1Response getAuthV1Response(ResponseEntity<String> response) {
-        if (response.getBody() != null) {
-            var authV1Response = AuthV1ResponseParser.fromJson(response.getBody());
-
-            if (authV1Response.status.equals(AuthV1ResponseStatus.UNAUTHENTICATED.getStatus())) {
-                throw new AuthenticationException();
-            }
-
-            if (authV1Response.status.equals(AuthV1ResponseStatus.NOT_HAVE_PERMISSION.getStatus())) {
-                throw new ForbiddenException();
-            }
-
-            return authV1Response;
-        }
-
-        throw new RuntimeException("Empty response body");
-    }
-
-    private URI createURI(String resource) {
-        return URI.create(String.format("https://%s:%d/%s", authHost, authPort, resource));
     }
 }

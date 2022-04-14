@@ -12,18 +12,18 @@ import java.util.Set;
 @Getter
 @Setter
 public final class Client {
-    private final Long id;
+    private final long id;
     @NotBlank
     private String name;
     private Boolean active;
     @NotEmpty
-    private final Set<String> clientPermissions;
+    private final Set<ClientPermission> clientPermissions;
 
 
-    public Client(Long id,
+    public Client(long id,
                   String name,
                   Boolean active,
-                  Set<String> clientPermissions) {
+                  Set<ClientPermission> clientPermissions) {
         this.id = id;
         this.name = name;
         this.active = active;

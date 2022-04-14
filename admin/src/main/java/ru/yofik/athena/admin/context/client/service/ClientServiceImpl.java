@@ -8,6 +8,7 @@ import ru.yofik.athena.admin.context.client.factory.ClientFactory;
 import ru.yofik.athena.admin.context.client.integration.ClientApi;
 import ru.yofik.athena.admin.context.client.model.AdminKeyStorage;
 import ru.yofik.athena.admin.context.client.model.Client;
+import ru.yofik.athena.admin.context.client.model.ClientPermission;
 import ru.yofik.athena.admin.context.client.model.Token;
 
 import java.util.List;
@@ -44,8 +45,11 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Token createClient(String name, Set<String> clientPermissions) {
-        var client = clientFactory.of(name, clientPermissions);
+    public Token createClient(String name, Set<ClientPermission> clientPermissions) {
+        var client = clientFactory.of(
+                name,
+                clientPermissions
+        );
         return clientApi.create(client, getToken());
     }
 
@@ -67,19 +71,6 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public void deleteClient(long id) {
         clientApi.deleteBy(id, getToken());
-    }
-
-    @Override
-    public Token login(String password) {
-        return clientApi.login(password);
-    }
-
-    @Override
-    public void logout() {
-        var authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            adminKeyStorage.remove((String) authentication.getCredentials());
-        }
     }
 
     @Override

@@ -6,27 +6,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.yofik.athena.admin.api.security.AthenaAuthenticationFilter;
+import ru.yofik.athena.admin.context.auth.service.AuthService;
 import ru.yofik.athena.admin.context.client.api.request.LoginRequest;
-import ru.yofik.athena.admin.context.client.model.AdminKeyStorage;
 import ru.yofik.athena.admin.context.client.model.Client;
 import ru.yofik.athena.admin.context.client.model.ClientPermission;
 import ru.yofik.athena.admin.context.client.service.ClientService;
 
-import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.HashSet;
-import java.util.UUID;
 
 @Controller
 @Log4j2
 public class ClientThymeleafController {
     @Autowired
     private ClientService clientService;
-
     @Autowired
-    private AdminKeyStorage adminKeyStorage;
+    private AuthService authService;
 
 
     @GetMapping("/")
@@ -41,21 +38,14 @@ public class ClientThymeleafController {
 
     @PostMapping(value = "/athena/login")
     public String login(@RequestBody LoginRequest request, HttpServletResponse servletResponse) {
-        var token = clientService.login(request.getPassword());
-        var athenaSession = UUID.randomUUID().toString();
-        adminKeyStorage.add(athenaSession, token.getToken());
-        var cookie = new Cookie(AthenaAuthenticationFilter.COOKIE_NAME, athenaSession);
-        cookie.setPath("/");
-        cookie.setMaxAge(30*60);
-        cookie.setSecure(true);
-        cookie.setHttpOnly(true);
-        servletResponse.addCookie(cookie);
+        authService.login(request.getPassword(), servletResponse);
         return "redirect:/admin-panel";
     }
 
+    // TODO переписать на REST
     @GetMapping(value = "/athena/logout")
-    public String logout() {
-        clientService.logout();
+    public String logout(HttpServletRequest servletRequest) {
+        authService.logout();
         return "redirect:/index";
     }
 
@@ -80,7 +70,7 @@ public class ClientThymeleafController {
 
     @GetMapping("/admin-panel/client/new")
     public String newClient(Model model) {
-        model.addAttribute("client", new Client(0L, "New client", true, new HashSet<>() {{add(ClientPermission.AUTHORIZE_USER.name());}}));
+        model.addAttribute("client", new Client(0L, "New client", true, new HashSet<>() {{add(ClientPermission.AUTHORIZE_USER);}}));
         model.addAttribute("clientPermissions", ClientPermission.values());
         model.addAttribute("login", true);
         return "client-new";

@@ -24,17 +24,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin-panel")
                     .hasAuthority("ADMIN")
                 .antMatchers("/admin-panel/**")
+                    .hasAuthority("ADMIN")
+                .antMatchers("/api/v1/auth/logout")
+                    .hasAuthority("ADMIN")
+                .antMatchers("/api/v1/users/**")
+                    .hasAuthority("ADMIN")
+                .antMatchers("/api/v1/clients/**")
                     .hasAuthority("ADMIN");
-    }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring()
+        http.authorizeHttpRequests()
                 .antMatchers("/css/**.css")
+                .permitAll()
                 .antMatchers("/js/**.js")
+                .permitAll()
                 .antMatchers("/")
+                .permitAll()
                 .antMatchers("/index")
+                .permitAll()
                 .antMatchers("/athena/login")
-                .antMatchers("/error");
+                .permitAll()
+                .antMatchers("/api/v1/auth/logout")
+                .permitAll()
+                .antMatchers("/error")
+                .permitAll();
     }
 }
