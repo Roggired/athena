@@ -14,5 +14,5 @@ public interface ChatService {
     void delete(long id);
     Chat get(long id);
     ChatFullView getFull(long id);
-    List<ChatView> getAll();
+    List<ChatView> getAllForCurrentUser();
 }

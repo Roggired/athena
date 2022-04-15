@@ -19,5 +19,6 @@ messenger/config
 auth/config
 admin/config
 
-/frontend/build/
-/frontend/node_modules/
+/admin/frontend/build/
+/admin/frontend/node_modules/
+/admin/src/main/webapp

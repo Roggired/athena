@@ -1,6 +1,12 @@
-## Messenger v.0.1.2
+## Messenger v.0.1.3
 
 ## Version Notes
+v.0.1.3
+- **issue#10** Fix invitation regeneration. Now amount of available usages on admin is correct.
+- **issue#11** For dev profile change generator of invitations. Now an invitation is a 3digits code.
+- **issue#12** Add filter by involved users for getAllChats endpoint in messenger.
+- Add support for ReactJS frontend. However, Thymeleaf and ReactJS conflict each other.
+
 v.0.1.2
 - Add RestApi for admin service
 - Now authentication cookie in admin service is not secure

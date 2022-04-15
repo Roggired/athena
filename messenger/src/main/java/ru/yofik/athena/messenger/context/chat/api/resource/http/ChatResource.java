@@ -20,10 +20,10 @@ public class ChatResource {
     private MessageService messageService;
 
     @GetMapping
-    public MessengerV1Response getAllChats() {
+    public MessengerV1Response getAllChatsForCurrentUser() {
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_RETURNED,
-                chatService.getAll()
+                chatService.getAllForCurrentUser()
         );
     }
 

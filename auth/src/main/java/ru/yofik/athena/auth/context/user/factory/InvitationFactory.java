@@ -5,11 +5,20 @@ import ru.yofik.athena.auth.context.user.dto.InvitationRedisDto;
 import ru.yofik.athena.auth.context.user.model.Invitation;
 import ru.yofik.athena.auth.context.user.model.User;
 
+import java.security.SecureRandom;
+import java.util.Random;
+
 @Component
 public class InvitationFactory {
-    public Invitation create(String code, int count, User user) {
+    private final CodeGenerator codeGenerator;
+
+    public InvitationFactory(CodeGenerator codeGenerator) {
+        this.codeGenerator = codeGenerator;
+    }
+
+    public Invitation create(int count, User user) {
         return new Invitation(
-                code,
+                codeGenerator.generate(),
                 count,
                 user.getId()
         );

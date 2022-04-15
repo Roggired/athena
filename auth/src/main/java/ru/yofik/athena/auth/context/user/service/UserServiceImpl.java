@@ -120,7 +120,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public InvitationView createInvitation(CreateInvitationRequest request) {
         var user = getUserById(request.userId);
-        var invitation = invitationFactory.create(UUID.randomUUID().toString(), request.count, user);
+        var invitationOptional = invitationRepository.findByUserId(user.getId());
+        invitationOptional.ifPresent(invitationRepository::delete);
+
+        var invitation = invitationFactory.create(request.count, user);
         user.setInvitation(invitation);
         save(user);
 

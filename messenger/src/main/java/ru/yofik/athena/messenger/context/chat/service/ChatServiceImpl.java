@@ -74,9 +74,11 @@ public class ChatServiceImpl extends AbstractService implements ChatService {
     }
 
     @Override
-    public List<ChatView> getAll() {
+    public List<ChatView> getAllForCurrentUser() {
+        var user = getCurrentUser();
         return chatRepository.findAll()
                 .stream()
+                .filter(el -> el.getUserIds().contains(user.getId()))
                 .map(el -> chatFactory.from(el, clientToken))
                 .map(Chat::toView)
                 .collect(Collectors.toList());
