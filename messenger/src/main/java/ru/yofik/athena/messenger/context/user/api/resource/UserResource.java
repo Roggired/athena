@@ -11,6 +11,7 @@ import ru.yofik.athena.messenger.context.user.service.UserService;
 import ru.yofik.athena.messenger.infrastructure.response.MessengerV1Response;
 import ru.yofik.athena.messenger.infrastructure.response.MessengerV1ResponseStatus;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -20,18 +21,26 @@ public class UserResource {
     private UserService userService;
 
     @PostMapping("/authorization")
-    public MessengerV1Response authorizeUser(@Valid @RequestBody AuthorizeUserRequest request) {
+    public MessengerV1Response authorizeUser(
+            @Valid @RequestBody AuthorizeUserRequest request,
+            HttpServletRequest servletRequest
+    ) {
+        var deviceId = servletRequest.getHeader("User-Agent");
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_RETURNED,
-                userService.authorizeUser(request.accessToken)
+                userService.authorizeUser(request.accessToken, deviceId)
         );
     }
 
     @PostMapping("/activation")
-    public MessengerV1Response activateUser(@Valid @RequestBody ActivateUserRequest request) {
+    public MessengerV1Response activateUser(
+            @Valid @RequestBody ActivateUserRequest request,
+            HttpServletRequest servletRequest
+    ) {
+        var deviceId = servletRequest.getHeader("User-Agent");
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_RETURNED,
-                userService.activate(request)
+                userService.activate(request, deviceId)
         );
     }
 }

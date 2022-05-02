@@ -45,14 +45,6 @@ public class Chat {
         users.remove(user);
     }
 
-    public void addMessage(Message message) {
-        messages.add(message);
-    }
-
-    public void removeMessage(Message message) {
-        messages.remove(message);
-    }
-
     public ChatView toView() {
         return new ChatView(
                 id,
@@ -61,7 +53,7 @@ public class Chat {
                         .map(User::toView)
                         .collect(Collectors.toList()),
                 messages.stream()
-                        .sorted((a, b) -> Comparators.comparable().compare(b.getDate(), a.getDate()))
+                        .sorted((a, b) -> Comparators.comparable().compare(b.getCreationDate(), a.getCreationDate()))
                         .map(Message::toView)
                         .findFirst()
                         .orElse(null)
@@ -76,7 +68,7 @@ public class Chat {
                         .map(User::toView)
                         .collect(Collectors.toList()),
                 messages.stream()
-                        .sorted((a, b) -> Comparators.comparable().compare(a.getDate(), b.getDate()))
+                        .sorted((a, b) -> Comparators.comparable().compare(a.getCreationDate(), b.getCreationDate()))
                         .map(Message::toView)
                         .collect(Collectors.toList())
         );

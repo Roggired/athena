@@ -2,6 +2,7 @@ package ru.yofik.athena.auth.context.user.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yofik.athena.auth.api.exception.InvalidDataException;
 import ru.yofik.athena.auth.api.exception.ResourceAlreadyExistsException;
 import ru.yofik.athena.auth.api.exception.ResourceNotFoundException;
@@ -10,13 +11,13 @@ import ru.yofik.athena.auth.context.user.api.request.ActivateUserRequest;
 import ru.yofik.athena.auth.context.user.api.request.AuthorizeUserRequest;
 import ru.yofik.athena.auth.context.user.api.request.CreateInvitationRequest;
 import ru.yofik.athena.auth.context.user.api.request.CreateUserRequest;
-import ru.yofik.athena.auth.context.user.dto.InvitationRedisDto;
 import ru.yofik.athena.auth.context.user.factory.InvitationFactory;
 import ru.yofik.athena.auth.context.user.factory.LockFactory;
 import ru.yofik.athena.auth.context.user.factory.UserFactory;
 import ru.yofik.athena.auth.context.user.model.LockReason;
 import ru.yofik.athena.auth.context.user.model.User;
 import ru.yofik.athena.auth.context.user.repository.InvitationRepository;
+import ru.yofik.athena.auth.context.user.repository.LockRepository;
 import ru.yofik.athena.auth.context.user.repository.UserRepository;
 import ru.yofik.athena.auth.context.user.view.*;
 import ru.yofik.athena.auth.infrastructure.security.InvalidTokenException;
@@ -24,9 +25,7 @@ import ru.yofik.athena.auth.infrastructure.security.Token;
 import ru.yofik.athena.auth.infrastructure.security.TokenGenerator;
 import ru.yofik.athena.auth.infrastructure.security.TokenVerifier;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +33,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final InvitationRepository invitationRepository;
+    private final LockRepository lockRepository;
     private final UserFactory userFactory;
     private final LockFactory lockFactory;
     private final InvitationFactory invitationFactory;
@@ -43,10 +43,15 @@ public class UserServiceImpl implements UserService {
 
     public UserServiceImpl(UserRepository userRepository,
                            InvitationRepository invitationRepository,
+                           LockRepository lockRepository,
                            UserFactory userFactory,
-                           LockFactory lockFactory, InvitationFactory invitationFactory, TokenGenerator<User> tokenGenerator, TokenVerifier<User> tokenVerifier) {
+                           LockFactory lockFactory,
+                           InvitationFactory invitationFactory,
+                           TokenGenerator<User> tokenGenerator,
+                           TokenVerifier<User> tokenVerifier) {
         this.userRepository = userRepository;
         this.invitationRepository = invitationRepository;
+        this.lockRepository = lockRepository;
         this.userFactory = userFactory;
         this.lockFactory = lockFactory;
         this.invitationFactory = invitationFactory;
@@ -105,8 +110,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void unlock(long id) {
         var user = getUserById(id);
+        var lock = user.getLock();
+
+        if (lock == null) {
+            return;
+        }
+
+        lockRepository.deleteById(lock.getId());
         user.unlock();
         save(user);
     }

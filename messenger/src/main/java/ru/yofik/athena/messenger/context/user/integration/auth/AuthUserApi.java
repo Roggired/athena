@@ -28,14 +28,17 @@ public class AuthUserApi extends AbstractRestTemplateApi implements UserApi {
     private String authHost;
     @Value("${yofik.api.auth-port}")
     private int authPort;
+    @Value("${yofik.messenger.user-agent}")
+    private String messengerUserAgent;
 
 
     @Override
-    public User authorizeUser(char[] accessToken, char[] clientToken) {
+    public User authorizeUser(char[] accessToken, char[] clientToken, String deviceId) {
         var response = executeRestTemplate(
                 createURI("/api/v1/users/authorities"),
                 HttpMethod.POST,
                 clientToken,
+                deviceId,
                 new AuthorizeUserRequest(new String(accessToken))
         );
         var authV1Response = getAuthV1Response(response);
@@ -49,11 +52,12 @@ public class AuthUserApi extends AbstractRestTemplateApi implements UserApi {
     }
 
     @Override
-    public NewAccessTokenResponse activateUser(String invitation, char[] clientToken) {
+    public NewAccessTokenResponse activateUser(String invitation, char[] clientToken, String deviceId) {
         var response = executeRestTemplate(
                 createURI("/api/v1/users/invitations"),
                 HttpMethod.POST,
                 clientToken,
+                deviceId,
                 new ActivateUserRequest(invitation)
         );
         var authV1Response = getAuthV1Response(response);
@@ -72,6 +76,7 @@ public class AuthUserApi extends AbstractRestTemplateApi implements UserApi {
                 createURI("/api/v1/users"),
                 HttpMethod.GET,
                 clientToken,
+                messengerUserAgent,
                 null
         );
         var authV1Response = getAuthV1Response(response);
@@ -90,6 +95,7 @@ public class AuthUserApi extends AbstractRestTemplateApi implements UserApi {
                 createURI("/api/v1/users/" + id),
                 HttpMethod.GET,
                 clientToken,
+                messengerUserAgent,
                 null
         );
         var authV1Response = getAuthV1Response(response);
@@ -108,6 +114,7 @@ public class AuthUserApi extends AbstractRestTemplateApi implements UserApi {
                 createURI("/api/v1/teapot"),
                 HttpMethod.GET,
                 clientToken,
+                messengerUserAgent,
                 null
         );
         var authV1Response = getAuthV1Response(response);

@@ -12,7 +12,7 @@ import java.util.List;
 public interface ChatService {
     ChatView create(CreateChatRequest request);
     void delete(long id);
-    Chat get(long id);
+    Chat getWithoutMessages(long id);
     ChatFullView getFull(long id);
     List<ChatView> getAllForCurrentUser();
 }

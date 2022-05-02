@@ -14,13 +14,15 @@ public final class JweAuthenticationToken implements Authentication {
     private final char[] clientToken;
     private final char[] accessToken;
     private final Set<GrantedAuthority> grantedAuthorities;
+    private final String deviceId;
     private User user;
 
 
-    public JweAuthenticationToken(char[] clientToken, char[] accessToken) {
+    public JweAuthenticationToken(char[] clientToken, char[] accessToken, String deviceId) {
         this.clientToken = clientToken;
         this.accessToken = accessToken;
         this.grantedAuthorities = new HashSet<>();
+        this.deviceId = deviceId;
     }
 
 
@@ -45,6 +47,10 @@ public final class JweAuthenticationToken implements Authentication {
 
     public char[] getAccessToken() {
         return accessToken;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
     }
 
     @Override

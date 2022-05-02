@@ -85,20 +85,9 @@ public abstract class AbstractRestTemplateApi {
     }
 
     protected ResponseEntity<String> executeRestTemplate(URI uri,
-                                                    HttpMethod httpMethod,
-                                                    Object requestEntity) {
-        return new RestTemplate(requestFactory)
-                .exchange(
-                        uri,
-                        httpMethod,
-                        RequestEntity.post(uri).body(requestEntity),
-                        String.class
-                );
-    }
-
-    protected ResponseEntity<String> executeRestTemplate(URI uri,
                                                          HttpMethod httpMethod,
                                                          char[] token,
+                                                         String deviceId,
                                                          Object requestEntity) {
         return new RestTemplate(requestFactory)
                 .exchange(
@@ -106,6 +95,7 @@ public abstract class AbstractRestTemplateApi {
                         httpMethod,
                         RequestEntity
                                 .post(uri)
+                                .header("User-Agent", deviceId)
                                 .header("Authorization", "Bearer " + new String(token))
                                 .body(requestEntity),
                         String.class

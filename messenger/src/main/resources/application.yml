@@ -6,6 +6,8 @@ spring:
       enabled: true
 
 yofik:
+  messenger:
+    user-agent: Athena Messenger
   api:
     auth-host: yofik.messenger.auth
     auth-port: 8081

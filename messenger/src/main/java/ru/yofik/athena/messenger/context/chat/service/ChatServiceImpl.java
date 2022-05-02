@@ -64,8 +64,8 @@ public class ChatServiceImpl extends AbstractService implements ChatService {
     }
 
     @Override
-    public Chat get(long id) {
-        return getChat(id);
+    public Chat getWithoutMessages(long id) {
+        return getChatWithoutMessages(id);
     }
 
     @Override
@@ -87,6 +87,11 @@ public class ChatServiceImpl extends AbstractService implements ChatService {
     private Chat getChat(long id) {
         var chatJpaDto = getChatJpaDto(id);
         return chatFactory.from(chatJpaDto, clientToken);
+    }
+
+    private Chat getChatWithoutMessages(long id) {
+        var chatJpaDto = getChatJpaDto(id);
+        return chatFactory.fromWithoutMessages(chatJpaDto, clientToken);
     }
 
     private ChatJpaDto getChatJpaDto(long id) {

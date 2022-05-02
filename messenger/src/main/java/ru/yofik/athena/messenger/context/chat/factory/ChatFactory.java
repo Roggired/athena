@@ -7,6 +7,7 @@ import ru.yofik.athena.messenger.context.user.integration.UserApi;
 import ru.yofik.athena.messenger.context.user.model.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Component
@@ -37,6 +38,18 @@ public class ChatFactory {
                         .stream()
                         .map(messageFactory::from)
                         .collect(Collectors.toList())
+        );
+    }
+
+    public Chat fromWithoutMessages(ChatJpaDto chatJpaDto, char[] clientToken) {
+        return new Chat(
+                chatJpaDto.getId(),
+                chatJpaDto.getName(),
+                chatJpaDto.getUserIds()
+                        .stream()
+                        .map(id -> userApi.getUser(id, clientToken))
+                        .collect(Collectors.toList()),
+                Collections.emptyList()
         );
     }
 

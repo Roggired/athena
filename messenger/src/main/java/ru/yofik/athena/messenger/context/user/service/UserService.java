@@ -9,8 +9,8 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    AccessTokenView activate(ActivateUserRequest request);
-    UserView authorizeUser(String accessToken);
+    AccessTokenView activate(ActivateUserRequest request, String deviceId);
+    UserView authorizeUser(String accessToken, String deviceId);
     List<UserView> getAllUsers();
     UserView getUser(long id);
 }

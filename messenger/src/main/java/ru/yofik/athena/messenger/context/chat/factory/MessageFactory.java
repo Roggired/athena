@@ -18,6 +18,7 @@ public class MessageFactory {
                 text,
                 sender.getId(),
                 chat.getId(),
+                Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime(),
                 Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime()
         );
     }
@@ -28,7 +29,8 @@ public class MessageFactory {
                 messageJpaDto.getText(),
                 messageJpaDto.getSenderId(),
                 messageJpaDto.getChat().getId(),
-                messageJpaDto.getDate()
+                messageJpaDto.getCreationDate(),
+                messageJpaDto.getModificationDate()
         );
     }
 
@@ -38,7 +40,8 @@ public class MessageFactory {
                 message.getText(),
                 message.getSenderId(),
                 chatJpaDto,
-                message.getDate().atZone(ZoneId.of("UTC")).toLocalDateTime()
+                message.getCreationDate().atZone(ZoneId.of("UTC")).toLocalDateTime(),
+                message.getModificationDate().atZone(ZoneId.of("UTC")).toLocalDateTime()
         );
     }
 }

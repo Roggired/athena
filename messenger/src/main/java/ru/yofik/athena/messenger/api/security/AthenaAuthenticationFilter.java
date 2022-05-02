@@ -36,7 +36,8 @@ public final class AthenaAuthenticationFilter extends OncePerRequestFilter {
 
         var clientTokenData = parts[1].toCharArray();
         var accessTokenData = parts.length == 3 ? parts[2].toCharArray() : new char[0];
-        var jweAuthenticationToken = new JweAuthenticationToken(clientTokenData, accessTokenData);
+        var deviceId = request.getHeader("User-Agent");
+        var jweAuthenticationToken = new JweAuthenticationToken(clientTokenData, accessTokenData, deviceId);
         var securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(jweAuthenticationToken);
         SecurityContextHolder.setContext(securityContext);

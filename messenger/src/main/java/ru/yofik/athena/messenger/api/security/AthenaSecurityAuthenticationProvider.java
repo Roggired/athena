@@ -43,9 +43,10 @@ public final class AthenaSecurityAuthenticationProvider implements Authenticatio
             return jweAuthenticationToken;
         }
 
+        var deviceId = jweAuthenticationToken.getDeviceId();
         UserView userView;
         try {
-            userView = userService.authorizeUser(new String(accessTokenData));
+            userView = userService.authorizeUser(new String(accessTokenData), deviceId);
         } catch (HttpClientErrorException.Unauthorized |
                 HttpClientErrorException.Forbidden |
                 ru.yofik.athena.messenger.api.exception.AuthenticationException |

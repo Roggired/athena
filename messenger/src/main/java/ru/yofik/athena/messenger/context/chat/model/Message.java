@@ -16,7 +16,9 @@ public class Message {
     private final long senderId;
     private final long chatId;
     // UTC
-    private final LocalDateTime date;
+    private final LocalDateTime creationDate;
+    // UTC
+    private final LocalDateTime modificationDate;
 
 
     public MessageView toView() {
@@ -25,7 +27,8 @@ public class Message {
                 text,
                 senderId,
                 chatId,
-                date.toString()
+                creationDate.toString(),
+                modificationDate.toString()
         );
     }
 }

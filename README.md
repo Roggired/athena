@@ -1,6 +1,15 @@
-## Messenger v.0.1.3
+## Messenger v.0.1.4
 
 ## Version Notes
+v.0.1.4 **ATTENTION! v.0.1.4 IS NOT COMPATIBLE WITH v.0.1.3**:
+- **issue#14** Fix removing locks. Now when user is unlocked, the lock is removed
+- **issue#15** Fix device id. Now Messenger sends client device id instead of Apache HttpClient
+- **issue#19** Deleting several messages
+- **issue#20** Updating existed messages. New WebSocket notifications:
+    1. Changed format of notification AthenaWSMessage. See WS API section
+    2. When a user updates or deletes messages, a notification will be sent. See WS API section
+    3. Changed MessageView: date -> creationDate, add field modificationDate
+
 v.0.1.3
 - **issue#10** Fix invitation regeneration. Now amount of available usages on admin is correct.
 - **issue#11** For dev profile change generator of invitations. Now an invitation is a 3digits code.
@@ -151,11 +160,56 @@ Subscribe message:
 }
 ```
 
-Messenger service will send a message for each message to user this socket is associated to:
+### Notifications:
+
+**New message** - when any user sends a message 
 ```json
 {
   "command": "RECEIVE_NOTIFICATION",
-  "argument": "<MessageView as JSON here. See ru.yofik.athena.messenger.context.chat.view.MessageView> Example: {id:26,text:Hello, world!,senderId:14,chatId:19,date:2022-04-09T16:06:25.998397} "
+  "argument": {
+    "type": "NEW_MESSAGE",
+    "message": {
+      "id": 1,
+      "text": "Hi!",
+      "senderId": 14,
+      "chatId": 57,
+      "creationDate": "2022-05-03T11:45:31.836541",
+      "modificationDate": "2022-05-03T11:45:31.836541"
+    }
+  }
+}
+```
+
+**Updated message** - when any user updates a message 
+```json
+{
+  "command": "RECEIVE_NOTIFICATION",
+  "argument": {
+    "type": "UPDATED_MESSAGE",
+    "message": {
+      "id": 1,
+      "text": "Hi! :)",
+      "senderId": 14,
+      "chatId": 57,
+      "creationDate": "2022-05-03T11:45:31.836541",
+      "modificationDate": "2022-05-03T12:01:12.531241"
+    }
+  }
+}
+```
+
+**Deleted messages** - when any user deletes one or more messages
+```json
+{
+  "command": "RECEIVE_NOTIFICATION",
+  "argument": {
+    "type": "DELETED_MESSAGES",
+    "deletedMessages": [
+      1,
+      3,
+      4
+    ]
+  }
 }
 ```
 

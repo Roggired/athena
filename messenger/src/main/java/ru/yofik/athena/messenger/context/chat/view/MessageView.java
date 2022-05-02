@@ -8,5 +8,6 @@ public class MessageView {
     public final String text;
     public final long senderId;
     public final long chatId;
-    public final String date;
+    public final String creationDate;
+    public final String modificationDate;
 }

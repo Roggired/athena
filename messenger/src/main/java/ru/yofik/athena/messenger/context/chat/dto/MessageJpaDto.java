@@ -26,5 +26,8 @@ public class MessageJpaDto {
     private ChatJpaDto chat;
     // UTC
     @Column
-    private LocalDateTime date;
+    private LocalDateTime creationDate;
+    // UTC
+    @Column
+    private LocalDateTime modificationDate;
 }

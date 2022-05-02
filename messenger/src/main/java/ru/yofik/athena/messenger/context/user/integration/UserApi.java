@@ -8,8 +8,8 @@ import java.util.List;
 
 @Service
 public interface UserApi {
-    User authorizeUser(char[] accessToken, char[] clientToken);
-    NewAccessTokenResponse activateUser(String invitation, char[] clientToken);
+    User authorizeUser(char[] accessToken, char[] clientToken, String deviceId);
+    NewAccessTokenResponse activateUser(String invitation, char[] clientToken, String deviceId);
     List<User> getAllUsers(char[] clientToken);
     User getUser(long id, char[] clientToken);
     void iAmTeapot(char[] clientToken);

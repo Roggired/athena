@@ -33,14 +33,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AccessTokenView activate(ActivateUserRequest request) {
-        var response = userApi.activateUser(request.invitation, clientToken);
+    public AccessTokenView activate(ActivateUserRequest request, String deviceId) {
+        var response = userApi.activateUser(request.invitation, clientToken, deviceId);
         return new AccessToken(response.accessToken.toCharArray()).toView();
     }
 
     @Override
-    public UserView authorizeUser(String accessToken) {
-        return userApi.authorizeUser(accessToken.toCharArray(), clientToken).toView();
+    public UserView authorizeUser(String accessToken, String deviceId) {
+        return userApi.authorizeUser(accessToken.toCharArray(), clientToken, deviceId).toView();
     }
 
     @Override
