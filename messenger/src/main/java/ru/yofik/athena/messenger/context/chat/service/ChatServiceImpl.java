@@ -15,6 +15,7 @@ import ru.yofik.athena.messenger.context.chat.view.ChatFullView;
 import ru.yofik.athena.messenger.context.chat.view.ChatView;
 import ru.yofik.athena.messenger.context.user.integration.UserApi;
 import ru.yofik.athena.messenger.context.user.model.User;
+import ru.yofik.athena.messenger.infrastructure.service.AbstractService;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,9 +1,10 @@
-package ru.yofik.athena.messenger.context.chat.service;
+package ru.yofik.athena.messenger.infrastructure.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import ru.yofik.athena.messenger.api.security.JweAuthenticationToken;
 import ru.yofik.athena.messenger.context.user.model.User;
 
 import javax.annotation.PostConstruct;
@@ -33,5 +34,11 @@ public abstract class AbstractService {
         }
 
         return (User) authentication.getDetails();
+    }
+
+    protected char[] getAccessToken() {
+        var securityContext = SecurityContextHolder.getContext();
+        var jweAuthentication = (JweAuthenticationToken) securityContext.getAuthentication();
+        return jweAuthentication.getAccessToken();
     }
 }

@@ -57,7 +57,7 @@ public final class AthenaSecurityAuthenticationProvider implements Authenticatio
 
         var user = new User(userView.id, userView.name, userView.login);
         jweAuthenticationToken.setAuthenticated(true);
-        jweAuthenticationToken.eraseToken();
+//        jweAuthenticationToken.eraseToken();
         jweAuthenticationToken.setUser(user);
         jweAuthenticationToken.addAll(Collections.singleton(Authorities.FULL_AUTHORITY));
         return jweAuthenticationToken;

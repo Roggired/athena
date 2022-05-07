@@ -13,4 +13,5 @@ public interface UserApi {
     List<User> getAllUsers(char[] clientToken);
     User getUser(long id, char[] clientToken);
     void iAmTeapot(char[] clientToken);
+    User updateUser(char[] accessToken, char[] clientToken, User user);
 }

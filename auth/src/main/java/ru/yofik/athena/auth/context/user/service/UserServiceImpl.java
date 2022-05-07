@@ -7,10 +7,7 @@ import ru.yofik.athena.auth.api.exception.InvalidDataException;
 import ru.yofik.athena.auth.api.exception.ResourceAlreadyExistsException;
 import ru.yofik.athena.auth.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.auth.api.exception.UnauthenticatedException;
-import ru.yofik.athena.auth.context.user.api.request.ActivateUserRequest;
-import ru.yofik.athena.auth.context.user.api.request.AuthorizeUserRequest;
-import ru.yofik.athena.auth.context.user.api.request.CreateInvitationRequest;
-import ru.yofik.athena.auth.context.user.api.request.CreateUserRequest;
+import ru.yofik.athena.auth.context.user.api.request.*;
 import ru.yofik.athena.auth.context.user.factory.InvitationFactory;
 import ru.yofik.athena.auth.context.user.factory.LockFactory;
 import ru.yofik.athena.auth.context.user.factory.UserFactory;
@@ -174,6 +171,21 @@ public class UserServiceImpl implements UserService {
         }
 
         return dbUser.toClientView();
+    }
+
+    @Override
+    public UserView updateUser(long id, UpdateUserRequest request) {
+        var user = getUserById(id);
+        var userWithSuchLogin = userRepository.findByLogin(request.login);
+        if (userWithSuchLogin.isPresent()) {
+            log.warn(() -> "User with login: " + request.login + " already exists");
+            throw new InvalidDataException("User with such login already exists");
+        }
+
+        user.setLogin(request.login);
+        user.setName(request.name);
+        user = userFactory.from(userRepository.save(userFactory.toUserJpaDto(user)));
+        return user.toView();
     }
 
     private User getUserById(long id) {

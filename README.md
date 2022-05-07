@@ -1,6 +1,9 @@
 ## Messenger v.0.1.4
 
 ## Version Notes
+in progress (v.0.1.5):
+- **issue#22** Feature update user
+
 v.0.1.4 **ATTENTION! v.0.1.4 IS NOT COMPATIBLE WITH v.0.1.3**:
 - **issue#14** Fix removing locks. Now when user is unlocked, the lock is removed
 - **issue#15** Fix device id. Now Messenger sends client device id instead of Apache HttpClient

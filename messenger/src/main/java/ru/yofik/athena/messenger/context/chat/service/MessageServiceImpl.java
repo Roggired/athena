@@ -15,6 +15,7 @@ import ru.yofik.athena.messenger.context.chat.factory.NotificationFactory;
 import ru.yofik.athena.messenger.context.chat.model.Chat;
 import ru.yofik.athena.messenger.context.chat.model.Message;
 import ru.yofik.athena.messenger.context.chat.repository.MessageRepository;
+import ru.yofik.athena.messenger.infrastructure.service.AbstractService;
 import ru.yofik.athena.messenger.infrastructure.wsApi.*;
 
 import java.time.Instant;
