@@ -1,11 +1,9 @@
-## Messenger v.0.1.4
+## Messenger v.0.1.5
 
 ## Version Notes
-in progress (v.0.2.0):
-- **issue#17** Global and local messages deletion
-
-in progress (v.0.1.5):
+v.0.1.5:
 - **issue#22** Feature update user
+- **issue#17** Global and local messages deletion. Deletion endpoints have been changed
 
 v.0.1.4 **ATTENTION! v.0.1.4 IS NOT COMPATIBLE WITH v.0.1.3**:
 - **issue#14** Fix removing locks. Now when user is unlocked, the lock is removed
