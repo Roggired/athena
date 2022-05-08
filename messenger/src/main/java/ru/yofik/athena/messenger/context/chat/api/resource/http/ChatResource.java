@@ -99,9 +99,10 @@ public class ChatResource {
     @DeleteMapping("/{id}/messages")
     public MessengerV1Response deleteMessages(
             @PathVariable("id") long chatId,
-            @RequestBody @Valid DeleteMessagesRequest request
+            @RequestBody @Valid DeleteMessagesRequest request,
+            @RequestParam("global") boolean isGlobal
     ) {
-        messageService.deleteMessages(chatId, request);
+        messageService.deleteMessages(chatId, request, isGlobal);
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_DELETED,
                 "Messages has been deleted"
@@ -111,9 +112,10 @@ public class ChatResource {
     @DeleteMapping("/{chatId}/messages/{messageId}")
     public MessengerV1Response deleteMessage(
             @PathVariable("chatId") long chatId,
-            @PathVariable("messageId") long messageId
+            @PathVariable("messageId") long messageId,
+            @RequestParam("global") boolean isGlobal
     ) {
-        messageService.deleteMessage(chatId, messageId);
+        messageService.deleteMessage(chatId, messageId, isGlobal);
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_DELETED,
                 "Message has been deleted"

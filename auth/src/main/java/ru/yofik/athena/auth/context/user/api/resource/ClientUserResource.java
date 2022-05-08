@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.yofik.athena.auth.context.user.api.request.ActivateUserRequest;
 import ru.yofik.athena.auth.context.user.api.request.AuthorizeUserRequest;
+import ru.yofik.athena.auth.context.user.api.request.UpdateUserRequest;
 import ru.yofik.athena.auth.context.user.service.UserService;
 import ru.yofik.athena.auth.context.user.view.ClientUserView;
 import ru.yofik.athena.auth.infrastructure.response.AuthV1Response;
@@ -54,6 +55,17 @@ public class ClientUserResource {
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_RETURNED,
                 clientUserView
+        );
+    }
+
+    @PutMapping("/{id}")
+    public AuthV1Response updateUser(
+            @PathVariable("id") long id,
+            @RequestBody @Valid UpdateUserRequest request
+    ) {
+        return AuthV1Response.of(
+                AuthV1ResponseStatus.RESOURCE_UPDATED,
+                userService.updateUser(id, request)
         );
     }
 }

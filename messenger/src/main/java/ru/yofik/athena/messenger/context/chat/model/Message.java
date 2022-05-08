@@ -4,6 +4,7 @@ import lombok.*;
 import ru.yofik.athena.messenger.context.chat.view.MessageView;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @AllArgsConstructor
 @Getter
@@ -19,6 +20,8 @@ public class Message {
     private final LocalDateTime creationDate;
     // UTC
     private final LocalDateTime modificationDate;
+
+    private final List<Long> owningUserIds;
 
 
     public MessageView toView() {

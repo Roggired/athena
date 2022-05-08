@@ -1,6 +1,7 @@
 package ru.yofik.athena.auth.context.user.model;
 
 import lombok.*;
+import org.springframework.stereotype.Service;
 import ru.yofik.athena.auth.context.user.view.ClientUserView;
 import ru.yofik.athena.auth.context.user.view.UserShortView;
 import ru.yofik.athena.auth.context.user.view.UserView;
@@ -18,7 +19,8 @@ public class User {
     @Setter
     private String name;
     @Getter
-    private final String login;
+    @Setter
+    private String login;
     @Getter
     private Lock lock;
     @Getter

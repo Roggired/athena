@@ -45,6 +45,13 @@ public class Chat {
         users.remove(user);
     }
 
+    public void hideMessagesForUser(User user) {
+        var messagesToDelete = messages.stream()
+                .filter(message -> !message.getOwningUserIds().contains(user.getId()))
+                .collect(Collectors.toList());
+        messages.removeAll(messagesToDelete);
+    }
+
     public ChatView toView() {
         return new ChatView(
                 id,

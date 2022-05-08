@@ -12,7 +12,7 @@ public class User {
     @EqualsAndHashCode.Include
     private final long id;
     private String name;
-    private final String login;
+    private String login;
 
 
     public UserView toView() {

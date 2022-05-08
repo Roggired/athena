@@ -1,10 +1,7 @@
 package ru.yofik.athena.auth.context.user.service;
 
 import org.springframework.stereotype.Service;
-import ru.yofik.athena.auth.context.user.api.request.ActivateUserRequest;
-import ru.yofik.athena.auth.context.user.api.request.AuthorizeUserRequest;
-import ru.yofik.athena.auth.context.user.api.request.CreateInvitationRequest;
-import ru.yofik.athena.auth.context.user.api.request.CreateUserRequest;
+import ru.yofik.athena.auth.context.user.api.request.*;
 import ru.yofik.athena.auth.context.user.model.LockReason;
 import ru.yofik.athena.auth.context.user.view.*;
 
@@ -21,4 +18,5 @@ public interface UserService {
     InvitationView createInvitation(CreateInvitationRequest request);
     void delete(long id);
     ClientUserView authorize(AuthorizeUserRequest request, String deviceId);
+    UserView updateUser(long id, UpdateUserRequest request);
 }

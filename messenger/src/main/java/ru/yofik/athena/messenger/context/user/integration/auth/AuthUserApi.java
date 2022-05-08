@@ -125,6 +125,25 @@ public class AuthUserApi extends AbstractRestTemplateApi implements UserApi {
         }
     }
 
+    @Override
+    public User updateUser(char[] accessToken, char[] clientToken, User user) {
+        var response = executeRestTemplate(
+                createURI("/api/v1/users/" + user.getId()),
+                HttpMethod.PUT,
+                clientToken,
+                messengerUserAgent,
+                user
+        );
+        var authV1Response = getAuthV1Response(response);
+
+        if (!AuthV1ResponseParser.isStatus(authV1Response, AuthV1ResponseStatus.RESOURCE_UPDATED)) {
+            log.warn(() -> "Can't update user with id: " + user.getId());
+            throw new RuntimeException("Can't update user");
+        }
+
+        return AuthV1ResponseParser.parsePayload(authV1Response, User.class);
+    }
+
     private AuthV1Response getAuthV1Response(ResponseEntity<String> response) {
         if (response.getBody() != null) {
             var authV1Response = AuthV1ResponseParser.fromJson(response.getBody());
