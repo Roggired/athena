@@ -9,17 +9,23 @@ import ru.yofik.athena.messenger.context.user.model.User;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.stream.Collectors;
 
 @Component
 public class MessageFactory {
     public Message create(String text, User sender, Chat chat) {
+        var creationDate = Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime();
         return new Message(
                 0,
                 text,
                 sender.getId(),
                 chat.getId(),
-                Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime(),
-                Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime()
+                creationDate,
+                creationDate,
+                chat.getUsers()
+                        .stream()
+                        .map(User::getId)
+                        .collect(Collectors.toList())
         );
     }
 
@@ -30,7 +36,8 @@ public class MessageFactory {
                 messageJpaDto.getSenderId(),
                 messageJpaDto.getChat().getId(),
                 messageJpaDto.getCreationDate(),
-                messageJpaDto.getModificationDate()
+                messageJpaDto.getModificationDate(),
+                messageJpaDto.getOwningUserIds()
         );
     }
 
@@ -41,7 +48,8 @@ public class MessageFactory {
                 message.getSenderId(),
                 chatJpaDto,
                 message.getCreationDate().atZone(ZoneId.of("UTC")).toLocalDateTime(),
-                message.getModificationDate().atZone(ZoneId.of("UTC")).toLocalDateTime()
+                message.getModificationDate().atZone(ZoneId.of("UTC")).toLocalDateTime(),
+                message.getOwningUserIds()
         );
     }
 }

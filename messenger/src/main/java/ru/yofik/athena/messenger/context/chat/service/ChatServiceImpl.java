@@ -71,7 +71,10 @@ public class ChatServiceImpl extends AbstractService implements ChatService {
 
     @Override
     public ChatFullView getFull(long id) {
-        return getChat(id).toFullView();
+        var chatJpaDto = getChatJpaDto(id);
+        var chat = chatFactory.from(chatJpaDto, clientToken);
+        chat.hideMessagesForUser(getCurrentUser());
+        return chat.toFullView();
     }
 
     @Override
@@ -81,13 +84,9 @@ public class ChatServiceImpl extends AbstractService implements ChatService {
                 .stream()
                 .filter(el -> el.getUserIds().contains(user.getId()))
                 .map(el -> chatFactory.from(el, clientToken))
+                .peek(el -> el.hideMessagesForUser(user))
                 .map(Chat::toView)
                 .collect(Collectors.toList());
-    }
-
-    private Chat getChat(long id) {
-        var chatJpaDto = getChatJpaDto(id);
-        return chatFactory.from(chatJpaDto, clientToken);
     }
 
     private Chat getChatWithoutMessages(long id) {

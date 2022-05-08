@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public interface MessageService {
     void sendMessage(SendMessageRequest request);
-    void deleteMessage(long chatId, long messageId);
-    void deleteMessages(long chatId, DeleteMessagesRequest request);
+    void deleteMessage(long chatId, long messageId, boolean isGlobal);
+    void deleteMessages(long chatId, DeleteMessagesRequest request, boolean isGlobal);
     void updateMessage(long chatId, long messageId, UpdateMessageRequest request);
 }

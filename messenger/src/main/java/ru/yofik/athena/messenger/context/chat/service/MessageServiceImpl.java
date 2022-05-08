@@ -2,6 +2,7 @@ package ru.yofik.athena.messenger.context.chat.service;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.RequestScope;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
@@ -15,6 +16,7 @@ import ru.yofik.athena.messenger.context.chat.factory.NotificationFactory;
 import ru.yofik.athena.messenger.context.chat.model.Chat;
 import ru.yofik.athena.messenger.context.chat.model.Message;
 import ru.yofik.athena.messenger.context.chat.repository.MessageRepository;
+import ru.yofik.athena.messenger.context.user.model.User;
 import ru.yofik.athena.messenger.infrastructure.service.AbstractService;
 import ru.yofik.athena.messenger.infrastructure.wsApi.*;
 
@@ -51,6 +53,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     }
 
     @Override
+    @Transactional(
+            isolation = Isolation.REPEATABLE_READ
+    )
     public void sendMessage(SendMessageRequest request) {
         var user = getCurrentUser();
         var chat = chatService.getWithoutMessages(request.chatId);
@@ -64,32 +69,76 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
                 )
         );
         var athenaWSMessage = notificationFactory.newMessage(messageFactory.from(messageJpaDto));
-        sendAthenaWSNotificationMessage(athenaWSMessage, chat);
+        sendAthenaWSNotificationMessage(athenaWSMessage, chat.getUsers());
     }
 
     @Override
-    public void deleteMessage(long chatId, long messageId) {
+    @Transactional(
+            isolation = Isolation.REPEATABLE_READ
+    )
+    public void deleteMessage(long chatId, long messageId, boolean isGlobal) {
         var chat = chatService.getWithoutMessages(chatId);
         var message = getMessage(messageId);
-        messageRepository.deleteById(message.getId());
-        var athenaWSMessage = notificationFactory.deletedMessages(List.of(messageId));
-        sendAthenaWSNotificationMessage(athenaWSMessage, chat);
+
+        if (isGlobal) {
+            messageRepository.deleteById(message.getId());
+
+            var athenaWSMessage = notificationFactory.deletedMessages(List.of(messageId));
+            sendAthenaWSNotificationMessage(athenaWSMessage, chat.getUsers());
+        } else {
+            var targetUser = getCurrentUser();
+            message.getOwningUserIds().remove(targetUser.getId());
+            messageRepository.save(
+                    messageFactory.to(
+                            message,
+                            chatFactory.to(
+                                    chat
+                            )
+                    )
+            );
+
+            deleteMessageIfNoAssociatedUser(message);
+
+            var athenaWSMessage = notificationFactory.deletedMessages(List.of(messageId));
+            sendAthenaWSNotificationMessage(athenaWSMessage, List.of(targetUser));
+        }
     }
 
     @Override
-    public void deleteMessages(long chatId, DeleteMessagesRequest request) {
+    @Transactional(
+            isolation = Isolation.REPEATABLE_READ
+    )
+    public void deleteMessages(long chatId, DeleteMessagesRequest request, boolean isGlobal) {
         var chat = chatService.getWithoutMessages(chatId);
         var messages = messageRepository.findAllById(request.ids);
         var messagesToDeleteIds = messages.stream()
                 .map(MessageJpaDto::getId)
                 .collect(Collectors.toList());
-        messageRepository.deleteAllById(messagesToDeleteIds);
-        var athenaWSMessage = notificationFactory.deletedMessages(messagesToDeleteIds);
-        sendAthenaWSNotificationMessage(athenaWSMessage, chat);
+
+        if (isGlobal) {
+            messageRepository.deleteAllById(messagesToDeleteIds);
+
+            var athenaWSMessage = notificationFactory.deletedMessages(messagesToDeleteIds);
+            sendAthenaWSNotificationMessage(athenaWSMessage, chat.getUsers());
+        } else {
+            var targetUser = getCurrentUser();
+            messages.forEach(message -> message.getOwningUserIds().remove(targetUser.getId()));
+            messageRepository.saveAll(messages);
+
+            messages.forEach(messageJpaDto -> {
+                var message = messageFactory.from(messageJpaDto);
+                deleteMessageIfNoAssociatedUser(message);
+            });
+
+            var athenaWSMessage = notificationFactory.deletedMessages(messagesToDeleteIds);
+            sendAthenaWSNotificationMessage(athenaWSMessage, List.of(targetUser));
+        }
     }
 
     @Override
-    @Transactional
+    @Transactional(
+            isolation = Isolation.REPEATABLE_READ
+    )
     public void updateMessage(long chatId, long messageId, UpdateMessageRequest request) {
         var message = messageFactory.from(
                 messageRepository.findById(messageId)
@@ -104,7 +153,8 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
                 message.getSenderId(),
                 message.getChatId(),
                 message.getCreationDate(),
-                Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime()
+                Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime(),
+                message.getOwningUserIds()
         );
 
         messageRepository.save(
@@ -117,9 +167,14 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         );
 
         var athenaWSMessage = notificationFactory.updatedMessage(updatedMessage);
-        sendAthenaWSNotificationMessage(athenaWSMessage, chat);
+        sendAthenaWSNotificationMessage(athenaWSMessage, chat.getUsers());
     }
 
+    private void deleteMessageIfNoAssociatedUser(Message message) {
+        if (message.getOwningUserIds().isEmpty()) {
+            messageRepository.deleteById(message.getId());
+        }
+    }
     private Message getMessage(long id) {
         return messageFactory.from(
                 messageRepository.findById(id)
@@ -129,9 +184,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
 
     private void sendAthenaWSNotificationMessage(
             AthenaWSMessage athenaWSMessage,
-            Chat chat
+            List<User> targetUsers
     ) {
-        for (var targetUser : chat.getUsers()) {
+        for (var targetUser : targetUsers) {
             webSocketSessionBroker.sendToSession(
                     new NotificationSubscriptionKey(targetUser.getId()),
                     WebSocketSubscriptionType.NOTIFICATION,

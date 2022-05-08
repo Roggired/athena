@@ -1,6 +1,9 @@
 ## Messenger v.0.1.4
 
 ## Version Notes
+in progress (v.0.2.0):
+- **issue#17** Global and local messages deletion
+
 in progress (v.0.1.5):
 - **issue#22** Feature update user
 

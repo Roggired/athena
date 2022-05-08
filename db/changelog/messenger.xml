@@ -8,4 +8,5 @@
     <include file="db/changelog/sql/ATHENA-3-authorize-user.sql"/>
     <include file="db/changelog/sql/ATHENA-5-simple-chat.sql"/>
     <include file="db/changelog/sql/ATHENA-20-modification-date-for-messages.sql"/>
+    <include file="db/changelog/sql/ATHENA-17-message-history.sql"/>
 </databaseChangeLog>
