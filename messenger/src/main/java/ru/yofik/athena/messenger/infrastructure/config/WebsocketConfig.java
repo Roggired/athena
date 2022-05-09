@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-import ru.yofik.athena.messenger.context.chat.api.resource.websocket.NotificationResource;
+import ru.yofik.athena.messenger.api.ws.notification.NotificationResource;
 
 @Configuration
 @EnableWebSocket
