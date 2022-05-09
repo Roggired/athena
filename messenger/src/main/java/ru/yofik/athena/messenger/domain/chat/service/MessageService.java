@@ -8,7 +8,6 @@ import ru.yofik.athena.messenger.api.http.chat.request.UpdateMessageRequest;
 @Service
 public interface MessageService {
     void sendMessage(SendMessageRequest request);
-    void deleteMessage(long chatId, long messageId, boolean isGlobal);
     void deleteMessages(long chatId, DeleteMessagesRequest request, boolean isGlobal);
     void updateMessage(long chatId, long messageId, UpdateMessageRequest request);
 }

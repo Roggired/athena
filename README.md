@@ -5,6 +5,7 @@ in progress (v.0.1.6):
 - Architecture refactoring
 - WS API improvements. Now WS API can be used for any type of notifications
 - Fix possible global message deletion after local one
+- **issue#26** User should be able to globally delete only their own messages
 
 v.0.1.5:
 - **issue#22** Feature update user

@@ -7,8 +7,6 @@ import ru.yofik.athena.messenger.api.ws.notification.view.NotificationView;
 import ru.yofik.athena.messenger.domain.notification.model.NewMessageNotification;
 import ru.yofik.athena.messenger.infrastructure.config.ConversionServiceConfig;
 
-import java.util.List;
-
 @Component
 public class NewNotificationViewMapper implements ConversionServiceConfig.Mapper<NewMessageNotification, NotificationView<MessageView>> {
     @Override

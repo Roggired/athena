@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.RequestScope;
+import ru.yofik.athena.messenger.api.exception.InvalidDataException;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.messenger.api.http.chat.request.DeleteMessagesRequest;
 import ru.yofik.athena.messenger.api.http.chat.request.SendMessageRequest;
@@ -67,38 +68,70 @@ public class MessageServiceImpl implements MessageService {
     @Transactional(
             isolation = Isolation.REPEATABLE_READ
     )
-    public void deleteMessage(long chatId, long messageId, boolean isGlobal) {
+    public void deleteMessages(long chatId, DeleteMessagesRequest request, boolean isGlobal) {
         var chat = chatService.getWithoutMessages(chatId);
-        var message = messageRepository.getById(messageId);
         var currentUser = userService.getCurrentUser();
+        var messages = messageRepository.getAllById(request.ids)
+                .stream()
+                .filter(message -> {
+                    if (message.getOwningUserIds().contains(currentUser.getId())) {
+                        return true;
+                    }
 
-        if (!message.getOwningUserIds().contains(currentUser.getId())) {
-            throw new ResourceNotFoundException();
+                    throw new ResourceNotFoundException();
+                })
+                .collect(Collectors.toList());
+
+        if (messages.isEmpty()) {
+            return;
         }
 
         Notification notification;
 
         if (isGlobal) {
-            messageRepository.deleteById(message.getId());
+            var deleteMessagesIds = deleteGlobally(messages, currentUser);
 
             notification = new DeletedMessagesNotification(
                     getUserIdsToBeNotified(chat),
-                    List.of(messageId)
+                    deleteMessagesIds
             );
         } else {
-            var targetUser = userService.getCurrentUser();
-            message.getOwningUserIds().remove(targetUser.getId());
-            messageRepository.save(message);
-
-            deleteMessageIfNoAssociatedUser(message);
+            var deleteMessagesIds = deleteLocally(messages, currentUser);
 
             notification = new DeletedMessagesNotification(
-                    List.of(targetUser.getId()),
-                    List.of(messageId)
+                    List.of(currentUser.getId()),
+                    deleteMessagesIds
             );
         }
 
         notificationService.sendNotification(notification);
+    }
+
+
+    private List<Long> deleteGlobally(List<Message> messages, User currentUser) {
+        var messageIdsToDelete = messages.stream()
+                .filter(message -> {
+                    if (message.getSenderId() == currentUser.getId()) {
+                        return true;
+                    }
+
+                    throw new InvalidDataException("You can't globally delete a message which you haven't sent");
+                })
+                .map(Message::getId)
+                .collect(Collectors.toList());
+        messageRepository.deleteAllById(messageIdsToDelete);
+        return messageIdsToDelete;
+    }
+
+    private List<Long> deleteLocally(List<Message> messages, User currentUser) {
+        messages.forEach(message -> message.getOwningUserIds().remove(currentUser.getId()));
+        messageRepository.saveAll(messages);
+
+        deleteMessageIfNoAssociatedUser(messages);
+
+        return messages.stream()
+                .map(Message::getId)
+                .collect(Collectors.toList());
     }
 
     private List<Long> getUserIdsToBeNotified(Chat chat) {
@@ -106,48 +139,6 @@ public class MessageServiceImpl implements MessageService {
                 .stream()
                 .map(User::getId)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    @Transactional(
-            isolation = Isolation.REPEATABLE_READ
-    )
-    public void deleteMessages(long chatId, DeleteMessagesRequest request, boolean isGlobal) {
-        var chat = chatService.getWithoutMessages(chatId);
-        var messages = messageRepository.getAllById(request.ids);
-        var currentUser = userService.getCurrentUser();
-        var messagesToDeleteIds = messages.stream()
-                .filter(message -> message.getOwningUserIds().contains(currentUser.getId()))
-                .map(Message::getId)
-                .collect(Collectors.toList());
-
-        if (messagesToDeleteIds.isEmpty()) {
-            return;
-        }
-
-        Notification notification;
-
-        if (isGlobal) {
-            messageRepository.deleteAllById(messagesToDeleteIds);
-
-            notification = new DeletedMessagesNotification(
-                    getUserIdsToBeNotified(chat),
-                    messagesToDeleteIds
-            );
-        } else {
-            var targetUser = userService.getCurrentUser();
-            messages.forEach(message -> message.getOwningUserIds().remove(targetUser.getId()));
-            messageRepository.saveAll(messages);
-
-            deleteMessageIfNoAssociatedUser(messages);
-
-            notification = new DeletedMessagesNotification(
-                    List.of(targetUser.getId()),
-                    messagesToDeleteIds
-            );
-        }
-
-        notificationService.sendNotification(notification);
     }
 
     @Override
@@ -176,12 +167,6 @@ public class MessageServiceImpl implements MessageService {
                         updatedMessage
                 )
         );
-    }
-
-    private void deleteMessageIfNoAssociatedUser(Message message) {
-        if (message.getOwningUserIds().isEmpty()) {
-            messageRepository.deleteById(message.getId());
-        }
     }
 
     private void deleteMessageIfNoAssociatedUser(List<Message> messages) {

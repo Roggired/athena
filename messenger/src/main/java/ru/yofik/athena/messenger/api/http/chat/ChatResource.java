@@ -15,6 +15,7 @@ import ru.yofik.athena.messenger.domain.chat.service.ChatService;
 import ru.yofik.athena.messenger.domain.chat.service.MessageService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
@@ -130,7 +131,13 @@ public class ChatResource {
             @PathVariable("messageId") long messageId,
             @RequestParam("global") boolean isGlobal
     ) {
-        messageService.deleteMessage(chatId, messageId, isGlobal);
+        var deleteMessagesRequest = new DeleteMessagesRequest();
+        deleteMessagesRequest.ids = List.of(messageId);
+        messageService.deleteMessages(
+                chatId,
+                deleteMessagesRequest,
+                isGlobal
+        );
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_DELETED,
                 "Message has been deleted"
