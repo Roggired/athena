@@ -67,4 +67,14 @@ public class Chat {
         }
         return this;
     }
+
+    public Chat chooseChatNameFor(User userFor) {
+        var otherUser = users
+                .stream()
+                .filter(user -> !user.equals(userFor))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+        this.name = otherUser.getName();
+        return this;
+    }
 }

@@ -55,22 +55,28 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Chat getWithoutMessages(long id) {
-        return chatRepository.getWithoutMessagesById(id);
+        return chatRepository.getWithoutMessagesById(id)
+                .chooseChatNameFor(userService.getCurrentUser());
     }
 
     @Override
     public Chat getFull(long id) {
+        var currentUser = userService.getCurrentUser();
         return chatRepository.getById(id)
-                .hideMessagesForUser(userService.getCurrentUser())
-                .sortMessages();
+                .hideMessagesForUser(currentUser)
+                .sortMessages()
+                .chooseChatNameFor(currentUser);
     }
 
     @Override
     public List<Chat> getAllForCurrentUser() {
-        var user = userService.getCurrentUser();
+        var currentUser = userService.getCurrentUser();
         return chatRepository.getAll()
                 .stream()
-                .peek(chat -> chat.hideMessagesForUser(user).onlyLastMessage())
+                .peek(chat -> chat.hideMessagesForUser(currentUser)
+                        .onlyLastMessage()
+                        .chooseChatNameFor(currentUser)
+                )
                 .collect(Collectors.toList());
     }
 }
