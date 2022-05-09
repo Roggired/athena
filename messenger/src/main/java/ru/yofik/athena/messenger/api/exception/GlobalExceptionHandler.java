@@ -7,8 +7,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
-import ru.yofik.athena.messenger.infrastructure.response.MessengerV1Response;
-import ru.yofik.athena.messenger.infrastructure.response.MessengerV1ResponseStatus;
+import ru.yofik.athena.messenger.api.http.MessengerV1Response;
+import ru.yofik.athena.messenger.api.http.MessengerV1ResponseStatus;
 
 import java.io.IOException;
 import java.net.SocketException;

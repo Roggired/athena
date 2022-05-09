@@ -1,6 +1,11 @@
 ## Messenger v.0.1.5
 
 ## Version Notes
+in progress (v.0.1.6):
+- Architecture refactoring
+- WS API improvements. Now WS API can be used for any type of notifications
+- Fix possible global message deletion after local one
+
 v.0.1.5:
 - **issue#22** Feature update user
 - **issue#17** Global and local messages deletion. Deletion endpoints have been changed
@@ -172,7 +177,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "NEW_MESSAGE",
-    "message": {
+    "payload": {
       "id": 1,
       "text": "Hi!",
       "senderId": 14,
@@ -190,7 +195,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "UPDATED_MESSAGE",
-    "message": {
+    "payload": {
       "id": 1,
       "text": "Hi! :)",
       "senderId": 14,
@@ -208,7 +213,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "DELETED_MESSAGES",
-    "deletedMessages": [
+    "payload": [
       1,
       3,
       4
