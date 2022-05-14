@@ -3,14 +3,15 @@ package ru.yofik.athena.messenger.api.http.chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.web.bind.annotation.*;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.http.MessengerV1Response;
 import ru.yofik.athena.messenger.api.http.MessengerV1ResponseStatus;
 import ru.yofik.athena.messenger.api.http.chat.request.CreateChatRequest;
 import ru.yofik.athena.messenger.api.http.chat.request.DeleteMessagesRequest;
 import ru.yofik.athena.messenger.api.http.chat.request.SendMessageRequest;
 import ru.yofik.athena.messenger.api.http.chat.request.UpdateMessageRequest;
-import ru.yofik.athena.messenger.api.http.chat.view.ChatFullView;
 import ru.yofik.athena.messenger.api.http.chat.view.ChatView;
+import ru.yofik.athena.messenger.api.http.chat.view.MessageView;
 import ru.yofik.athena.messenger.domain.chat.service.ChatService;
 import ru.yofik.athena.messenger.domain.chat.service.MessageService;
 
@@ -29,10 +30,12 @@ public class ChatResource {
     private MessageService messageService;
 
     @GetMapping
-    public MessengerV1Response getAllChatsForCurrentUser() {
+    public MessengerV1Response getPageOfChatsForCurrentUser(
+            @Valid Page.Meta pageMeta
+    ) {
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_RETURNED,
-                chatService.getAllForCurrentUser()
+                chatService.getPageForCurrentUser(pageMeta)
                         .stream()
                         .map(chat -> conversionService.convert(chat, ChatView.class))
                         .collect(Collectors.toList())
@@ -46,22 +49,25 @@ public class ChatResource {
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_RETURNED,
                 conversionService.convert(
-                        chatService.getWithoutMessages(id),
+                        chatService.getById(id),
                         ChatView.class
                 )
         );
     }
 
-    @GetMapping("/{id}/fullView")
-    public MessengerV1Response getFullChat(
-            @PathVariable("id") long id
+    @GetMapping("/{id}/messages")
+    public MessengerV1Response getPageOfChatMessages(
+            @PathVariable("id") long chatId,
+            @Valid Page.Meta pageMeta
     ) {
+        var chat = chatService.getById(chatId);
+        var page = messageService.getPageFor(chat, pageMeta);
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_RETURNED,
-                conversionService.convert(
-                        chatService.getFull(id),
-                        ChatFullView.class
-                )
+                page.map(message -> conversionService.convert(
+                        message,
+                        MessageView.class
+                ))
         );
     }
 

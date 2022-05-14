@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import ru.yofik.athena.common.AuthV1Response;
 import ru.yofik.athena.common.AuthV1ResponseParser;
 import ru.yofik.athena.common.AuthV1ResponseStatus;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.exception.AuthenticationException;
 import ru.yofik.athena.messenger.api.exception.ForbiddenException;
 
@@ -36,5 +37,18 @@ public abstract class AthenaAbstractApi extends AbstractRestTemplateApi {
 
     protected URI createURI(String resource) {
         return URI.create(String.format("https://%s:%d/%s", authHost, authPort, resource));
+    }
+
+    protected URI createURI(String resource, Page.Meta pageMeta) {
+        return URI.create(
+                String.format(
+                        "https://%s:%d/%s?sequentialNumber=%d&size=%d",
+                        authHost,
+                        authPort,
+                        resource,
+                        pageMeta.getSequentialNumber(),
+                        pageMeta.getSize()
+                )
+        );
     }
 }

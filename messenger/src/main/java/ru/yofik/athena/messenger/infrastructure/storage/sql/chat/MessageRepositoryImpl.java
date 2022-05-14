@@ -1,6 +1,10 @@
 package ru.yofik.athena.messenger.infrastructure.storage.sql.chat;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
 import ru.yofik.athena.messenger.domain.chat.repository.MessageRepository;
@@ -30,7 +34,6 @@ public class MessageRepositoryImpl implements MessageRepository {
 
     @Override
     public Message save(Message message) {
-        // TODO fix inefficient call
         var chatEntity = crudChatRepository.findById(message.getChatId())
                 .orElseThrow(IllegalStateException::new);
         return messageFactory.fromEntity(
@@ -76,6 +79,12 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
+    @Transactional
+    public void deleteAllByChatId(long chatId) {
+        crudMessageRepository.deleteAllByChatId(chatId);
+    }
+
+    @Override
     public Message getById(long id) {
         return messageFactory.fromEntity(
                 crudMessageRepository.findById(id)
@@ -84,18 +93,31 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
-    public List<Message> getAll() {
-        return crudMessageRepository.findAll()
+    public List<Message> getAllById(List<Long> ids) {
+        return crudMessageRepository.findAllById(ids)
                 .stream()
                 .map(messageFactory::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<Message> getAllById(List<Long> ids) {
-        return crudMessageRepository.findAllById(ids)
-                .stream()
-                .map(messageFactory::fromEntity)
-                .collect(Collectors.toList());
+    public Page<Message> getPageByChatIdAndOwningUserId(Page.Meta pageMeta, long chatId, long userId) {
+        var pageable = PageRequest.of(
+                pageMeta.getSequentialNumber(),
+                pageMeta.getSize(),
+                Sort.by("creationDate").descending()
+        );
+        var springPage = crudMessageRepository.findAllByChatIdAndOwningUserIdsContains(
+                pageable,
+                chatId,
+                userId
+        ).map(messageFactory::fromEntity);
+        return new Page<>(
+                new Page.Meta(
+                        springPage.getPageable().getPageNumber(),
+                        springPage.getPageable().getPageSize()
+                ),
+                new ArrayList<>(springPage.getContent())
+        );
     }
 }

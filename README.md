@@ -1,6 +1,9 @@
 ## Messenger v.0.1.6
 
 ## Version Notes
+in progress (v.0.2.0):
+- **issue#21** Pagination for users, chats and messages in Messenger
+
 v.0.1.6:
 - Architecture refactoring
 - WS API improvements. Now WS API can be used for any type of notifications

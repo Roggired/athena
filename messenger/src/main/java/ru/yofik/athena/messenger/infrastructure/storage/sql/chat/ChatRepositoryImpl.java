@@ -1,6 +1,8 @@
 package ru.yofik.athena.messenger.infrastructure.storage.sql.chat;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.repository.ChatRepository;
@@ -21,13 +23,6 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
-    public Chat getWithoutMessagesById(long id) {
-        var chatEntity = crudChatRepository.findById(id)
-                .orElseThrow(ResourceNotFoundException::new);
-        return chatFactory.fromEntityWithoutMessages(chatEntity);
-    }
-
-    @Override
     public Chat getById(long id) {
         var chatEntity = crudChatRepository.findById(id)
                 .orElseThrow(ResourceNotFoundException::new);
@@ -37,7 +32,7 @@ public class ChatRepositoryImpl implements ChatRepository {
     @Override
     public Chat save(Chat chat) {
         var chatEntity = chatFactory.toEntity(chat);
-        return chatFactory.fromEntityWithoutMessages(crudChatRepository.save(chatEntity));
+        return chatFactory.fromEntity(crudChatRepository.save(chatEntity));
     }
 
     @Override
@@ -51,5 +46,25 @@ public class ChatRepositoryImpl implements ChatRepository {
                 .stream()
                 .map(chatFactory::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<Chat> getPage(Page.Meta pageMeta) {
+        var springPage = crudChatRepository.findAll(
+                PageRequest.of(
+                        pageMeta.getSequentialNumber(),
+                        pageMeta.getSize()
+                )
+        );
+        return new Page<>(
+                new Page.Meta(
+                        springPage.getPageable().getPageNumber(),
+                        springPage.getPageable().getPageSize()
+                ),
+                springPage.getContent()
+                        .stream()
+                        .map(chatFactory::fromEntity)
+                        .collect(Collectors.toList())
+        );
     }
 }

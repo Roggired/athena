@@ -30,5 +30,6 @@ jasypt:
 
 yofik:
   security:
+#    16 bytes
     jwe-key: ENC(AFU0CPRBYMRRmKZEVXylhi5prPEQO/ocPlzim0x8ZrA=)
     admin-password: ENC(JiDCOAk77HU4etGWYul/4g==)

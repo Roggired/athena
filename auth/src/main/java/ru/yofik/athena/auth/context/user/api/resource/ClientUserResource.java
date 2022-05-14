@@ -1,6 +1,7 @@
 package ru.yofik.athena.auth.context.user.api.resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.yofik.athena.auth.context.user.api.request.ActivateUserRequest;
 import ru.yofik.athena.auth.context.user.api.request.AuthorizeUserRequest;
@@ -9,6 +10,7 @@ import ru.yofik.athena.auth.context.user.service.UserService;
 import ru.yofik.athena.auth.context.user.view.ClientUserView;
 import ru.yofik.athena.auth.infrastructure.response.AuthV1Response;
 import ru.yofik.athena.auth.infrastructure.response.AuthV1ResponseStatus;
+import ru.yofik.athena.common.Page;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -29,6 +31,16 @@ public class ClientUserResource {
                         .stream()
                         .map(shortView -> new ClientUserView(shortView.id, shortView.name, shortView.login))
                         .collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping("/pages")
+    public AuthV1Response getPageOfUsers(
+            Page.Meta pageMeta
+    ) {
+        return AuthV1Response.of(
+                AuthV1ResponseStatus.RESOURCE_RETURNED,
+                userService.getPage(pageMeta)
         );
     }
 

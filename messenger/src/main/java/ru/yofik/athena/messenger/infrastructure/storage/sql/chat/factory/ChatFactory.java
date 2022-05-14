@@ -13,11 +13,9 @@ import java.util.stream.Collectors;
 @Component
 public class ChatFactory {
     private final UserService userService;
-    private final MessageFactory messageFactory;
 
-    public ChatFactory(UserService userService, MessageFactory messageFactory) {
+    public ChatFactory(UserService userService) {
         this.userService = userService;
-        this.messageFactory = messageFactory;
     }
 
     public Chat fromEntity(ChatEntity chatEntity) {
@@ -27,38 +25,18 @@ public class ChatFactory {
                 chatEntity.getUserIds()
                         .stream()
                         .map(userService::getUser)
-                        .collect(Collectors.toList()),
-                chatEntity.getMessages()
-                        .stream()
-                        .map(messageFactory::fromEntity)
                         .collect(Collectors.toList())
         );
     }
 
-    public Chat fromEntityWithoutMessages(ChatEntity chatEntity) {
-        return new Chat(
-                chatEntity.getId(),
-                chatEntity.getName(),
-                chatEntity.getUserIds()
-                        .stream()
-                        .map(userService::getUser)
-                        .collect(Collectors.toList()),
-                Collections.emptyList()
-        );
-    }
-
     public ChatEntity toEntity(Chat chat) {
-        var chatJpaDto = new ChatEntity(
+        return new ChatEntity(
                 chat.getId(),
                 chat.getName(),
                 chat.getUsers()
                         .stream()
                         .map(User::getId)
-                        .collect(Collectors.toList()),
-                new ArrayList<>()
+                        .collect(Collectors.toList())
         );
-        chat.getMessages()
-                .forEach(message -> chatJpaDto.getMessages().add(messageFactory.toEntity(message, chatJpaDto)));
-        return chatJpaDto;
     }
 }

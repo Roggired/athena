@@ -2,7 +2,10 @@ package ru.yofik.athena.messenger.api.exception;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -104,9 +107,26 @@ public class GlobalExceptionHandler {
                 .body(MessengerV1Response.of(MessengerV1ResponseStatus.INVALID_DATA, exception.getMessage()));
     }
 
+    @ExceptionHandler
+    public ResponseEntity<? extends MessengerV1Response> handleConversionFailed(ConversionFailedException exception) {
+        log.warn("", exception);
+        return ResponseEntity
+                .status(MessengerV1ResponseStatus.INVALID_DATA.getHttpStatusCode())
+                .body(MessengerV1Response.of(MessengerV1ResponseStatus.MISMATCHED_REQUEST, exception.getMessage()));
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<? extends MessengerV1Response> handleBindError(BindException exception) {
+        log.warn("", exception);
+        return ResponseEntity
+                .status(MessengerV1ResponseStatus.INVALID_DATA.getHttpStatusCode())
+                .body(MessengerV1Response.of(MessengerV1ResponseStatus.MISMATCHED_REQUEST, exception.getMessage()));
+    }
+
     @ExceptionHandler(value = {RuntimeException.class, NullPointerException.class, SocketException.class, IOException.class})
     public ResponseEntity<? extends MessengerV1Response> handleRuntimeException(Throwable exception) {
         log.warn("", exception);
+
         return ResponseEntity
                 .status(MessengerV1ResponseStatus.UNEXPECTED_ERROR.getHttpStatusCode())
                 .body(MessengerV1Response.of(MessengerV1ResponseStatus.UNEXPECTED_ERROR, exception.getMessage()));

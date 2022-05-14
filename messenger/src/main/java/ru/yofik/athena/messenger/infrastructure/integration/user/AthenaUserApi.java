@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.yofik.athena.common.AuthV1ResponseParser;
 import ru.yofik.athena.common.AuthV1ResponseStatus;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.repository.UserRepository;
 import ru.yofik.athena.messenger.infrastructure.integration.AthenaAbstractApi;
@@ -41,6 +42,26 @@ public class AthenaUserApi extends AthenaAbstractApi implements UserRepository {
 
         log.warn(() -> "Auth Service response: " + authV1Response);
         throw new RuntimeException("Can't get all users");
+    }
+
+    @Override
+    public Page<User> getPage(Page.Meta pageMeta) {
+        var clientCredentials = athenaCredentialsProvider.provideClientCredentials();
+        var response = executeRestTemplate(
+                createURI("/api/v1/users/pages", pageMeta),
+                HttpMethod.GET,
+                clientCredentials.clientToken,
+                clientCredentials.deviceId,
+                null
+        );
+        var authV1Response = getAuthV1Response(response);
+
+        if (AuthV1ResponseParser.isStatus(authV1Response, AuthV1ResponseStatus.RESOURCE_RETURNED)) {
+            return (Page<User>) AuthV1ResponseParser.parsePayload(authV1Response, new TypeToken<Page<User>>(){});
+        }
+
+        log.warn(() -> "Auth Service response: " + authV1Response);
+        throw new RuntimeException("Can't get page of users");
     }
 
     @Override

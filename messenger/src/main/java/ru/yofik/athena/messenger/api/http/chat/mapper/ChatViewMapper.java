@@ -20,10 +20,7 @@ public class ChatViewMapper implements ConversionServiceConfig.Mapper<Chat, Chat
                 chat.getUsers().stream()
                         .map(userViewMapper::convert)
                         .collect(Collectors.toList()),
-                chat.getMessages().stream()
-                        .map(messageViewMapper::convert)
-                        .findFirst()
-                        .orElse(null)
+                messageViewMapper.convert(chat.getLastMessage())
         );
     }
 }

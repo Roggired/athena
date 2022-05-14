@@ -3,13 +3,13 @@ package ru.yofik.athena.messenger.domain.chat.service;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.http.chat.request.CreateChatRequest;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.repository.ChatRepository;
 import ru.yofik.athena.messenger.domain.chat.repository.MessageRepository;
 import ru.yofik.athena.messenger.domain.user.service.UserService;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -19,16 +19,15 @@ import java.util.stream.Collectors;
 public class ChatServiceImpl implements ChatService {
     private final UserService userService;
     private final ChatRepository chatRepository;
-    private final MessageRepository messageRepository;
+    private final MessageService messageService;
 
     public ChatServiceImpl(
             UserService userService,
             ChatRepository chatRepository,
-            MessageRepository messageRepository
-    ) {
+            MessageService messageService) {
         this.userService = userService;
         this.chatRepository = chatRepository;
-        this.messageRepository = messageRepository;
+        this.messageService = messageService;
     }
 
     @Override
@@ -49,34 +48,25 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void delete(long id) {
         var chat = chatRepository.getById(id);
-        chat.getMessages().forEach(message -> messageRepository.deleteById(message.getId()));
+        messageService.deleteMessagesByChatId(chat.getId());
         chatRepository.delete(chat.getId());
     }
 
     @Override
-    public Chat getWithoutMessages(long id) {
-        return chatRepository.getWithoutMessagesById(id)
+    public Chat getById(long id) {
+        var chat = chatRepository.getById(id)
                 .chooseChatNameFor(userService.getCurrentUser());
+        chat.setLastMessage(messageService.getLastFor(chat));
+        return chat;
     }
 
     @Override
-    public Chat getFull(long id) {
-        var currentUser = userService.getCurrentUser();
-        return chatRepository.getById(id)
-                .hideMessagesForUser(currentUser)
-                .sortMessages()
-                .chooseChatNameFor(currentUser);
-    }
-
-    @Override
-    public List<Chat> getAllForCurrentUser() {
-        var currentUser = userService.getCurrentUser();
-        return chatRepository.getAll()
-                .stream()
-                .peek(chat -> chat.hideMessagesForUser(currentUser)
-                        .onlyLastMessage()
-                        .chooseChatNameFor(currentUser)
-                )
-                .collect(Collectors.toList());
+    public Page<Chat> getPageForCurrentUser(Page.Meta pageMeta) {
+        var page = chatRepository.getPage(pageMeta);
+        return page.map(chat -> {
+            chat.chooseChatNameFor(userService.getCurrentUser());
+            chat.setLastMessage(messageService.getLastFor(chat));
+            return chat;
+        });
     }
 }

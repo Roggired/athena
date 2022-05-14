@@ -23,8 +23,6 @@ public class UserResource {
     @Autowired
     private ConversionService conversionService;
     @Autowired
-    private UserService userService;
-    @Autowired
     private AthenaAuthApi athenaAuthApi;
 
 

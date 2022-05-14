@@ -28,11 +28,4 @@ public class ChatEntity {
     )
     @Column(name = "user_id")
     private List<Long> userIds;
-
-    @OneToMany(
-            mappedBy = "chat",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
-    )
-    private List<MessageEntity> messages;
 }

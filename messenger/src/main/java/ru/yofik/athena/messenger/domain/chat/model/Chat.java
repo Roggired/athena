@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.util.comparator.Comparators;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.domain.user.model.User;
 
 import java.util.ArrayList;
@@ -19,19 +20,19 @@ public class Chat {
     private final long id;
     private String name;
     private final List<User> users = new ArrayList<>();
-    private List<Message> messages = new ArrayList<>();
+    private Message lastMessage;
 
-
-    public Chat(long id, String name, List<User> users, List<Message> messages) {
+    public Chat(long id, String name, List<User> users) {
         this.id = id;
         this.name = name;
         this.users.addAll(users);
-        this.messages.addAll(messages);
+        this.lastMessage = null;
     }
 
     public Chat(String name) {
         this.id = 0;
         this.name = name;
+        this.lastMessage = null;
     }
     
     
@@ -43,30 +44,30 @@ public class Chat {
         users.remove(user);
     }
 
-    public Chat hideMessagesForUser(User user) {
-        messages = messages.stream()
-                .filter(message -> message.getOwningUserIds().contains(user.getId()))
-                .collect(Collectors.toList());
-        return this;
-    }
+//    public Chat hideMessagesForUser(User user) {
+//        messages = messages.stream()
+//                .filter(message -> message.getOwningUserIds().contains(user.getId()))
+//                .collect(Collectors.toList());
+//        return this;
+//    }
 
-    public Chat sortMessages() {
-        messages = messages.stream()
-                .sorted((a, b) -> Comparators.comparable().compare(a.getCreationDate(), b.getCreationDate()))
-                .collect(Collectors.toList());
-        return this;
-    }
+//    public Chat sortMessages() {
+//        messages = messages.stream()
+//                .sorted((a, b) -> Comparators.comparable().compare(a.getCreationDate(), b.getCreationDate()))
+//                .collect(Collectors.toList());
+//        return this;
+//    }
 
-    public Chat onlyLastMessage() {
-        var lastMessage = messages.stream()
-                .min((a, b) -> Comparators.comparable().compare(b.getCreationDate(), a.getCreationDate()))
-                .orElse(null);
-        messages.clear();
-        if (lastMessage != null) {
-            messages.add(lastMessage);
-        }
-        return this;
-    }
+//    public Chat onlyLastMessage() {
+//        var lastMessage = messages.stream()
+//                .min((a, b) -> Comparators.comparable().compare(b.getCreationDate(), a.getCreationDate()))
+//                .orElse(null);
+//        messages.clear();
+//        if (lastMessage != null) {
+//            messages.add(lastMessage);
+//        }
+//        return this;
+//    }
 
     public Chat chooseChatNameFor(User userFor) {
         var otherUser = users

@@ -4,7 +4,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.comparator.Comparators;
 import org.springframework.web.context.annotation.RequestScope;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.exception.InvalidDataException;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.messenger.api.http.chat.request.DeleteMessagesRequest;
@@ -52,7 +54,7 @@ public class MessageServiceImpl implements MessageService {
     )
     public void sendMessage(SendMessageRequest request) {
         var user = userService.getCurrentUser();
-        var chat = chatService.getWithoutMessages(request.chatId);
+        var chat = chatService.getById(request.chatId);
         var message = messageRepository.save(
                 Message.newMessage(request.text, user, chat)
         );
@@ -69,7 +71,7 @@ public class MessageServiceImpl implements MessageService {
             isolation = Isolation.REPEATABLE_READ
     )
     public void deleteMessages(long chatId, DeleteMessagesRequest request, boolean isGlobal) {
-        var chat = chatService.getWithoutMessages(chatId);
+        var chat = chatService.getById(chatId);
         var currentUser = userService.getCurrentUser();
         var messages = messageRepository.getAllById(request.ids)
                 .stream()
@@ -147,7 +149,7 @@ public class MessageServiceImpl implements MessageService {
     )
     public void updateMessage(long chatId, long messageId, UpdateMessageRequest request) {
         var message = messageRepository.getById(messageId);
-        var chat = chatService.getWithoutMessages(chatId);
+        var chat = chatService.getById(chatId);
 
         var updatedMessage = new Message(
                 message.getId(),
@@ -176,5 +178,25 @@ public class MessageServiceImpl implements MessageService {
                         .map(Message::getId)
                         .collect(Collectors.toList())
         );
+    }
+
+    @Override
+    public Page<Message> getPageFor(Chat chat, Page.Meta pageMeta) {
+        return messageRepository.getPageByChatIdAndOwningUserId(
+                pageMeta,
+                chat.getId(),
+                userService.getCurrentUser().getId()
+        ).sort((a, b) -> Comparators.comparable().compare(a.getCreationDate(), b.getCreationDate()));
+    }
+
+    @Override
+    public Message getLastFor(Chat chat) {
+        var pageMeta = new Page.Meta(0, 1);
+        return getPageFor(chat, pageMeta).stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public void deleteMessagesByChatId(long chatId) {
+        messageRepository.deleteAllByChatId(chatId);
     }
 }
