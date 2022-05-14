@@ -15,7 +15,8 @@ public class MessageViewMapper implements ConversionServiceConfig.Mapper<Message
                 message.getSenderId(),
                 message.getChatId(),
                 message.getCreationDate().toString(),
-                message.getModificationDate().toString()
+                message.getModificationDate().toString(),
+                message.getViewedByUserIds()
         );
     }
 }

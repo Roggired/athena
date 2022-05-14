@@ -17,7 +17,8 @@ public class MessageFactory {
                 messageEntity.getChat().getId(),
                 messageEntity.getCreationDate(),
                 messageEntity.getModificationDate(),
-                messageEntity.getOwningUserIds()
+                messageEntity.getOwningUserIds(),
+                messageEntity.getViewedByUserIds()
         );
     }
 
@@ -29,7 +30,8 @@ public class MessageFactory {
                 chatEntity,
                 message.getCreationDate().atZone(ZoneId.of("UTC")).toLocalDateTime(),
                 message.getModificationDate().atZone(ZoneId.of("UTC")).toLocalDateTime(),
-                message.getOwningUserIds()
+                message.getOwningUserIds(),
+                message.getViewedByUserIds()
         );
     }
 }

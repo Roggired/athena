@@ -1,8 +1,9 @@
 ## Messenger v.0.1.6
 
 ## Version Notes
-in progress (v.0.2.0):
+in progress (v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**):
 - **issue#21** Pagination for users, chats and messages in Messenger
+- **issue#23** View messages
 
 v.0.1.6:
 - Architecture refactoring
@@ -223,6 +224,20 @@ Subscribe message:
       3,
       4
     ]
+  }
+}
+```
+
+**Viewed messages** - when any user views one or more messages
+```json
+{
+  "command": "RECEIVE_NOTIFICATION",
+  "argument": {
+    "type": "VIEWED_MESSAGES",
+    "payload": {
+      "messageIds": [1, 2, 3],
+      "viewerId": 13
+    }
   }
 }
 ```

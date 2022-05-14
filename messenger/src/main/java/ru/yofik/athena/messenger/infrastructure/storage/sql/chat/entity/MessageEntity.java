@@ -43,4 +43,12 @@ public class MessageEntity {
     )
     @Column(name = "user_id")
     private List<Long> owningUserIds;
+
+    @ElementCollection(targetClass = Long.class)
+    @CollectionTable(
+            name = "message_views",
+            joinColumns = @JoinColumn(name = "message_id")
+    )
+    @Column(name = "user_id")
+    private List<Long> viewedByUserIds;
 }

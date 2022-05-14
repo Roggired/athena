@@ -6,10 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.http.MessengerV1Response;
 import ru.yofik.athena.messenger.api.http.MessengerV1ResponseStatus;
-import ru.yofik.athena.messenger.api.http.chat.request.CreateChatRequest;
-import ru.yofik.athena.messenger.api.http.chat.request.DeleteMessagesRequest;
-import ru.yofik.athena.messenger.api.http.chat.request.SendMessageRequest;
-import ru.yofik.athena.messenger.api.http.chat.request.UpdateMessageRequest;
+import ru.yofik.athena.messenger.api.http.chat.request.*;
 import ru.yofik.athena.messenger.api.http.chat.view.ChatView;
 import ru.yofik.athena.messenger.api.http.chat.view.MessageView;
 import ru.yofik.athena.messenger.domain.chat.service.ChatService;
@@ -147,6 +144,18 @@ public class ChatResource {
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_DELETED,
                 "Message has been deleted"
+        );
+    }
+
+    @PostMapping("/{chatId}/messages/viewed")
+    public MessengerV1Response viewMessages(
+            @PathVariable("chatId") long chatId,
+            @RequestBody ViewMessagesRequest request
+    ) {
+        messageService.viewMessage(request.messageIds);
+        return MessengerV1Response.of(
+                MessengerV1ResponseStatus.RESOURCE_UPDATED,
+                "Messages has been viewed"
         );
     }
 }

@@ -8,6 +8,8 @@ import ru.yofik.athena.messenger.api.http.chat.request.UpdateMessageRequest;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
 
+import java.util.List;
+
 @Service
 public interface MessageService {
     void sendMessage(SendMessageRequest request);
@@ -16,4 +18,5 @@ public interface MessageService {
     Page<Message> getPageFor(Chat chat, Page.Meta pageMeta);
     Message getLastFor(Chat chat);
     void deleteMessagesByChatId(long chatId);
+    void viewMessage(List<Long> messageIds);
 }

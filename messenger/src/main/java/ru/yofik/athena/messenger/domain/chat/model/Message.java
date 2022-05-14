@@ -6,6 +6,7 @@ import ru.yofik.athena.messenger.domain.user.model.User;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +23,7 @@ public class Message {
     private final LocalDateTime creationDate; // UTC
     private final LocalDateTime modificationDate; // UTC
     private final List<Long> owningUserIds;
+    private final List<Long> viewedByUserIds;
 
     public static Message newMessage(String text, User sender, Chat chat) {
         var creationDate = Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime();
@@ -35,7 +37,8 @@ public class Message {
                 chat.getUsers()
                         .stream()
                         .map(User::getId)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                List.of(sender.getId())
         );
     }
 }

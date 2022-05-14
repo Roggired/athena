@@ -15,10 +15,7 @@ import ru.yofik.athena.messenger.api.http.chat.request.UpdateMessageRequest;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
 import ru.yofik.athena.messenger.domain.chat.repository.MessageRepository;
-import ru.yofik.athena.messenger.domain.notification.model.DeletedMessagesNotification;
-import ru.yofik.athena.messenger.domain.notification.model.NewMessageNotification;
-import ru.yofik.athena.messenger.domain.notification.model.Notification;
-import ru.yofik.athena.messenger.domain.notification.model.UpdateMessageNotification;
+import ru.yofik.athena.messenger.domain.notification.model.*;
 import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
 import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.service.UserService;
@@ -143,6 +140,14 @@ public class MessageServiceImpl implements MessageService {
                 .collect(Collectors.toList());
     }
 
+    private List<Long> getUserIdsToBeNotified(Chat chat, Message targetMessage) {
+        return chat.getUsers()
+                .stream()
+                .map(User::getId)
+                .filter(userId -> targetMessage.getOwningUserIds().contains(userId))
+                .collect(Collectors.toList());
+    }
+
     @Override
     @Transactional(
             isolation = Isolation.REPEATABLE_READ
@@ -158,14 +163,15 @@ public class MessageServiceImpl implements MessageService {
                 message.getChatId(),
                 message.getCreationDate(),
                 Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime(),
-                message.getOwningUserIds()
+                message.getOwningUserIds(),
+                message.getViewedByUserIds()
         );
 
         messageRepository.save(message);
 
         notificationService.sendNotification(
                 new UpdateMessageNotification(
-                        getUserIdsToBeNotified(chat),
+                        getUserIdsToBeNotified(chat, message),
                         updatedMessage
                 )
         );
@@ -198,5 +204,20 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void deleteMessagesByChatId(long chatId) {
         messageRepository.deleteAllByChatId(chatId);
+    }
+
+    @Override
+    public void viewMessage(List<Long> messageIds) {
+        var messages = messageRepository.getAllById(messageIds);
+        var chat = chatService.getById(messages.get(0).getChatId());
+        var viewer = userService.getCurrentUser();
+        messages.forEach(message -> message.getViewedByUserIds().add(viewer.getId()));
+        messageRepository.saveAll(messages);
+
+        notificationService.sendNotification(new ViewMessageNotification(
+                getUserIdsToBeNotified(chat),
+                messageIds,
+                viewer.getId()
+        ));
     }
 }
