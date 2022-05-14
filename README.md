@@ -3,6 +3,8 @@
 ## Version Notes
 in progress (v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**):
 - **issue#21** Pagination for users, chats and messages in Messenger
+  - Now messages cannot be obtained with a chat. Endpoint GET /fullView has been changed to GET /messages with pagination
+  - Endpoints GET /users GET /chats has been updated and now require pagination
 - **issue#23** View messages
 
 v.0.1.6:
