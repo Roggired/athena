@@ -2,6 +2,8 @@ package ru.yofik.athena.messenger.domain.user.model;
 
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -12,4 +14,6 @@ public class User {
     private final long id;
     private String name;
     private String login;
+    private boolean online;
+    private LocalDateTime lastOnlineTime; // in UTC
 }

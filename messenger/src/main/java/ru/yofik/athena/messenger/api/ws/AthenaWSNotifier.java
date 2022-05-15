@@ -29,6 +29,14 @@ public class AthenaWSNotifier implements NotificationService {
         );
     }
 
+    @Override
+    public boolean isUserActive(long userId) {
+        return webSocketSessionBroker.isSubscribed(
+                WebSocketSubscriptionType.NOTIFICATION,
+                new NotificationSubscriptionKey(userId)
+        );
+    }
+
     private AthenaWSMessage createAthenaWSNotificationMessage(
             Notification notification
     ) {

@@ -6,7 +6,6 @@ import ru.yofik.athena.messenger.domain.user.model.User;
 import java.util.List;
 
 public interface UserRepository {
-    List<User> getAllUsers();
     Page<User> getPage(Page.Meta pageMeta);
     User getUser(long id);
     User updateUser(User user);

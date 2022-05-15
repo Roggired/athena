@@ -6,6 +6,9 @@ in progress (v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**):
   - Now messages cannot be obtained with a chat. Endpoint GET /fullView has been changed to GET /messages with pagination
   - Endpoints GET /users GET /chats has been updated and now require pagination
 - **issue#23** View messages
+- **issue#24** Is online status for users. Is online status is implemented by active websockets. Therefore, all users 
+for whom a websocket is open, will be marked as online. Besides, when a websocket is opened for a user, this user will 
+be updated with "lastOnlineTime" equal to now.
 
 v.0.1.6:
 - Architecture refactoring

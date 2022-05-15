@@ -9,7 +9,6 @@ import java.util.List;
 
 @Service
 public interface UserService {
-    List<User> getAllUsers();
     Page<User> getPage(Page.Meta pageMeta);
     User getUser(long id);
     User updateUser(UpdateUserRequest request);

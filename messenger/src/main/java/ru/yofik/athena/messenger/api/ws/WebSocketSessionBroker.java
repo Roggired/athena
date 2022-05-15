@@ -10,9 +10,8 @@ import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @ApplicationScope
@@ -68,5 +67,9 @@ public class WebSocketSessionBroker {
                 }
             });
         }
+    }
+
+    public synchronized boolean isSubscribed(WebSocketSubscriptionType subscriptionType, SubscriptionKey subscriptionKey) {
+        return subscriptions.get(subscriptionType).containsKey(subscriptionKey);
     }
 }

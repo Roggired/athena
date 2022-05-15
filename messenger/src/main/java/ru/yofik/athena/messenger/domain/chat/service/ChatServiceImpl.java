@@ -7,11 +7,10 @@ import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.http.chat.request.CreateChatRequest;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.repository.ChatRepository;
-import ru.yofik.athena.messenger.domain.chat.repository.MessageRepository;
+import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
 import ru.yofik.athena.messenger.domain.user.service.UserService;
 
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Service
 @RequestScope
@@ -20,14 +19,18 @@ public class ChatServiceImpl implements ChatService {
     private final UserService userService;
     private final ChatRepository chatRepository;
     private final MessageService messageService;
+    private final NotificationService notificationService;
 
     public ChatServiceImpl(
             UserService userService,
             ChatRepository chatRepository,
-            MessageService messageService) {
+            MessageService messageService,
+            NotificationService notificationService
+    ) {
         this.userService = userService;
         this.chatRepository = chatRepository;
         this.messageService = messageService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -42,6 +45,8 @@ public class ChatServiceImpl implements ChatService {
                 .map(userService::getUser)
                 .forEach(chat::addUser);
 
+        chat.markOnlineUsers(notificationService);
+
         return chatRepository.save(chat);
     }
 
@@ -55,7 +60,8 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat getById(long id) {
         var chat = chatRepository.getById(id)
-                .chooseChatNameFor(userService.getCurrentUser());
+                .chooseChatNameFor(userService.getCurrentUser())
+                .markOnlineUsers(notificationService);
         chat.setLastMessage(messageService.getLastFor(chat));
         return chat;
     }
@@ -65,6 +71,7 @@ public class ChatServiceImpl implements ChatService {
         var page = chatRepository.getPage(pageMeta);
         return page.map(chat -> {
             chat.chooseChatNameFor(userService.getCurrentUser());
+            chat.markOnlineUsers(notificationService);
             chat.setLastMessage(messageService.getLastFor(chat));
             return chat;
         });

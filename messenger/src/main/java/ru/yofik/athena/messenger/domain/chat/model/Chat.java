@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 import org.springframework.util.comparator.Comparators;
 import ru.yofik.athena.common.Page;
+import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
 import ru.yofik.athena.messenger.domain.user.model.User;
 
 import java.util.ArrayList;
@@ -44,31 +45,6 @@ public class Chat {
         users.remove(user);
     }
 
-//    public Chat hideMessagesForUser(User user) {
-//        messages = messages.stream()
-//                .filter(message -> message.getOwningUserIds().contains(user.getId()))
-//                .collect(Collectors.toList());
-//        return this;
-//    }
-
-//    public Chat sortMessages() {
-//        messages = messages.stream()
-//                .sorted((a, b) -> Comparators.comparable().compare(a.getCreationDate(), b.getCreationDate()))
-//                .collect(Collectors.toList());
-//        return this;
-//    }
-
-//    public Chat onlyLastMessage() {
-//        var lastMessage = messages.stream()
-//                .min((a, b) -> Comparators.comparable().compare(b.getCreationDate(), a.getCreationDate()))
-//                .orElse(null);
-//        messages.clear();
-//        if (lastMessage != null) {
-//            messages.add(lastMessage);
-//        }
-//        return this;
-//    }
-
     public Chat chooseChatNameFor(User userFor) {
         var otherUser = users
                 .stream()
@@ -76,6 +52,11 @@ public class Chat {
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
         this.name = otherUser.getName();
+        return this;
+    }
+
+    public Chat markOnlineUsers(NotificationService notificationService) {
+        users.forEach(user -> user.setOnline(notificationService.isUserActive(user.getId())));
         return this;
     }
 }
