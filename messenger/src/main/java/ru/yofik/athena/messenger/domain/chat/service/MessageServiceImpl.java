@@ -288,4 +288,14 @@ public class MessageServiceImpl implements MessageService {
                 )
         );
     }
+
+    @Override
+    public Page<Message> getPageByTopicFor(Chat chat, Page.Meta pageMeta, long topicId) {
+        return messageRepository.getPageByChatIdAndOwningUserIdAndTopicId(
+                pageMeta,
+                chat.getId(),
+                userService.getCurrentUser().getId(),
+                topicId
+        );
+    }
 }

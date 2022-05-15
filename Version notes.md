@@ -14,6 +14,7 @@ in progress (v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**):
   - Alter message model - add "topic" and "isPinned"
   - Add endpoints for pinning and unpinning messages and for assigning a topic for the message
   - Add new WS notifications: CHANGED_TOPIC, PIN_MESSAGE, UNPIN_MESSAGE, DELETED_TOPICS
+- **issue#27** Search messages by topic with pagination 
 
 v.0.1.6:
 - Architecture refactoring

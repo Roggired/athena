@@ -11,6 +11,7 @@ import ru.yofik.athena.messenger.domain.chat.repository.MessageRepository;
 import ru.yofik.athena.messenger.infrastructure.storage.sql.chat.factory.MessageFactory;
 import ru.yofik.athena.messenger.infrastructure.storage.sql.chat.repository.CrudChatRepository;
 import ru.yofik.athena.messenger.infrastructure.storage.sql.chat.repository.CrudMessageRepository;
+import ru.yofik.athena.messenger.utils.PageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,12 +113,22 @@ public class MessageRepositoryImpl implements MessageRepository {
                 chatId,
                 userId
         ).map(messageFactory::fromEntity);
-        return new Page<>(
-                new Page.Meta(
-                        springPage.getPageable().getPageNumber(),
-                        springPage.getPageable().getPageSize()
-                ),
-                new ArrayList<>(springPage.getContent())
+        return PageUtils.fromSpringPage(springPage);
+    }
+
+    @Override
+    public Page<Message> getPageByChatIdAndOwningUserIdAndTopicId(Page.Meta pageMeta, long chatId, long userId, long topicId) {
+        var pageable = PageRequest.of(
+                pageMeta.getSequentialNumber(),
+                pageMeta.getSize(),
+                Sort.by("creationDate").descending()
         );
+        var springPage = crudMessageRepository.findAllByChatIdAndOwningUserIdsContainsAndTopicId(
+                pageable,
+                chatId,
+                userId,
+                topicId
+        ).map(messageFactory::fromEntity);
+        return PageUtils.fromSpringPage(springPage);
     }
 }

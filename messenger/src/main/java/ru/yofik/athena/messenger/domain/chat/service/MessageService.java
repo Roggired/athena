@@ -20,4 +20,5 @@ public interface MessageService {
     void pinMessage(PinMessageRequest request);
     void unpinMessage(long messageId);
     void changeTopic(long messageId, ChangeTopicRequest request);
+    Page<Message> getPageByTopicFor(Chat chat, Page.Meta pageMeta, long topicId);
 }

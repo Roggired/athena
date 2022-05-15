@@ -13,5 +13,15 @@ public interface MessageRepository {
     void deleteAllByChatId(long chatId);
     Message getById(long id);
     List<Message> getAllById(List<Long> ids);
-    Page<Message> getPageByChatIdAndOwningUserId(Page.Meta pageMeta, long chatId, long userId);
+    Page<Message> getPageByChatIdAndOwningUserId(
+            Page.Meta pageMeta,
+            long chatId,
+            long userId
+    );
+    Page<Message> getPageByChatIdAndOwningUserIdAndTopicId(
+            Page.Meta pageMeta,
+            long chatId,
+            long userId,
+            long topicId
+    );
 }

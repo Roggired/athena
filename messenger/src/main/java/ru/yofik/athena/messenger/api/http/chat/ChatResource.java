@@ -272,4 +272,21 @@ public class ChatResource {
                 "Message has changed its topic"
         );
     }
+
+    @GetMapping("/{chatId}/messagesWithTopic/{topicId}")
+    public MessengerV1Response getMessagePageByTopic(
+            @PathVariable("chatId") long chatId,
+            @PathVariable("topicId") long topicId,
+            @Valid Page.Meta pageMeta
+    ) {
+        var chat = chatService.getById(chatId);
+        return MessengerV1Response.of(
+                MessengerV1ResponseStatus.RESOURCE_RETURNED,
+                messageService.getPageByTopicFor(
+                        chat,
+                        pageMeta,
+                        topicId
+                ).map(message -> conversionService.convert(message, MessageView.class))
+        );
+    }
 }

@@ -8,6 +8,7 @@ import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.repository.ChatRepository;
 import ru.yofik.athena.messenger.infrastructure.storage.sql.chat.factory.ChatFactory;
 import ru.yofik.athena.messenger.infrastructure.storage.sql.chat.repository.CrudChatRepository;
+import ru.yofik.athena.messenger.utils.PageUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,17 +56,8 @@ public class ChatRepositoryImpl implements ChatRepository {
                         pageMeta.getSequentialNumber(),
                         pageMeta.getSize()
                 )
-        );
-        return new Page<>(
-                new Page.Meta(
-                        springPage.getPageable().getPageNumber(),
-                        springPage.getPageable().getPageSize()
-                ),
-                springPage.getContent()
-                        .stream()
-                        .map(chatFactory::fromEntity)
-                        .collect(Collectors.toList())
-        );
+        ).map(chatFactory::fromEntity);
+        return PageUtils.fromSpringPage(springPage);
     }
 
     @Override

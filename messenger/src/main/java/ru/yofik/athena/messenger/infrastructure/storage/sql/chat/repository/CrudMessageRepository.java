@@ -9,5 +9,11 @@ import ru.yofik.athena.messenger.infrastructure.storage.sql.chat.entity.MessageE
 @Repository
 public interface CrudMessageRepository extends JpaRepository<MessageEntity, Long> {
     Page<MessageEntity> findAllByChatIdAndOwningUserIdsContains(Pageable pageable, long chatId, long userId);
+    Page<MessageEntity> findAllByChatIdAndOwningUserIdsContainsAndTopicId(
+            Pageable pageable,
+            long chatId,
+            long userId,
+            long topicId
+    );
     void deleteAllByChatId(long chatId);
 }
