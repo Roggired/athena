@@ -111,7 +111,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<? extends MessengerV1Response> handleConversionFailed(ConversionFailedException exception) {
         log.warn("", exception);
         return ResponseEntity
-                .status(MessengerV1ResponseStatus.INVALID_DATA.getHttpStatusCode())
+                .status(MessengerV1ResponseStatus.UNEXPECTED_ERROR.getHttpStatusCode())
                 .body(MessengerV1Response.of(MessengerV1ResponseStatus.MISMATCHED_REQUEST, exception.getMessage()));
     }
 

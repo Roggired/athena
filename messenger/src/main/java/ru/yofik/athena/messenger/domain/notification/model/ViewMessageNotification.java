@@ -17,7 +17,7 @@ public class ViewMessageNotification extends Notification {
             List<Long> messageIds,
             long viewerId
     ) {
-        super(NotificationType.VIEWED_MESSAGE, targetUserIds);
+        super(NotificationType.VIEWED_MESSAGES, targetUserIds);
         this.payload = new Payload(messageIds, viewerId);
     }
 

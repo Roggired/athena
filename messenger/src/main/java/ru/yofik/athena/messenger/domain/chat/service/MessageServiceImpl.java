@@ -9,19 +9,16 @@ import org.springframework.web.context.annotation.RequestScope;
 import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.exception.InvalidDataException;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
-import ru.yofik.athena.messenger.api.http.chat.request.DeleteMessagesRequest;
-import ru.yofik.athena.messenger.api.http.chat.request.SendMessageRequest;
-import ru.yofik.athena.messenger.api.http.chat.request.UpdateMessageRequest;
+import ru.yofik.athena.messenger.api.http.chat.request.*;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
+import ru.yofik.athena.messenger.domain.chat.model.Topic;
 import ru.yofik.athena.messenger.domain.chat.repository.MessageRepository;
 import ru.yofik.athena.messenger.domain.notification.model.*;
 import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
 import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.service.UserService;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,16 +30,19 @@ public class MessageServiceImpl implements MessageService {
     private final NotificationService notificationService;
     private final UserService userService;
     private final MessageRepository messageRepository;
+    private final TopicService topicService;
 
     public MessageServiceImpl(
             ChatService chatService,
             NotificationService notificationService,
             UserService userService,
-            MessageRepository messageRepository) {
+            MessageRepository messageRepository,
+            TopicService topicService) {
         this.chatService = chatService;
         this.notificationService = notificationService;
         this.userService = userService;
         this.messageRepository = messageRepository;
+        this.topicService = topicService;
     }
 
     @Override
@@ -55,6 +55,12 @@ public class MessageServiceImpl implements MessageService {
         var message = messageRepository.save(
                 Message.newMessage(request.text, user, chat)
         );
+
+        if (request.topicId != null) {
+            var topic = topicService.getById(request.topicId);
+            message.setTopic(topic);
+        }
+
         notificationService.sendNotification(
                 new NewMessageNotification(
                         getUserIdsToBeNotified(chat),
@@ -156,23 +162,15 @@ public class MessageServiceImpl implements MessageService {
         var message = messageRepository.getById(messageId);
         var chat = chatService.getById(chatId);
 
-        var updatedMessage = new Message(
-                message.getId(),
-                request.text,
-                message.getSenderId(),
-                message.getChatId(),
-                message.getCreationDate(),
-                Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime(),
-                message.getOwningUserIds(),
-                message.getViewedByUserIds()
-        );
-
+        message.update(request.text);
         messageRepository.save(message);
 
         notificationService.sendNotification(
-                new UpdateMessageNotification(
+                new ChangedMessageNotification(
+                        NotificationType.UPDATED_MESSAGE,
                         getUserIdsToBeNotified(chat, message),
-                        updatedMessage
+                        userService.getCurrentUser().getId(),
+                        message
                 )
         );
     }
@@ -211,7 +209,11 @@ public class MessageServiceImpl implements MessageService {
         var messages = messageRepository.getAllById(messageIds);
         var chat = chatService.getById(messages.get(0).getChatId());
         var viewer = userService.getCurrentUser();
-        messages.forEach(message -> message.getViewedByUserIds().add(viewer.getId()));
+        messages.forEach(message -> {
+            if (!message.getViewedByUserIds().contains(viewer.getId())) {
+                message.getViewedByUserIds().add(viewer.getId());
+            }
+        });
         messageRepository.saveAll(messages);
 
         notificationService.sendNotification(new ViewMessageNotification(
@@ -219,5 +221,71 @@ public class MessageServiceImpl implements MessageService {
                 messageIds,
                 viewer.getId()
         ));
+    }
+
+    @Override
+    public void pinMessage(PinMessageRequest request) {
+        var message = messageRepository.getById(request.messageId);
+        var chat = chatService.getById(message.getChatId());
+
+        if (request.topicId != null) {
+            var topic = topicService.getById(request.topicId);
+            message.pin(topic);
+        } {
+            message.pin();
+        }
+
+        messageRepository.save(message);
+
+        notificationService.sendNotification(
+                new ChangedMessageNotification(
+                        NotificationType.PIN_MESSAGE,
+                        getUserIdsToBeNotified(chat, message),
+                        userService.getCurrentUser().getId(),
+                        message
+                )
+        );
+    }
+
+    @Override
+    public void unpinMessage(long messageId) {
+        var message = messageRepository.getById(messageId);
+        var chat = chatService.getById(message.getChatId());
+
+        message.unpin();
+        messageRepository.save(message);
+
+        notificationService.sendNotification(
+                new ChangedMessageNotification(
+                        NotificationType.UNPIN_MESSAGE,
+                        getUserIdsToBeNotified(chat, message),
+                        userService.getCurrentUser().getId(),
+                        message
+                )
+        );
+    }
+
+    @Override
+    public void changeTopic(long messageId, ChangeTopicRequest request) {
+        var message = messageRepository.getById(messageId);
+        var chat = chatService.getById(message.getChatId());
+
+        Topic topic = Topic.DEFAULT_TOPIC;
+
+        if (request.topicId != null) {
+            topic = topicService.getById(request.topicId);
+        }
+
+        message.setTopic(topic);
+        message = messageRepository.save(message);
+
+        notificationService.sendNotification(
+                new ChangedMessageNotification(
+                        NotificationType.CHANGED_TOPIC,
+                        getUserIdsToBeNotified(chat, message),
+                        userService.getCurrentUser().getId(),
+                        message
+                )
+        );
     }
 }

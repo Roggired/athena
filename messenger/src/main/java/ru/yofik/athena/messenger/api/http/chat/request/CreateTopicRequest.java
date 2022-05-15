@@ -5,9 +5,7 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor
-public class SendMessageRequest {
-    public Long chatId;
+public class CreateTopicRequest {
     @NotBlank
-    public String text;
-    public Long topicId;
+    public String name;
 }

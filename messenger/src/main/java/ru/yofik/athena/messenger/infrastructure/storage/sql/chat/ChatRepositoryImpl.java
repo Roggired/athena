@@ -67,4 +67,9 @@ public class ChatRepositoryImpl implements ChatRepository {
                         .collect(Collectors.toList())
         );
     }
+
+    @Override
+    public boolean existsById(long id) {
+        return crudChatRepository.existsById(id);
+    }
 }

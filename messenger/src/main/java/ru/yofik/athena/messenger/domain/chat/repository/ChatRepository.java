@@ -11,4 +11,5 @@ public interface ChatRepository {
     void delete(long id);
     List<Chat> getAll();
     Page<Chat> getPage(Page.Meta pageMeta);
+    boolean existsById(long id);
 }

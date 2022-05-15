@@ -13,4 +13,6 @@ public class MessageView {
     public final String creationDate;
     public final String modificationDate;
     public final List<Long> viewedByUserIds;
+    public final TopicView topic;
+    public final boolean isPinned;
 }

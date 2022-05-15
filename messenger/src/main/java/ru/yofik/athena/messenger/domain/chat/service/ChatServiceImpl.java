@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
 import ru.yofik.athena.common.Page;
+import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.messenger.api.http.chat.request.CreateChatRequest;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.repository.ChatRepository;
@@ -75,5 +76,12 @@ public class ChatServiceImpl implements ChatService {
             chat.setLastMessage(messageService.getLastFor(chat));
             return chat;
         });
+    }
+
+    @Override
+    public void checkThatChatExists(long id) {
+        if (!chatRepository.existsById(id)) {
+            throw new ResourceNotFoundException();
+        }
     }
 }

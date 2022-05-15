@@ -9,6 +9,7 @@ import ru.yofik.athena.messenger.infrastructure.config.ConversionServiceConfig;
 public class MessageViewMapper implements ConversionServiceConfig.Mapper<Message, MessageView> {
     @Override
     public MessageView convert(Message message) {
+        var topicViewMapper = new TopicViewMapper();
         return new MessageView(
                 message.getId(),
                 message.getText(),
@@ -16,7 +17,9 @@ public class MessageViewMapper implements ConversionServiceConfig.Mapper<Message
                 message.getChatId(),
                 message.getCreationDate().toString(),
                 message.getModificationDate().toString(),
-                message.getViewedByUserIds()
+                message.getViewedByUserIds(),
+                topicViewMapper.convert(message.getTopic()),
+                message.isPinned()
         );
     }
 }

@@ -2,9 +2,7 @@ package ru.yofik.athena.messenger.domain.chat.service;
 
 import org.springframework.stereotype.Service;
 import ru.yofik.athena.common.Page;
-import ru.yofik.athena.messenger.api.http.chat.request.DeleteMessagesRequest;
-import ru.yofik.athena.messenger.api.http.chat.request.SendMessageRequest;
-import ru.yofik.athena.messenger.api.http.chat.request.UpdateMessageRequest;
+import ru.yofik.athena.messenger.api.http.chat.request.*;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
 
@@ -19,4 +17,7 @@ public interface MessageService {
     Message getLastFor(Chat chat);
     void deleteMessagesByChatId(long chatId);
     void viewMessage(List<Long> messageIds);
+    void pinMessage(PinMessageRequest request);
+    void unpinMessage(long messageId);
+    void changeTopic(long messageId, ChangeTopicRequest request);
 }

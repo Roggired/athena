@@ -11,4 +11,5 @@ public interface ChatService {
     void delete(long id);
     Chat getById(long id);
     Page<Chat> getPageForCurrentUser(Page.Meta pageMeta);
+    void checkThatChatExists(long id);
 }

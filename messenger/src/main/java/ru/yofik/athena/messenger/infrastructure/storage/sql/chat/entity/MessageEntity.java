@@ -51,4 +51,10 @@ public class MessageEntity {
     )
     @Column(name = "user_id")
     private List<Long> viewedByUserIds;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private TopicEntity topic;
+
+    @Column
+    private boolean isPinned;
 }
