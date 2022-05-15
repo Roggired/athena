@@ -1,45 +1,8 @@
-## Messenger v.0.1.6
+## Messenger v.0.2.0
 
 ## Version Notes
-v.0.1.6:
-- Architecture refactoring
-- WS API improvements. Now WS API can be used for any type of notifications
-- Fix possible global message deletion after local one
-- **issue#26** User should be able to globally delete only their own messages
-- **issue#25** Personal chats name resolution
 
-v.0.1.5:
-- **issue#22** Feature update user
-- **issue#17** Global and local messages deletion. Deletion endpoints have been changed
-
-v.0.1.4 **ATTENTION! v.0.1.4 IS NOT COMPATIBLE WITH v.0.1.3**:
-- **issue#14** Fix removing locks. Now when user is unlocked, the lock is removed
-- **issue#15** Fix device id. Now Messenger sends client device id instead of Apache HttpClient
-- **issue#19** Deleting several messages
-- **issue#20** Updating existed messages. New WebSocket notifications:
-    1. Changed format of notification AthenaWSMessage. See WS API section
-    2. When a user updates or deletes messages, a notification will be sent. See WS API section
-    3. Changed MessageView: date -> creationDate, add field modificationDate
-
-v.0.1.3
-- **issue#10** Fix invitation regeneration. Now amount of available usages on admin is correct.
-- **issue#11** For dev profile change generator of invitations. Now an invitation is a 3digits code.
-- **issue#12** Add filter by involved users for getAllChats endpoint in messenger.
-- Add support for ReactJS frontend. However, Thymeleaf and ReactJS conflict each other.
-
-v.0.1.2
-- Add RestApi for admin service
-- Now authentication cookie in admin service is not secure
-- Add Swagger OpenApi v3 for admin service (available on http://localhost:8082/swagger-ui.html)
-
-v.0.1.1
-- Fix message order and last message problem
-- Improve presentation of AthenaWSMessage. Now argument is pretty formatted
-
-v.0.1.0
-- Auth, Admin, Messenger services which implements only text messages functionalities
-- Sending messages via HTTPS request
-- Receiving messages via single notification websocket
+[Version Notes](Version%20notes.md)
 
 ## Requirements
 
@@ -156,79 +119,12 @@ each module and place in associated config directory and disable ssl.
 
 ## API reference
 
-REST api docs can be found on `http://localhost:8080/swagger-ui.html` for messenger and 
-on `http://localhost:8082/swagger-ui.html` for admin
+### REST API
 
-WebSocket api is described below in `WebSocket API` section
+[REST API Reference](REST%20API.md)
 
-## WebSocket API
+### WebSocket API
 
-`ws://localhost:8080/ws-api/v1/notifications` - notification websocket.
-Subscribe message:
-```json
-{
-  "command": "SUBSCRIBE_ON_NOTIFICATIONS"
-}
-```
+[WebSocket API Reference](WebSocket%20API.md)
 
-### Notifications:
-
-**New message** - when any user sends a message 
-```json
-{
-  "command": "RECEIVE_NOTIFICATION",
-  "argument": {
-    "type": "NEW_MESSAGE",
-    "payload": {
-      "id": 1,
-      "text": "Hi!",
-      "senderId": 14,
-      "chatId": 57,
-      "creationDate": "2022-05-03T11:45:31.836541",
-      "modificationDate": "2022-05-03T11:45:31.836541"
-    }
-  }
-}
-```
-
-**Updated message** - when any user updates a message 
-```json
-{
-  "command": "RECEIVE_NOTIFICATION",
-  "argument": {
-    "type": "UPDATED_MESSAGE",
-    "payload": {
-      "id": 1,
-      "text": "Hi! :)",
-      "senderId": 14,
-      "chatId": 57,
-      "creationDate": "2022-05-03T11:45:31.836541",
-      "modificationDate": "2022-05-03T12:01:12.531241"
-    }
-  }
-}
-```
-
-**Deleted messages** - when any user deletes one or more messages
-```json
-{
-  "command": "RECEIVE_NOTIFICATION",
-  "argument": {
-    "type": "DELETED_MESSAGES",
-    "payload": [
-      1,
-      3,
-      4
-    ]
-  }
-}
-```
-
-NOTE:
-1. To connect to the server via websocket, a client sends special HTTP request (handshake). As soon as this
-request is HTTP, we can use the `Authorization` header to secure websocket endpoints. So, when you are trying to 
-connect, you need to specify `Authorization` header as below:
-`Authorization: Bearer <client-token> <access-token>`
-2. After the connection is established, Messenger service will not expect any authentication information as soon as 
-websockets are long-lived connections.
 

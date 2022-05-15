@@ -9,4 +9,5 @@ public class SendMessageRequest {
     public Long chatId;
     @NotBlank
     public String text;
+    public Long topicId;
 }

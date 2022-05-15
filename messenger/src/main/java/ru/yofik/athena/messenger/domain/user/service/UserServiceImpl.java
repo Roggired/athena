@@ -1,29 +1,36 @@
 package ru.yofik.athena.messenger.domain.user.service;
 
 import org.springframework.stereotype.Service;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.http.user.request.UpdateUserRequest;
+import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
 import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.repository.UserRepository;
-
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, NotificationService notificationService) {
         this.userRepository = userRepository;
-    }
-
-
-    @Override
-    public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+        this.notificationService = notificationService;
     }
 
     @Override
-    public User getUser(long id) {
-        return userRepository.getUser(id);
+    public Page<User> getPage(Page.Meta pageMeta) {
+        return userRepository.getPage(pageMeta)
+                .map(user -> {
+                    user.setOnline(notificationService.isUserActive(user.getId()));
+                    return user;
+                });
+    }
+
+    @Override
+    public User getById(long id) {
+        var user = userRepository.getUser(id);
+        user.setOnline(notificationService.isUserActive(id));
+        return user;
     }
 
     @Override
@@ -39,6 +46,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getCurrentUser() {
-        return userRepository.getCurrentUser();
+        var user = userRepository.getCurrentUser();
+        user.setOnline(true);
+        return user;
     }
 }

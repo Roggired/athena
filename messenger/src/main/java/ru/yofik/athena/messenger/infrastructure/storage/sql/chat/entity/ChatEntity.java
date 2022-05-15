@@ -1,6 +1,7 @@
 package ru.yofik.athena.messenger.infrastructure.storage.sql.chat.entity;
 
 import lombok.*;
+import ru.yofik.athena.messenger.domain.chat.model.ChatType;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,6 +22,9 @@ public class ChatEntity {
     @Column
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private ChatType type;
+
     @ElementCollection(targetClass = Long.class)
     @CollectionTable(
             name = "chat_user",
@@ -28,11 +32,4 @@ public class ChatEntity {
     )
     @Column(name = "user_id")
     private List<Long> userIds;
-
-    @OneToMany(
-            mappedBy = "chat",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL
-    )
-    private List<MessageEntity> messages;
 }

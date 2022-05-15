@@ -6,4 +6,5 @@ import ru.yofik.athena.messenger.domain.notification.model.Notification;
 @Service
 public interface NotificationService {
     void sendNotification(Notification notification);
+    boolean isUserActive(long userId);
 }

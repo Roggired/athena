@@ -7,27 +7,35 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.yofik.athena.common.AuthV1ResponseParser;
 import ru.yofik.athena.common.AuthV1ResponseStatus;
+import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.repository.UserRepository;
 import ru.yofik.athena.messenger.infrastructure.integration.AthenaAbstractApi;
 import ru.yofik.athena.messenger.infrastructure.integration.AthenaCredentialsProvider;
+import ru.yofik.athena.messenger.infrastructure.storage.sql.user.repository.CrudUserLastOnlineRecordRepository;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Component
 @Log4j2
 public class AthenaUserApi extends AthenaAbstractApi implements UserRepository {
     private final AthenaCredentialsProvider athenaCredentialsProvider;
+    private final CrudUserLastOnlineRecordRepository crudUserLastOnlineRecordRepository;
 
-    public AthenaUserApi(AthenaCredentialsProvider athenaCredentialsProvider) {
+    public AthenaUserApi(
+            AthenaCredentialsProvider athenaCredentialsProvider,
+            CrudUserLastOnlineRecordRepository crudUserLastOnlineRecordRepository
+    ) {
         this.athenaCredentialsProvider = athenaCredentialsProvider;
+        this.crudUserLastOnlineRecordRepository = crudUserLastOnlineRecordRepository;
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public Page<User> getPage(Page.Meta pageMeta) {
         var clientCredentials = athenaCredentialsProvider.provideClientCredentials();
         var response = executeRestTemplate(
-                createURI("/api/v1/users"),
+                createURI("/api/v1/users/pages", pageMeta),
                 HttpMethod.GET,
                 clientCredentials.clientToken,
                 clientCredentials.deviceId,
@@ -36,11 +44,45 @@ public class AthenaUserApi extends AthenaAbstractApi implements UserRepository {
         var authV1Response = getAuthV1Response(response);
 
         if (AuthV1ResponseParser.isStatus(authV1Response, AuthV1ResponseStatus.RESOURCE_RETURNED)) {
-            return (List<User>) AuthV1ResponseParser.parsePayload(authV1Response, new TypeToken<List<User>>(){});
+            var page = (Page<User>) AuthV1ResponseParser.parsePayload(authV1Response, new TypeToken<Page<User>>(){});
+            fillLastOnlineTime(page);
+            return page;
         }
 
         log.warn(() -> "Auth Service response: " + authV1Response);
-        throw new RuntimeException("Can't get all users");
+        throw new RuntimeException("Can't get page of users");
+    }
+
+    private void fillLastOnlineTime(Page<User> page) {
+        var userLastOnlineRecords = crudUserLastOnlineRecordRepository.findAllByUserIds(
+                page.getContent()
+                        .stream()
+                        .map(User::getId)
+                        .collect(Collectors.toList())
+        );
+        var users = page.getContent();
+        users.forEach(user -> {
+            var userLastOnlineRecord = userLastOnlineRecords.stream()
+                    .filter(record -> record.getUserId() == user.getId())
+                    .findFirst();
+
+            if (userLastOnlineRecord.isEmpty()) {
+                user.setLastOnlineTime(LocalDateTime.MIN);
+                return;
+            }
+
+            user.setLastOnlineTime(userLastOnlineRecord.get().getLastOnlineTime());
+        });
+    }
+
+    private void fillLastOnlineTime(User user) {
+        var userLastOnlineRecord = crudUserLastOnlineRecordRepository.findByUserId(user.getId());
+
+        if (userLastOnlineRecord.isPresent()) {
+            user.setLastOnlineTime(userLastOnlineRecord.get().getLastOnlineTime());
+        } else {
+            user.setLastOnlineTime(LocalDateTime.MIN);
+        }
     }
 
     @Override
@@ -56,7 +98,10 @@ public class AthenaUserApi extends AthenaAbstractApi implements UserRepository {
         var authV1Response = getAuthV1Response(response);
 
         if (AuthV1ResponseParser.isStatus(authV1Response, AuthV1ResponseStatus.RESOURCE_RETURNED)) {
-            return AuthV1ResponseParser.parsePayload(authV1Response, User.class);
+            var user = AuthV1ResponseParser.parsePayload(authV1Response, User.class);
+            fillLastOnlineTime(user);
+
+            return user;
         }
 
         log.warn(() -> "Auth Service response: " + authV1Response);
@@ -93,6 +138,8 @@ public class AthenaUserApi extends AthenaAbstractApi implements UserRepository {
             throw new RuntimeException();
         }
 
-        return (User) authentication.getDetails();
+        var user = (User) authentication.getDetails();
+        fillLastOnlineTime(user);
+        return user;
     }
 }

@@ -12,7 +12,9 @@ public class UserViewMapper implements ConversionServiceConfig.Mapper<User, User
         return new UserView(
                 user.getId(),
                 user.getName(),
-                user.getLogin()
+                user.getLogin(),
+                user.isOnline(),
+                user.getLastOnlineTime().toString()
         );
     }
 }

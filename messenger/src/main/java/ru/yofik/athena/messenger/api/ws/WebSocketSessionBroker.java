@@ -69,4 +69,8 @@ public class WebSocketSessionBroker {
             });
         }
     }
+
+    public synchronized boolean isSubscribed(WebSocketSubscriptionType subscriptionType, SubscriptionKey subscriptionKey) {
+        return subscriptions.get(subscriptionType).containsKey(subscriptionKey);
+    }
 }

@@ -2,10 +2,9 @@ package ru.yofik.athena.messenger.domain.chat.model;
 
 import lombok.*;
 import ru.yofik.athena.messenger.domain.user.model.User;
+import ru.yofik.athena.messenger.utils.DateUtils;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,15 +15,18 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Message {
     private final long id;
-    private final String text;
+    private String text;
     private final long senderId;
     private final long chatId;
     private final LocalDateTime creationDate; // UTC
-    private final LocalDateTime modificationDate; // UTC
+    private LocalDateTime modificationDate; // UTC
     private final List<Long> owningUserIds;
+    private final List<Long> viewedByUserIds;
+    private Topic topic;
+    private boolean pinned;
 
     public static Message newMessage(String text, User sender, Chat chat) {
-        var creationDate = Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime();
+        var creationDate = DateUtils.nowUTC();
         return new Message(
                 0,
                 text,
@@ -35,7 +37,38 @@ public class Message {
                 chat.getUsers()
                         .stream()
                         .map(User::getId)
-                        .collect(Collectors.toList())
+                        .collect(Collectors.toList()),
+                List.of(sender.getId()),
+                Topic.DEFAULT_TOPIC,
+                false
         );
+    }
+
+
+    public Message update(String newText) {
+        this.text = newText;
+        this.modificationDate = DateUtils.nowUTC();
+        return this;
+    }
+
+    public Message pin() {
+        this.pinned = true;
+        return this;
+    }
+
+    public Message pin(Topic topic) {
+        this.pinned = true;
+        this.topic = topic;
+        return this;
+    }
+
+    public Message unpin() {
+        this.pinned = false;
+        return this;
+    }
+
+    public Message setTopic(Topic topic) {
+        this.topic = topic;
+        return this;
     }
 }

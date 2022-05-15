@@ -1,6 +1,8 @@
 package ru.yofik.athena.auth.context.user.service;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yofik.athena.auth.api.exception.InvalidDataException;
@@ -21,6 +23,7 @@ import ru.yofik.athena.auth.infrastructure.security.InvalidTokenException;
 import ru.yofik.athena.auth.infrastructure.security.Token;
 import ru.yofik.athena.auth.infrastructure.security.TokenGenerator;
 import ru.yofik.athena.auth.infrastructure.security.TokenVerifier;
+import ru.yofik.athena.common.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,6 +101,25 @@ public class UserServiceImpl implements UserService {
                 .map(userFactory::from)
                 .map(User::toShortView)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Page<UserShortView> getPage(Page.Meta pageMeta) {
+        var springPage = userRepository.findAll(
+                PageRequest.of(
+                        pageMeta.getSequentialNumber(),
+                        pageMeta.getSize(),
+                        Sort.by("name")
+                )
+        ).map(userFactory::from).map(User::toShortView);
+
+        return new Page<>(
+                new Page.Meta(
+                        springPage.getPageable().getPageNumber(),
+                        springPage.getPageable().getPageSize()
+                ),
+                springPage.getContent()
+        );
     }
 
     @Override

@@ -12,14 +12,22 @@ import ru.yofik.athena.messenger.infrastructure.integration.AthenaCredentialsPro
 import ru.yofik.athena.messenger.infrastructure.integration.auth.request.ActivateUserRequest;
 import ru.yofik.athena.messenger.infrastructure.integration.auth.request.AuthorizeUserRequest;
 import ru.yofik.athena.messenger.infrastructure.integration.auth.response.NewAccessTokenResponse;
+import ru.yofik.athena.messenger.infrastructure.storage.sql.user.entity.UserLastOnlineRecord;
+import ru.yofik.athena.messenger.infrastructure.storage.sql.user.repository.CrudUserLastOnlineRecordRepository;
+import ru.yofik.athena.messenger.utils.DateUtils;
 
 @Component
 @Log4j2
 public class AthenaAuthApiImpl extends AthenaAbstractApi implements AthenaAuthApi {
     private final AthenaCredentialsProvider athenaCredentialsProvider;
+    private final CrudUserLastOnlineRecordRepository crudUserLastOnlineRecordRepository;
 
-    public AthenaAuthApiImpl(AthenaCredentialsProvider athenaCredentialsProvider) {
+    public AthenaAuthApiImpl(
+            AthenaCredentialsProvider athenaCredentialsProvider,
+            CrudUserLastOnlineRecordRepository crudUserLastOnlineRecordRepository
+    ) {
         this.athenaCredentialsProvider = athenaCredentialsProvider;
+        this.crudUserLastOnlineRecordRepository = crudUserLastOnlineRecordRepository;
     }
 
     @Override
@@ -35,7 +43,18 @@ public class AthenaAuthApiImpl extends AthenaAbstractApi implements AthenaAuthAp
         var authV1Response = getAuthV1Response(response);
 
         if (AuthV1ResponseParser.isStatus(authV1Response, AuthV1ResponseStatus.RESOURCE_RETURNED)) {
-            return AuthV1ResponseParser.parsePayload(authV1Response, User.class);
+            var user = AuthV1ResponseParser.parsePayload(authV1Response, User.class);
+
+            var userLastOnlineRecord = new UserLastOnlineRecord();
+            var lastOnlineTime = DateUtils.nowUTC();
+            userLastOnlineRecord.setUserId(user.getId());
+            userLastOnlineRecord.setLastOnlineTime(lastOnlineTime);
+            crudUserLastOnlineRecordRepository.save(userLastOnlineRecord);
+
+            user.setOnline(true);
+            user.setLastOnlineTime(lastOnlineTime);
+
+            return user;
         }
 
         log.warn(() -> "Auth Service response: " + authV1Response);
