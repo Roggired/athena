@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(long id) {
+    public User getById(long id) {
         var user = userRepository.getUser(id);
         user.setOnline(notificationService.isUserActive(id));
         return user;

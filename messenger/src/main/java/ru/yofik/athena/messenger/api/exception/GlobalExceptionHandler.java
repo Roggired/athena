@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

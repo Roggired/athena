@@ -86,6 +86,12 @@ public class MessageRepositoryImpl implements MessageRepository {
     }
 
     @Override
+    @Transactional
+    public void deleteAllByChatIdAndSenderId(long chatId, long senderId) {
+        crudMessageRepository.deleteAllByChatIdAndSenderId(chatId, senderId);
+    }
+
+    @Override
     public Message getById(long id) {
         return messageFactory.fromEntity(
                 crudMessageRepository.findById(id)

@@ -12,14 +12,13 @@ import ru.yofik.athena.messenger.api.http.user.request.ActivateUserRequest;
 import ru.yofik.athena.messenger.api.http.user.request.AuthorizeUserRequest;
 import ru.yofik.athena.messenger.api.http.user.view.AccessTokenView;
 import ru.yofik.athena.messenger.api.http.user.view.UserView;
-import ru.yofik.athena.messenger.domain.user.service.UserService;
 import ru.yofik.athena.messenger.infrastructure.integration.auth.AthenaAuthApi;
 
 import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/users")
-public class UserResource {
+public class UserController {
     @Autowired
     private ConversionService conversionService;
     @Autowired

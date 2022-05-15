@@ -6,8 +6,6 @@ import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.service.UserService;
 import ru.yofik.athena.messenger.infrastructure.storage.sql.chat.entity.ChatEntity;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.stream.Collectors;
 
 @Component
@@ -22,9 +20,10 @@ public class ChatFactory {
         return new Chat(
                 chatEntity.getId(),
                 chatEntity.getName(),
+                chatEntity.getType(),
                 chatEntity.getUserIds()
                         .stream()
-                        .map(userService::getUser)
+                        .map(userService::getById)
                         .collect(Collectors.toList())
         );
     }
@@ -33,6 +32,7 @@ public class ChatFactory {
         return new ChatEntity(
                 chat.getId(),
                 chat.getName(),
+                chat.getType(),
                 chat.getUsers()
                         .stream()
                         .map(User::getId)

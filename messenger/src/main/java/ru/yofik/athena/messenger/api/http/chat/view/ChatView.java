@@ -9,6 +9,7 @@ import java.util.List;
 public class ChatView {
     public final long id;
     public final String name;
+    public final String type;
     public final List<UserView> userViews;
     public final MessageView lastMessage;
 }

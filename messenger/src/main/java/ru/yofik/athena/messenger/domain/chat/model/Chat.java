@@ -4,14 +4,11 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.util.comparator.Comparators;
-import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
 import ru.yofik.athena.messenger.domain.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -20,20 +17,39 @@ import java.util.stream.Collectors;
 public class Chat {
     private final long id;
     private String name;
+    private final ChatType type;
     private final List<User> users = new ArrayList<>();
     private Message lastMessage;
 
-    public Chat(long id, String name, List<User> users) {
+    public Chat(long id, String name, ChatType type, List<User> users) {
         this.id = id;
         this.name = name;
+        this.type = type;
         this.users.addAll(users);
         this.lastMessage = null;
     }
 
-    public Chat(String name) {
+    private Chat(String name, ChatType type) {
         this.id = 0;
         this.name = name;
+        this.type = type;
         this.lastMessage = null;
+    }
+
+    public static Chat newPersonalChat(User userA, User userB) {
+        var chat = new Chat(
+                "personal-chat-for-users-" + userA.getId() + "-and-" + userB.getId(),
+                ChatType.PERSONAL
+        );
+        chat.addUser(userA);
+        chat.addUser(userB);
+        return chat;
+    }
+
+    public static Chat newGroupChat(String name, User initiator) {
+        var chat = new Chat(name, ChatType.GROUP);
+        chat.addUser(initiator);
+        return chat;
     }
     
     
@@ -46,6 +62,10 @@ public class Chat {
     }
 
     public Chat chooseChatNameFor(User userFor) {
+        if (type == ChatType.GROUP) {
+            return this;
+        }
+
         var otherUser = users
                 .stream()
                 .filter(user -> !user.equals(userFor))

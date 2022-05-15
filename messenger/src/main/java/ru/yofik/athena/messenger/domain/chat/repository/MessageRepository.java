@@ -11,6 +11,7 @@ public interface MessageRepository {
     void deleteById(long id);
     void deleteAllById(List<Long> ids);
     void deleteAllByChatId(long chatId);
+    void deleteAllByChatIdAndSenderId(long chatId, long senderId);
     Message getById(long id);
     List<Message> getAllById(List<Long> ids);
     Page<Message> getPageByChatIdAndOwningUserId(

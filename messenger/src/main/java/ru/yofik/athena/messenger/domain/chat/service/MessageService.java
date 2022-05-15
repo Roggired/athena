@@ -15,7 +15,7 @@ public interface MessageService {
     void updateMessage(long chatId, long messageId, UpdateMessageRequest request);
     Page<Message> getPageFor(Chat chat, Page.Meta pageMeta);
     Message getLastFor(Chat chat);
-    void deleteMessagesByChatId(long chatId);
+    void deleteMessagesByChatId(long chatId, boolean isGlobal);
     void viewMessage(List<Long> messageIds);
     void pinMessage(PinMessageRequest request);
     void unpinMessage(long messageId);

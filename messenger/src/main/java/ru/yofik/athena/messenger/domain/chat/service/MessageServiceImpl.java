@@ -200,8 +200,12 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void deleteMessagesByChatId(long chatId) {
-        messageRepository.deleteAllByChatId(chatId);
+    public void deleteMessagesByChatId(long chatId, boolean isGlobal) {
+        if (isGlobal) {
+            messageRepository.deleteAllByChatId(chatId);
+        } else {
+            messageRepository.deleteAllByChatIdAndSenderId(chatId, userService.getCurrentUser().getId());
+        }
     }
 
     @Override

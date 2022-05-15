@@ -1,0 +1,19 @@
+package ru.yofik.athena.messenger.api.ws.notification.mapper;
+
+import org.springframework.stereotype.Component;
+import ru.yofik.athena.messenger.api.ws.notification.view.ChangedUserPayloadView;
+import ru.yofik.athena.messenger.api.ws.notification.view.NotificationView;
+import ru.yofik.athena.messenger.domain.notification.model.LeavedUserNotification;
+import ru.yofik.athena.messenger.infrastructure.config.ConversionServiceConfig;
+
+@Component
+public class LeavedUserNotificationViewMapper implements ConversionServiceConfig.Mapper<LeavedUserNotification, NotificationView<ChangedUserPayloadView>> {
+    @Override
+    public NotificationView<ChangedUserPayloadView> convert(LeavedUserNotification notification) {
+        var changedUserPayloadViewMapper = new ChangedUserPayloadViewMapper();
+        return new NotificationView<>(
+                notification.getType().toString(),
+                changedUserPayloadViewMapper.convert(notification.getChangedUserPayload())
+        );
+    }
+}

@@ -4,10 +4,7 @@ import lombok.*;
 import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.utils.DateUtils;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

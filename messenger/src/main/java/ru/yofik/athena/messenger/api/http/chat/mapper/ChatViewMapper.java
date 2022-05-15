@@ -17,6 +17,7 @@ public class ChatViewMapper implements ConversionServiceConfig.Mapper<Chat, Chat
         return new ChatView(
                 chat.getId(),
                 chat.getName(),
+                chat.getType().name(),
                 chat.getUsers().stream()
                         .map(userViewMapper::convert)
                         .collect(Collectors.toList()),

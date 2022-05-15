@@ -173,6 +173,96 @@ Subscribe message:
 }
 ```
 
+**New user** - when a user joins a chat
+```json
+{
+   "command": "RECEIVE_NOTIFICATION",
+   "argument": {
+      "type": "NEW_USER",
+      "payload": {
+         "user": {
+            "id": 1,
+            "name": "Иляшик",
+            "login": "kisusil",
+            "isOnline": true,
+            "lastOnlineTime": "2022-05-15T18:14:06.610100"
+         },
+         "chatId": 5
+      }
+   }
+}
+```
+
+**Leaved user** - when a user leaves a chat
+```json
+{
+   "command": "RECEIVE_NOTIFICATION",
+   "argument": {
+      "type": "LEAVED_USER",
+      "payload": {
+         "user": {
+            "id": 1,
+            "name": "Иляшик",
+            "login": "kisusil",
+            "isOnline": true,
+            "lastOnlineTime": "2022-05-15T18:14:06.610100"
+         },
+         "chatId": 5
+      }
+   }
+}
+```
+
+**New invitation** - when the user gets a new invitation
+```json
+{
+   "command": "RECEIVE_NOTIFICATION",
+   "argument": {
+      "type": "NEW_INVITATION",
+      "payload": {
+         "id": "UUID-here",
+         "sender": {
+            "id": 1,
+            "name": "Иляшик",
+            "login": "kisusil",
+            "isOnline": true,
+            "lastOnlineTime": "2022-05-15T18:14:06.610100"
+         },
+         "chat": {
+            "id": 46,
+            "name": "Афина Тим",
+            "type": "GROUP",
+            "userViews": [
+               {
+                  "id": 1,
+                  "name": "Иляшик",
+                  "login": "kisusil",
+                  "isOnline": true,
+                  "lastOnlineTime": "2022-05-15T18:15:23.253348"
+               }
+            ],
+            "lastMessage": {
+               "id": 58,
+               "text": "Пивет",
+               "senderId": 2,
+               "chatId": 46,
+               "creationDate": "2022-05-15T14:19:16.414645",
+               "modificationDate": "2022-05-15T14:19:16.414645",
+               "viewedByUserIds": [
+                  2
+               ],
+               "topic": {
+                  "id": 60,
+                  "name": "Матеша"
+               },
+               "isPinned": false
+            }
+         }
+      }
+   }
+}
+```
+
 NOTE:
 1. To connect to the server via websocket, a client sends special HTTP request (handshake). As soon as this
    request is HTTP, we can use the `Authorization` header to secure websocket endpoints. So, when you are trying to

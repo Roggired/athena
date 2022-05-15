@@ -1,6 +1,9 @@
 package ru.yofik.athena.messenger.domain.notification.model;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 

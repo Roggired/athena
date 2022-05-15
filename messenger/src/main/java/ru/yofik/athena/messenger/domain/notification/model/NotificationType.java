@@ -8,5 +8,8 @@ public enum NotificationType {
     PIN_MESSAGE,
     UNPIN_MESSAGE,
     CHANGED_TOPIC,
-    DELETED_TOPICS
+    DELETED_TOPICS,
+    NEW_USER,
+    LEAVED_USER,
+    NEW_INVITATION
 }

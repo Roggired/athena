@@ -1,6 +1,7 @@
 package ru.yofik.athena.messenger.infrastructure.storage.sql.chat.entity;
 
 import lombok.*;
+
 import javax.persistence.*;
 
 @NoArgsConstructor

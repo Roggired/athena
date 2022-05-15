@@ -2,8 +2,8 @@
 
 in progress (v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**):
 - **issue#21** Pagination for users, chats and messages in Messenger
-    - Now messages cannot be obtained with a chat. Endpoint GET /fullView has been changed to GET /messages with pagination
-    - Endpoints GET /users GET /chats has been updated and now require pagination
+  - Now messages cannot be obtained with a chat. Endpoint GET /fullView has been changed to GET /messages with pagination
+  - Endpoints GET /users GET /chats has been updated and now require pagination
 - **issue#23** View messages
   - Add new WS notification: VIEWED_MESSAGES
 - **issue#24** Is online status for users. Is online status is implemented by active websockets. Therefore, all users
@@ -15,6 +15,13 @@ in progress (v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**):
   - Add endpoints for pinning and unpinning messages and for assigning a topic for the message
   - Add new WS notifications: CHANGED_TOPIC, PIN_MESSAGE, UNPIN_MESSAGE, DELETED_TOPICS
 - **issue#27** Search messages by topic with pagination 
+- **issue#16** Group chats
+  - Alter entity "chat" - add field "type" (possible values: PERSONAL, GROUP)
+  - Alter endpoint "createChat" - now only long "userId" is needed for the request
+  - Add endpoint "createGroupChat"
+  - Add invitations to group chats. The invitation has "id", "sender", "chat"
+  - Add endpoints "inviteUser", "acceptInvitation", "leaveChat", "getAllMineInvitations"
+  - Add new WS notifications: NEW_INVITATION, NEW_USER, LEAVED_USER
 
 v.0.1.6:
 - Architecture refactoring

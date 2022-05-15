@@ -12,4 +12,5 @@
     <include file="db/changelog/sql/ATHENA-23-message-views.sql"/>
     <include file="db/changelog/sql/ATHENA-24-users-last-online-time.sql"/>
     <include file="db/changelog/sql/ATHENA-18-pin-messages.sql"/>
+    <include file="db/changelog/sql/ATHENA-16-group-chat.sql"/>
 </databaseChangeLog>

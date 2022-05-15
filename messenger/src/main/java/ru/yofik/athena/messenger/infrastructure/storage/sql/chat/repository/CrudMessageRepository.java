@@ -16,4 +16,5 @@ public interface CrudMessageRepository extends JpaRepository<MessageEntity, Long
             long topicId
     );
     void deleteAllByChatId(long chatId);
+    void deleteAllByChatIdAndSenderId(long chatId, long senderId);
 }

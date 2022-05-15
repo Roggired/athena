@@ -1,7 +1,6 @@
 package ru.yofik.athena.messenger.api.http.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.http.AbstractPaginationResource;
@@ -15,7 +14,7 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/userProfiles")
-public class UserProfileResource extends AbstractPaginationResource {
+public class UserProfileController extends AbstractPaginationResource {
     @Autowired
     private UserService userService;
 
@@ -38,7 +37,7 @@ public class UserProfileResource extends AbstractPaginationResource {
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_RETURNED,
                 conversionService.convert(
-                        userService.getUser(id),
+                        userService.getById(id),
                         UserView.class
                 )
         );
