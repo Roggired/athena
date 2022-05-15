@@ -14,6 +14,7 @@ public class NewNotificationViewMapper implements ConversionServiceConfig.Mapper
         var messageViewMapper = new MessageViewMapper();
         return new NotificationView<>(
                 notification.getType().toString(),
+                notification.getChatId(),
                 messageViewMapper.convert(notification.getMessage())
         );
     }

@@ -13,6 +13,7 @@ public class DeletedMessagesNotificationViewMapper implements ConversionServiceC
     public NotificationView<List<Long>> convert(DeletedMessagesNotification notification) {
         return new NotificationView<>(
                 notification.getType().name(),
+                notification.getTargetChatId(),
                 notification.getDeletedMessages()
         );
     }

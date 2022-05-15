@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
 
 import java.util.List;
@@ -12,11 +13,11 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class NewMessageNotification extends Notification {
+public class NewMessageNotification extends ChatNotification {
     private final Message message;
 
-    public NewMessageNotification(List<Long> targetUserIds, Message message) {
-        super(NotificationType.NEW_MESSAGE, targetUserIds);
+    public NewMessageNotification(Chat chat, Message message) {
+        super(NotificationType.NEW_MESSAGE, chat);
         this.message = message;
     }
 }

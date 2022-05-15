@@ -11,6 +11,7 @@ public class ViewMessageNotificationViewMapper implements ConversionServiceConfi
     public NotificationView<ViewMessageNotification.Payload> convert(ViewMessageNotification notification) {
         return new NotificationView<>(
                 notification.getType().toString(),
+                notification.getChatId(),
                 notification.getPayload()
         );
     }

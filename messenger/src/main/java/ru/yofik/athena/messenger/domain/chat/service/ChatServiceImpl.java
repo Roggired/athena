@@ -139,7 +139,7 @@ public class ChatServiceImpl implements ChatService {
 
         notificationService.sendNotification(
                 new NewUserNotification(
-                        getUserIdsToBeNotified(chat),
+                        chat,
                         recipient,
                         chat.getId()
                 )
@@ -175,13 +175,6 @@ public class ChatServiceImpl implements ChatService {
         );
     }
 
-    private List<Long> getUserIdsToBeNotified(Chat chat) {
-        return chat.getUsers()
-                .stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
-    }
-
     @Override
     @Transactional(
             isolation = Isolation.REPEATABLE_READ
@@ -207,7 +200,7 @@ public class ChatServiceImpl implements ChatService {
 
             notificationService.sendNotification(
                     new LeavedUserNotification(
-                            getUserIdsToBeNotified(chat),
+                            chat,
                             user,
                             chat.getId()
                     )

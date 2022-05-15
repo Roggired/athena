@@ -13,6 +13,7 @@ public class DeletedTopicNotificationViewMapper implements ConversionServiceConf
     public NotificationView<List<Long>> convert(DeletedTopicNotification notification) {
         return new NotificationView<>(
                 notification.getType().toString(),
+                notification.getChatId(),
                 notification.getDeletedTopicIds()
         );
     }

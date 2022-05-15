@@ -1,6 +1,6 @@
 ## Versions Notes
 
-in progress (v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**):
+v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**:
 - **issue#21** Pagination for users, chats and messages in Messenger
   - Now messages cannot be obtained with a chat. Endpoint GET /fullView has been changed to GET /messages with pagination
   - Endpoints GET /users GET /chats has been updated and now require pagination
@@ -22,6 +22,9 @@ in progress (v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**):
   - Add invitations to group chats. The invitation has "id", "sender", "chat"
   - Add endpoints "inviteUser", "acceptInvitation", "leaveChat", "getAllMineInvitations"
   - Add new WS notifications: NEW_INVITATION, NEW_USER, LEAVED_USER
+- **issue#28** Add "targetChatId" to notification model. This field is useful for finding the chat to which this 
+notification belongs to. I think, it would be more efficient to find the chat in mobile app's cache rather than 
+search for messageId in each chat. See [WebSocket API Reference](WebSocket%20API.md) for details.
 
 v.0.1.6:
 - Architecture refactoring

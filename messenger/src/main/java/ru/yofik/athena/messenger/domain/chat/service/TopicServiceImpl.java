@@ -73,10 +73,7 @@ public class TopicServiceImpl implements TopicService {
 
         notificationService.sendNotification(
                 new DeletedTopicNotification(
-                        chat.getUsers()
-                                .stream()
-                                .map(User::getId)
-                                .collect(Collectors.toList()),
+                        chat,
                         ids
                 )
         );

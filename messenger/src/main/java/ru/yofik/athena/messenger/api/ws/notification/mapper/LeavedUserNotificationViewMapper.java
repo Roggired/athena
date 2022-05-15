@@ -13,6 +13,7 @@ public class LeavedUserNotificationViewMapper implements ConversionServiceConfig
         var changedUserPayloadViewMapper = new ChangedUserPayloadViewMapper();
         return new NotificationView<>(
                 notification.getType().toString(),
+                notification.getChatId(),
                 changedUserPayloadViewMapper.convert(notification.getChangedUserPayload())
         );
     }

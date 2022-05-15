@@ -4,6 +4,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.yofik.athena.messenger.domain.chat.model.Chat;
 
 import java.util.List;
 
@@ -11,14 +12,14 @@ import java.util.List;
 @Setter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
-public class DeletedTopicNotification extends Notification {
+public class DeletedTopicNotification extends ChatNotification {
     private final List<Long> deletedTopicIds;
 
     public DeletedTopicNotification(
-            List<Long> targetUserIds,
+            Chat chat,
             List<Long> deletedTopicIds
     ) {
-        super(NotificationType.DELETED_TOPICS, targetUserIds);
+        super(NotificationType.DELETED_TOPICS, chat);
         this.deletedTopicIds = deletedTopicIds;
     }
 }

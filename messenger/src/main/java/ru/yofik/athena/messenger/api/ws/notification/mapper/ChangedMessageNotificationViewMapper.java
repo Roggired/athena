@@ -13,6 +13,7 @@ public class ChangedMessageNotificationViewMapper implements ConversionServiceCo
         var changedMessagePayloadViewMapper = new ChangedMessagePayloadViewMapper();
         return new NotificationView<>(
                 notification.getType().toString(),
+                notification.getChatId(),
                 changedMessagePayloadViewMapper.convert(notification.getChangedMessagePayload())
         );
     }

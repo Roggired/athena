@@ -16,6 +16,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "NEW_MESSAGE",
+    "targetChatId": 57,
     "payload": {
       "id": 1,
       "text": "Hi!",
@@ -34,6 +35,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "UPDATED_MESSAGE",
+    "targetChatId": 57,
     "payload": {
       "id": 1,
       "text": "Hi! :)",
@@ -52,6 +54,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "DELETED_MESSAGES",
+    "targetChatId": 57,
     "payload": [
       1,
       3,
@@ -81,6 +84,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "CHANGED_TOPIC",
+    "targetChatId": 46,
     "payload": {
       "initiatorId": 2,
       "message": {
@@ -110,6 +114,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "PIN_MESSAGE",
+    "targetChatId": 46,
     "payload": {
       "initiatorId": 2,
       "message": {
@@ -139,6 +144,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "UNPIN_MESSAGE",
+    "targetChatId": 46,
     "payload": {
       "initiatorId": 2,
       "message": {
@@ -168,6 +174,7 @@ Subscribe message:
   "command": "RECEIVE_NOTIFICATION",
   "argument": {
     "type": "DELETED_TOPICS",
+    "targetChatId": 46,
     "payload": [53, 54]
   }
 }
@@ -179,6 +186,7 @@ Subscribe message:
    "command": "RECEIVE_NOTIFICATION",
    "argument": {
       "type": "NEW_USER",
+      "targetChatId": 5,
       "payload": {
          "user": {
             "id": 1,
@@ -199,6 +207,7 @@ Subscribe message:
    "command": "RECEIVE_NOTIFICATION",
    "argument": {
       "type": "LEAVED_USER",
+      "targetChatId": 5,
       "payload": {
          "user": {
             "id": 1,
@@ -219,6 +228,7 @@ Subscribe message:
    "command": "RECEIVE_NOTIFICATION",
    "argument": {
       "type": "NEW_INVITATION",
+      "targetChatId": null,
       "payload": {
          "id": "UUID-here",
          "sender": {

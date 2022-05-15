@@ -19,6 +19,7 @@ public class NewInvitationNotificationViewMapper implements ConversionServiceCon
 
         return new NotificationView<>(
                 notification.getType().toString(),
+                null,
                 new PayloadView(
                         notification.getPayload().getId(),
                         userViewMapper.convert(notification.getPayload().getUser()),

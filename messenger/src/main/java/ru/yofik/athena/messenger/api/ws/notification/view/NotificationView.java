@@ -5,5 +5,6 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class NotificationView<T> {
     public String type;
+    public Long targetChatId;
     public T payload;
 }

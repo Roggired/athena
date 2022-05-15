@@ -63,7 +63,7 @@ public class MessageServiceImpl implements MessageService {
 
         notificationService.sendNotification(
                 new NewMessageNotification(
-                        getUserIdsToBeNotified(chat),
+                        chat,
                         message
                 )
         );
@@ -97,13 +97,14 @@ public class MessageServiceImpl implements MessageService {
             var deleteMessagesIds = deleteGlobally(messages, currentUser);
 
             notification = new DeletedMessagesNotification(
-                    getUserIdsToBeNotified(chat),
+                    chat,
                     deleteMessagesIds
             );
         } else {
             var deleteMessagesIds = deleteLocally(messages, currentUser);
 
             notification = new DeletedMessagesNotification(
+                    chat.getId(),
                     List.of(currentUser.getId()),
                     deleteMessagesIds
             );
@@ -139,21 +140,6 @@ public class MessageServiceImpl implements MessageService {
                 .collect(Collectors.toList());
     }
 
-    private List<Long> getUserIdsToBeNotified(Chat chat) {
-        return chat.getUsers()
-                .stream()
-                .map(User::getId)
-                .collect(Collectors.toList());
-    }
-
-    private List<Long> getUserIdsToBeNotified(Chat chat, Message targetMessage) {
-        return chat.getUsers()
-                .stream()
-                .map(User::getId)
-                .filter(userId -> targetMessage.getOwningUserIds().contains(userId))
-                .collect(Collectors.toList());
-    }
-
     @Override
     @Transactional(
             isolation = Isolation.REPEATABLE_READ
@@ -168,9 +154,9 @@ public class MessageServiceImpl implements MessageService {
         notificationService.sendNotification(
                 new ChangedMessageNotification(
                         NotificationType.UPDATED_MESSAGE,
-                        getUserIdsToBeNotified(chat, message),
-                        userService.getCurrentUser().getId(),
-                        message
+                        chat,
+                        message,
+                        userService.getCurrentUser().getId()
                 )
         );
     }
@@ -221,7 +207,7 @@ public class MessageServiceImpl implements MessageService {
         messageRepository.saveAll(messages);
 
         notificationService.sendNotification(new ViewMessageNotification(
-                getUserIdsToBeNotified(chat),
+                chat,
                 messageIds,
                 viewer.getId()
         ));
@@ -244,9 +230,9 @@ public class MessageServiceImpl implements MessageService {
         notificationService.sendNotification(
                 new ChangedMessageNotification(
                         NotificationType.PIN_MESSAGE,
-                        getUserIdsToBeNotified(chat, message),
-                        userService.getCurrentUser().getId(),
-                        message
+                        chat,
+                        message,
+                        userService.getCurrentUser().getId()
                 )
         );
     }
@@ -262,9 +248,9 @@ public class MessageServiceImpl implements MessageService {
         notificationService.sendNotification(
                 new ChangedMessageNotification(
                         NotificationType.UNPIN_MESSAGE,
-                        getUserIdsToBeNotified(chat, message),
-                        userService.getCurrentUser().getId(),
-                        message
+                        chat,
+                        message,
+                        userService.getCurrentUser().getId()
                 )
         );
     }
@@ -286,9 +272,9 @@ public class MessageServiceImpl implements MessageService {
         notificationService.sendNotification(
                 new ChangedMessageNotification(
                         NotificationType.CHANGED_TOPIC,
-                        getUserIdsToBeNotified(chat, message),
-                        userService.getCurrentUser().getId(),
-                        message
+                        chat,
+                        message,
+                        userService.getCurrentUser().getId()
                 )
         );
     }
