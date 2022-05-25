@@ -1,6 +1,6 @@
 ## Versions Notes
 
-in progress (v0.2.1):
+v0.2.1:
 - **issue#35** fix endpoint /api/v1/chats
 - **issue#33** fix endpoint /api/v1/chats/1/messages/messages
 - **issue#34** remove this user from page returning on /api/v1/userProfiles
