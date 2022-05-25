@@ -1,6 +1,10 @@
 package ru.yofik.athena.admin.context.user.service;
 
+import com.google.gson.Gson;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.RequestScope;
@@ -11,6 +15,9 @@ import ru.yofik.athena.admin.context.user.model.Invitation;
 import ru.yofik.athena.admin.context.user.model.User;
 import ru.yofik.athena.admin.context.user.model.UserInfo;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.List;
@@ -34,6 +41,53 @@ public class UserServiceImpl implements UserService {
     public void createUser(String name, String login) {
         var user = userFactory.of(name, login);
         userApi.createUser(user, getToken());
+    }
+
+    @Override
+    public String importUsers(InputStream inputStream) {
+        try {
+            var csvParser = CSVParser.parse(
+                    inputStream,
+                    StandardCharsets.UTF_8,
+                    CSVFormat.DEFAULT
+            );
+            var users = csvParser.stream()
+                    .map(record -> userFactory.of(
+                            record.get(0),
+                            record.get(1)
+                    ))
+                    .collect(Collectors.toList());
+            users = users.stream()
+                    .map(user -> userApi.createUser(user, getToken()))
+                    .collect(Collectors.toList());
+
+            return activateUsersAndGetJsonList(users);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @AllArgsConstructor
+    private static class Pair {
+        public final String login;
+        public final String name;
+        public final String invitation;
+    }
+    @AllArgsConstructor
+    private static class PairWrapper {
+        public final List<Pair> users;
+    }
+
+    private String activateUsersAndGetJsonList(List<User> users) {
+        var pairs = users.stream()
+                .map(user -> new Pair(
+                        user.getLogin(),
+                        user.getName(),
+                        userApi.createNewInvitation(user.getId(), getToken()).getCode()
+                ))
+                .collect(Collectors.toList());
+
+        return new Gson().toJson(new PairWrapper(pairs));
     }
 
     @Override

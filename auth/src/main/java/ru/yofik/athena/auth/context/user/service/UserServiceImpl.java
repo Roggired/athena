@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void create(CreateUserRequest request) {
+    public UserView create(CreateUserRequest request) {
         var existedUser = userRepository.findByLogin(request.login);
         if (existedUser.isPresent()) {
             log.warn(() -> "User with login: " + request.login + " already exists");
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         }
 
         var user = userFactory.createNew(request.name, request.login);
-        save(user);
+        return save(user).toView();
     }
 
     @Override
@@ -221,13 +221,15 @@ public class UserServiceImpl implements UserService {
         return userFactory.from(user);
     }
 
-    private void save(User user) {
+    private User save(User user) {
         var userJpaDto = userFactory.toUserJpaDto(user);
-        userRepository.save(userJpaDto);
+        userJpaDto = userRepository.save(userJpaDto);
 
         if (user.hasInvitation()) {
             var invitationRedisDto = invitationFactory.toRedisDto(user.getInvitation());
             invitationRepository.save(invitationRedisDto);
         }
+
+        return userFactory.from(userJpaDto);
     }
 }

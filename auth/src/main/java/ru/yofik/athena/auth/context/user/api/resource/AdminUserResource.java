@@ -20,11 +20,9 @@ public class AdminUserResource {
 
     @PostMapping
     public AuthV1Response createUser(@Valid @RequestBody CreateUserRequest request) {
-        userService.create(request);
-
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_CREATED,
-                "User has been created"
+                userService.create(request)
         );
     }
 

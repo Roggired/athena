@@ -15,6 +15,6 @@ public interface UserApi {
     void deleteUser(long id, char[] token);
     void lockUser(long id, char[] token);
     void unlockUser(long id, char[] token);
-    void createUser(User user, char[] token);
+    User createUser(User user, char[] token);
     Invitation createNewInvitation(long id, char[] token);
 }

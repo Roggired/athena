@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public interface UserService {
     AccessTokenView activate(ActivateUserRequest request, String deviceId);
-    void create(CreateUserRequest request);
+    UserView create(CreateUserRequest request);
     UserView get(long id);
     List<UserShortView> getAll();
     Page<UserShortView> getPage(Page.Meta pageMeta);
