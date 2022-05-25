@@ -67,7 +67,7 @@ public class MessageController {
         );
     }
 
-    @DeleteMapping("/messages")
+    @DeleteMapping
     public MessengerV1Response deleteMessages(
             @PathVariable("chatId") long chatId,
             @RequestBody @Valid DeleteMessagesRequest request,

@@ -107,7 +107,7 @@ public class AuthServiceUserApi extends AbstractAuthServiceApi implements UserAp
     }
 
     @Override
-    public void createUser(User user, char[] token) {
+    public User createUser(User user, char[] token) {
         var response = executeRestTemplate(
                 createURI("/api/v1/admin/users"),
                 HttpMethod.POST,
@@ -117,7 +117,7 @@ public class AuthServiceUserApi extends AbstractAuthServiceApi implements UserAp
         var authV1Response = getAuthV1Response(response);
 
         if (AuthV1ResponseParser.isStatus(authV1Response, AuthV1ResponseStatus.RESOURCE_CREATED)) {
-            return;
+            return AuthV1ResponseParser.parsePayload(authV1Response, User.class);
         }
 
         log.warn(() -> "Auth Service response: " + authV1Response);

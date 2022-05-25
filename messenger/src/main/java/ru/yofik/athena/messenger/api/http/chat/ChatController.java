@@ -54,7 +54,10 @@ public class ChatController {
     ) {
         return MessengerV1Response.of(
                 MessengerV1ResponseStatus.RESOURCE_CREATED,
-                chatService.createPersonalChat(request)
+                conversionService.convert(
+                        chatService.createPersonalChat(request),
+                        ChatView.class
+                )
         );
     }
 
