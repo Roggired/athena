@@ -3,6 +3,7 @@
 in progress (v0.2.1):
 - **issue#35** fix endpoint /api/v1/chats
 - **issue#33** fix endpoint /api/v1/chats/1/messages/messages
+- **issue#34** remove this user from page returning on /api/v1/userProfiles
 
 v.0.2.0 **ATTENTION! v.0.2.0 MAY NOT BE COMPATIBLE WITH v.0.1.x**:
 - **issue#21** Pagination for users, chats and messages in Messenger
