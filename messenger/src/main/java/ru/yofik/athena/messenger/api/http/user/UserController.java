@@ -11,6 +11,7 @@ import ru.yofik.athena.messenger.api.http.MessengerV1ResponseStatus;
 import ru.yofik.athena.messenger.api.http.user.request.ActivateUserRequest;
 import ru.yofik.athena.messenger.api.http.user.request.AuthorizeUserRequest;
 import ru.yofik.athena.messenger.api.http.user.view.AccessTokenView;
+import ru.yofik.athena.messenger.api.http.user.view.MyUserView;
 import ru.yofik.athena.messenger.api.http.user.view.UserView;
 import ru.yofik.athena.messenger.infrastructure.integration.auth.AthenaAuthApi;
 
@@ -33,7 +34,7 @@ public class UserController {
                 MessengerV1ResponseStatus.RESOURCE_RETURNED,
                 conversionService.convert(
                         athenaAuthApi.authorize(request.accessToken),
-                        UserView.class
+                        MyUserView.class
                 )
         );
     }

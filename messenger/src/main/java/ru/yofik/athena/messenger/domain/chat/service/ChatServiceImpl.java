@@ -14,18 +14,15 @@ import ru.yofik.athena.messenger.api.http.chat.request.InviteUserToGroupChatRequ
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.model.ChatType;
 import ru.yofik.athena.messenger.domain.chat.model.JoinChatInvitation;
-import ru.yofik.athena.messenger.domain.chat.model.Message;
 import ru.yofik.athena.messenger.domain.chat.repository.ChatRepository;
 import ru.yofik.athena.messenger.domain.chat.repository.JoinChatInvitationRepository;
 import ru.yofik.athena.messenger.domain.notification.model.LeavedUserNotification;
 import ru.yofik.athena.messenger.domain.notification.model.NewInvitationNotification;
 import ru.yofik.athena.messenger.domain.notification.model.NewUserNotification;
 import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
-import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.service.UserService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequestScope
@@ -58,6 +55,11 @@ public class ChatServiceImpl implements ChatService {
         var user = userService.getCurrentUser();
         var targetUser = userService.getById(request.targetUserId);
 
+        var existedChat = chatRepository.getByUserIds(user.getId(), targetUser.getId());
+        if (existedChat.isPresent()) {
+            return existedChat.get();
+        }
+
         var chat = Chat.newPersonalChat(user, targetUser);
         chat.markOnlineUsers(notificationService);
 
@@ -87,7 +89,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Page<Chat> getPageForCurrentUser(Page.Meta pageMeta) {
-        var page = chatRepository.getPage(pageMeta);
+        var page = chatRepository.getPageByUserId(pageMeta, userService.getCurrentUser().getId());
         return page.map(chat -> {
             chat.chooseChatNameFor(userService.getCurrentUser());
             chat.markOnlineUsers(notificationService);

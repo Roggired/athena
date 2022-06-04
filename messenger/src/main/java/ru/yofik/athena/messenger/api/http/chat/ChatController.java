@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yofik.athena.common.Page;
 import ru.yofik.athena.messenger.api.http.MessengerV1Response;
 import ru.yofik.athena.messenger.api.http.MessengerV1ResponseStatus;
-import ru.yofik.athena.messenger.api.http.chat.request.CreateGroupChatRequest;
 import ru.yofik.athena.messenger.api.http.chat.request.CreatePersonalChatRequest;
 import ru.yofik.athena.messenger.api.http.chat.view.ChatView;
 import ru.yofik.athena.messenger.domain.chat.service.ChatService;

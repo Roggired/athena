@@ -7,8 +7,6 @@ import ru.yofik.athena.messenger.domain.notification.service.NotificationService
 import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.repository.UserRepository;
 
-import java.util.function.UnaryOperator;
-
 @Service
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;

@@ -1,5 +1,10 @@
 ## Versions Notes
 
+v0.2.2:
+- **issue#37** fix bug with creating personal chats
+- **issue#39** fix bug with chat paging
+- **issue#42** make new view for /api/v1/users/authorize
+
 v0.2.1:
 - **issue#35** fix endpoint /api/v1/chats
 - **issue#33** fix endpoint /api/v1/chats/1/messages/messages
