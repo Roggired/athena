@@ -1,5 +1,8 @@
 ## Versions Notes
 
+v0.2.2:
+- **issue#37** fix bug with creating personal chats
+
 v0.2.1:
 - **issue#35** fix endpoint /api/v1/chats
 - **issue#33** fix endpoint /api/v1/chats/1/messages/messages

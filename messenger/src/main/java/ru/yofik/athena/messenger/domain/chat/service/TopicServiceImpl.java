@@ -9,10 +9,8 @@ import ru.yofik.athena.messenger.domain.chat.repository.MessageRepository;
 import ru.yofik.athena.messenger.domain.chat.repository.TopicRepository;
 import ru.yofik.athena.messenger.domain.notification.model.DeletedTopicNotification;
 import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
-import ru.yofik.athena.messenger.domain.user.model.User;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TopicServiceImpl implements TopicService {

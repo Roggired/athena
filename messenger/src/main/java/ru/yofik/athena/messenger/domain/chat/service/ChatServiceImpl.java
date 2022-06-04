@@ -14,18 +14,15 @@ import ru.yofik.athena.messenger.api.http.chat.request.InviteUserToGroupChatRequ
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.model.ChatType;
 import ru.yofik.athena.messenger.domain.chat.model.JoinChatInvitation;
-import ru.yofik.athena.messenger.domain.chat.model.Message;
 import ru.yofik.athena.messenger.domain.chat.repository.ChatRepository;
 import ru.yofik.athena.messenger.domain.chat.repository.JoinChatInvitationRepository;
 import ru.yofik.athena.messenger.domain.notification.model.LeavedUserNotification;
 import ru.yofik.athena.messenger.domain.notification.model.NewInvitationNotification;
 import ru.yofik.athena.messenger.domain.notification.model.NewUserNotification;
 import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
-import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.service.UserService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequestScope
@@ -57,6 +54,11 @@ public class ChatServiceImpl implements ChatService {
     public Chat createPersonalChat(CreatePersonalChatRequest request) {
         var user = userService.getCurrentUser();
         var targetUser = userService.getById(request.targetUserId);
+
+        var existedChat = chatRepository.getByUserIds(user.getId(), targetUser.getId());
+        if (existedChat.isPresent()) {
+            return existedChat.get();
+        }
 
         var chat = Chat.newPersonalChat(user, targetUser);
         chat.markOnlineUsers(notificationService);

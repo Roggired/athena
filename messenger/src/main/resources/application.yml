@@ -13,3 +13,13 @@ yofik:
     auth-port: 8081
   security:
     client-token: <client-token>
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: WARN
+        type:
+          descriptor:
+            sql:
+              BasicBinder: WARN

@@ -11,6 +11,7 @@ import ru.yofik.athena.messenger.infrastructure.storage.sql.chat.repository.Crud
 import ru.yofik.athena.messenger.utils.PageUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -63,5 +64,10 @@ public class ChatRepositoryImpl implements ChatRepository {
     @Override
     public boolean existsById(long id) {
         return crudChatRepository.existsById(id);
+    }
+
+    @Override
+    public Optional<Chat> getByUserIds(long userAId, long userBId) {
+        return crudChatRepository.getByUserIds(userAId, userBId).map(chatFactory::fromEntity);
     }
 }

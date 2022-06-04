@@ -7,8 +7,6 @@ import lombok.ToString;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
 
-import java.util.List;
-
 @Getter
 @Setter
 @ToString
