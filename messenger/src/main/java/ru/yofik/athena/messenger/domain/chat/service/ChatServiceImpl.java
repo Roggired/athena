@@ -89,7 +89,7 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public Page<Chat> getPageForCurrentUser(Page.Meta pageMeta) {
-        var page = chatRepository.getPage(pageMeta);
+        var page = chatRepository.getPageByUserId(pageMeta, userService.getCurrentUser().getId());
         return page.map(chat -> {
             chat.chooseChatNameFor(userService.getCurrentUser());
             chat.markOnlineUsers(notificationService);

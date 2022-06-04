@@ -62,12 +62,24 @@ public class ChatRepositoryImpl implements ChatRepository {
     }
 
     @Override
+    public Page<Chat> getPageByUserId(Page.Meta pageMeta, long userId) {
+        var springPage = crudChatRepository.findAllByUserId(
+                PageRequest.of(
+                        pageMeta.getSequentialNumber(),
+                        pageMeta.getSize()
+                ),
+                userId
+        ).map(chatFactory::fromEntity);
+        return PageUtils.fromSpringPage(springPage);
+    }
+
+    @Override
     public boolean existsById(long id) {
         return crudChatRepository.existsById(id);
     }
 
     @Override
     public Optional<Chat> getByUserIds(long userAId, long userBId) {
-        return crudChatRepository.getByUserIds(userAId, userBId).map(chatFactory::fromEntity);
+        return crudChatRepository.getPersonalChatByUserIds(userAId, userBId).map(chatFactory::fromEntity);
     }
 }

@@ -2,6 +2,7 @@
 
 v0.2.2:
 - **issue#37** fix bug with creating personal chats
+- **issue#39** fix bug with chat paging
 
 v0.2.1:
 - **issue#35** fix endpoint /api/v1/chats
