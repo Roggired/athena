@@ -4,11 +4,13 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public final class AuthV1ResponseParser {
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(AuthV1Response.class, new AuthV1ResponseJsonDeserializer())
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeJsonDeserializer())
             .create();
 
 
@@ -42,6 +44,13 @@ public final class AuthV1ResponseParser {
                     status,
                     jsonPayload
             );
+        }
+    }
+
+    private static class LocalDateTimeJsonDeserializer implements JsonDeserializer<LocalDateTime> {
+        @Override
+        public LocalDateTime deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            return LocalDateTime.parse(json.getAsString());
         }
     }
 }
