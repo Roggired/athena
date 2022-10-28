@@ -15,17 +15,16 @@ import java.security.NoSuchAlgorithmException;
 @RestController
 @RequestMapping("/files")
 public class FileController {
+
     private final MinioClient minioClient;
+
     @Autowired
     public FileController(MinioClient minioClient) {
         this.minioClient = minioClient;
     }
 
     @PostMapping
-    public ResponseEntity uploadFile(@RequestBody MultipartFile file) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        if (!minioClient.bucketExists(BucketExistsArgs.builder().bucket("athena-test-bucket").build())) {
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket("athena-test-bucket").build());
-        }
+    public ResponseEntity uploadFile(@RequestBody MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
 
         minioClient.uploadObject(UploadObjectArgs.builder()
                 .bucket("athena-test-bucket")
@@ -35,7 +34,7 @@ public class FileController {
                 .build()
         );
 
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
     @GetMapping("/{object}")
