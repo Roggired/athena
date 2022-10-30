@@ -51,8 +51,8 @@ jobs:
           scp auth-0.3.0.war stage:~/athena-stage/auth/
       - name: Run server
         run: |
-          ssh stage 'docker stop auth-athena-stage && docker rm auth-athena-stage && cd ~/athena-stage/auth && docker build -t auth-service-stage:latest . && docker run --name auth-athena-stage --network athena-stage auth-service-stage:latest &'
-          ssh stage 'sleep 180'
+          ssh stage 'docker stop auth-athena-stage && docker rm auth-athena-stage && cd ~/athena-stage/auth && docker build -t auth-service-stage:latest . && docker run --name auth-athena-stage --network athena-stage -d -p 8081:8081 auth-service-stage:latest'
+          ssh stage 'sleep 60'
       - name: Install Postman CLI
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
