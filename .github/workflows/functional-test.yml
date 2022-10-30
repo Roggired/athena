@@ -61,6 +61,3 @@ jobs:
       - name: Run API tests
         run: |
           postman collection run "5015455-908ea1c4-170a-4f84-a275-678aa2158afd" --integration-id "126124-${{ github.run_id }}"
-      - name: Stop server
-        run: |
-          ssh stage 'docker stop auth-athena-stage'
