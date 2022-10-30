@@ -1,6 +1,7 @@
 package ru.yofik.athena.auth.api.user;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.yofik.athena.auth.api.user.requests.CreateUserRequest;
 import ru.yofik.athena.auth.api.user.requests.FilteredUsersRequest;
@@ -12,6 +13,7 @@ import ru.yofik.athena.common.api.AuthV1Response;
 import ru.yofik.athena.common.api.AuthV1ResponseStatus;
 import ru.yofik.athena.common.domain.NewPage;
 
+import javax.print.attribute.standard.Media;
 import javax.validation.Valid;
 
 @AllArgsConstructor
@@ -21,7 +23,7 @@ public class UserController {
     private final UserService userService;
 
 
-    @PostMapping
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthV1Response createUser(
             @RequestBody @Valid CreateUserRequest request
     ) {
@@ -35,7 +37,7 @@ public class UserController {
         );
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthV1Response updateUser(
             @PathVariable("id") long id,
             @RequestBody @Valid UpdateUserRequest request
@@ -48,7 +50,7 @@ public class UserController {
         );
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthV1Response deleteUser(
             @PathVariable("id") long id
     ) {
@@ -59,7 +61,7 @@ public class UserController {
         );
     }
 
-    @PostMapping("/filtered")
+    @PostMapping(value = "/filtered", produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthV1Response getUsersPageable(
             NewPage.Meta pageMeta,
             @RequestBody @Valid FilteredUsersRequest request
@@ -70,7 +72,7 @@ public class UserController {
         );
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthV1Response getUser(
             @PathVariable("id") long id
     ) {
