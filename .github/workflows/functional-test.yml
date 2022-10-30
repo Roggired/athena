@@ -1,0 +1,69 @@
+name: Backend functional tests with Postman
+
+on: workflow_dispatch
+
+env:
+  ARTIFACT_NAME: auth-0.3.0.war
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ready war
+          path: auth/build/libs/$ARTIFACT_NAME
+          retention-days: 1
+
+  automated-api-tests:
+    needs: unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure ssh
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/id_stage_key &&
+          chmod 600 ~/.ssh/id_stage_key
+          cat >>~/.ssh/config <<END
+          Host stage
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/id_stage_key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.ATHENA_STAGE_SSH_USER }}
+          SSH_HOST: ${{ secrets.ATHENA_STAGE_SSH_HOST }}
+          SSH_KEY: ${{ secrets.ATHENA_STAGE_SSH_KEY }}
+      - name: Obtain war
+        uses: actions/download-artifact@v3
+        with:
+          name: ready war
+      - name: Deploy war
+        run: |
+          scp $ARTIFACT_NAME stage:~/athena-stage/auth/
+      - name: Run server
+        run: |
+          ssh stage 'cd ~/athena-stage/auth && java -jar -Dspring.profiles.active=dev,stage $ARTIFACT_NAME' &
+      - name: Install Postman CLI
+        run: |
+          curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Login to Postman CLI
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Run API tests
+        run: |
+          postman collection run "5015455-908ea1c4-170a-4f84-a275-678aa2158afd" --integration-id "126124-${{ github.run_id }}"
+      - name: Stop server
+        run: |
+          ps aux | awk '{print $11 " " $12 " " $13 " " $14 " " $2}' | grep "^java -jar -Dspring.profiles.active=dev,stage" | awk '{print $5}' | xargs kill -9 $1
