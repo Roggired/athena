@@ -1,10 +1,10 @@
-package ru.yofik.athena.common.fine;
+package ru.yofik.athena.common.storage.fine;
 
 import org.junit.jupiter.api.Test;
 import ru.yofik.athena.common.storage.fine.entityDescriptor.EntityDescriptorBuilder;
-import ru.yofik.athena.common.fine.testEntity.TestEntity;
-import ru.yofik.athena.common.fine.testEntity.TestNestedEntityA;
-import ru.yofik.athena.common.fine.testEntity.TestNestedEntityB;
+import ru.yofik.athena.common.storage.fine.testEntity.TestEntity;
+import ru.yofik.athena.common.storage.fine.testEntity.TestNestedEntityA;
+import ru.yofik.athena.common.storage.fine.testEntity.TestNestedEntityB;
 
 import java.util.List;
 import java.util.Map;

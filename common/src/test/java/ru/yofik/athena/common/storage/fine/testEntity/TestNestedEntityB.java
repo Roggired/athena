@@ -1,4 +1,4 @@
-package ru.yofik.athena.common.fine.testEntity;
+package ru.yofik.athena.common.storage.fine.testEntity;
 
 public class TestNestedEntityB {
     private final long id;

@@ -1,13 +1,12 @@
-package ru.yofik.athena.common.fine;
+package ru.yofik.athena.common.storage.fine;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import ru.yofik.athena.common.storage.fine.Columns;
 import ru.yofik.athena.common.storage.fine.entityDescriptor.EntityDescriptor;
 import ru.yofik.athena.common.storage.fine.entityDescriptor.EntityDescriptorBuilder;
-import ru.yofik.athena.common.fine.testEntity.TestEntity;
-import ru.yofik.athena.common.fine.testEntity.TestNestedEntityA;
-import ru.yofik.athena.common.fine.testEntity.TestNestedEntityB;
+import ru.yofik.athena.common.storage.fine.testEntity.TestEntity;
+import ru.yofik.athena.common.storage.fine.testEntity.TestNestedEntityA;
+import ru.yofik.athena.common.storage.fine.testEntity.TestNestedEntityB;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
