@@ -1,7 +1,6 @@
 name: Backend functional tests with Postman
 
-on:
-  workflow_dispatch:
+on: workflow_dispatch
 
 env:
   ARTIFACT_NAME: auth-0.3.0.war
