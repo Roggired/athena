@@ -9,11 +9,12 @@ on:
 permissions:
   contents: read
 
+env:
+  ARTIFACT_NAME: auth-0.3.0.war
+
 jobs:
-  build:
-
+  unit-tests:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
@@ -25,3 +26,8 @@ jobs:
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
           arguments: build
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ready war
+          path: auth/build/libs/$ARTIFACT_NAME
+          retention-days: 1
