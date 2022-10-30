@@ -21,7 +21,6 @@ jobs:
           name: ready war
           path: auth/build/libs/auth-0.3.0.war
           retention-days: 1
-
   automated-api-tests:
     needs: unit-tests
     runs-on: ubuntu-latest
@@ -52,7 +51,8 @@ jobs:
           scp auth-0.3.0.war stage:~/athena-stage/auth/
       - name: Run server
         run: |
-          ssh stage 'cd ~/athena-stage/auth && java -jar -Dspring.profiles.active=dev,stage auth-0.3.0.war' &
+          ssh stage 'docker stop auth-athena-stage && docker rm auth-athena-stage && cd ~/athena-stage/auth && docker build -t auth-service-stage:latest . && docker run --name auth-athena-stage --network athena-stage auth-service-stage:latest &'
+          ssh stage 'sleep 180'
       - name: Install Postman CLI
         run: |
           curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
@@ -63,4 +63,4 @@ jobs:
           postman collection run "5015455-908ea1c4-170a-4f84-a275-678aa2158afd" --integration-id "126124-${{ github.run_id }}"
       - name: Stop server
         run: |
-          ps aux | awk '{print $11 " " $12 " " $13 " " $14 " " $2}' | grep "^java -jar -Dspring.profiles.active=dev,stage" | awk '{print $5}' | xargs kill -9 $1
+          ssh stage 'docker stop auth-athena-stage'
