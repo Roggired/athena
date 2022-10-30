@@ -8,8 +8,8 @@ import ru.yofik.athena.admin.context.client.integration.auth.request.LoginReques
 import ru.yofik.athena.admin.context.client.integration.auth.response.NewTokenAuthResponse;
 import ru.yofik.athena.admin.context.client.model.Token;
 import ru.yofik.athena.admin.infrastructure.restApi.AbstractAuthServiceApi;
-import ru.yofik.athena.common.AuthV1ResponseParser;
-import ru.yofik.athena.common.AuthV1ResponseStatus;
+import ru.yofik.athena.common.api.AuthV1ResponseParser;
+import ru.yofik.athena.common.api.AuthV1ResponseStatus;
 
 @Service
 @Log4j2

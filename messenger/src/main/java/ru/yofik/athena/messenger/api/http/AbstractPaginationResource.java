@@ -3,7 +3,7 @@ package ru.yofik.athena.messenger.api.http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 
 import java.util.stream.Collectors;
 

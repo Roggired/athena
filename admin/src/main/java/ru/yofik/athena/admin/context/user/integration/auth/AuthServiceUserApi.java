@@ -12,8 +12,8 @@ import ru.yofik.athena.admin.context.user.model.Invitation;
 import ru.yofik.athena.admin.context.user.model.User;
 import ru.yofik.athena.admin.context.user.model.UserInfo;
 import ru.yofik.athena.admin.infrastructure.restApi.AbstractAuthServiceApi;
-import ru.yofik.athena.common.AuthV1ResponseParser;
-import ru.yofik.athena.common.AuthV1ResponseStatus;
+import ru.yofik.athena.common.api.AuthV1ResponseParser;
+import ru.yofik.athena.common.api.AuthV1ResponseStatus;
 
 import java.util.Collections;
 import java.util.List;

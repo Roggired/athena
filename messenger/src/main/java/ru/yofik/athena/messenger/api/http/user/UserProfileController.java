@@ -2,7 +2,7 @@ package ru.yofik.athena.messenger.api.http.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.api.http.AbstractPaginationResource;
 import ru.yofik.athena.messenger.api.http.MessengerV1Response;
 import ru.yofik.athena.messenger.api.http.MessengerV1ResponseStatus;

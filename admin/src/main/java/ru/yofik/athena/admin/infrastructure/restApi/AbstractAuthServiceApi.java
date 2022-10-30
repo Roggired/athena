@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import ru.yofik.athena.admin.api.exception.AuthenticationException;
 import ru.yofik.athena.admin.api.exception.ForbiddenException;
-import ru.yofik.athena.common.AuthV1Response;
-import ru.yofik.athena.common.AuthV1ResponseParser;
-import ru.yofik.athena.common.AuthV1ResponseStatus;
+import ru.yofik.athena.common.api.AuthV1Response;
+import ru.yofik.athena.common.api.AuthV1ResponseParser;
+import ru.yofik.athena.common.api.AuthV1ResponseStatus;
 
 import java.net.URI;
 

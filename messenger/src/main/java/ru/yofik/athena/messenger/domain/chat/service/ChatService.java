@@ -1,7 +1,7 @@
 package ru.yofik.athena.messenger.domain.chat.service;
 
 import org.springframework.stereotype.Service;
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.api.http.chat.request.CreateGroupChatRequest;
 import ru.yofik.athena.messenger.api.http.chat.request.CreatePersonalChatRequest;
 import ru.yofik.athena.messenger.api.http.chat.request.InviteUserToGroupChatRequest;

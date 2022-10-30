@@ -4,7 +4,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
 import ru.yofik.athena.messenger.domain.chat.repository.MessageRepository;

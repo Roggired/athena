@@ -1,6 +1,6 @@
 package ru.yofik.athena.messenger.domain.chat.repository;
 
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.domain.chat.model.Message;
 
 import java.util.List;

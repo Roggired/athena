@@ -2,7 +2,7 @@ package ru.yofik.athena.messenger.infrastructure.storage.sql.chat;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.messenger.domain.chat.model.Chat;
 import ru.yofik.athena.messenger.domain.chat.repository.ChatRepository;

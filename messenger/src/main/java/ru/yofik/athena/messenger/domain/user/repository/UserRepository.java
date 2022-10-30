@@ -1,6 +1,6 @@
 package ru.yofik.athena.messenger.domain.user.repository;
 
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.domain.user.model.User;
 
 public interface UserRepository {

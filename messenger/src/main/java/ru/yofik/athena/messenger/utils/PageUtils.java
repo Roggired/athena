@@ -1,6 +1,6 @@
 package ru.yofik.athena.messenger.utils;
 
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 
 import java.util.ArrayList;
 

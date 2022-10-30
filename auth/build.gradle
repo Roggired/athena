@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'ru.yofik.athena'
-version = '0.1.2'
+version = '0.3.0'
 sourceCompatibility = '11'
 
 configurations {
@@ -21,10 +21,10 @@ repositories {
 
 dependencies {
     //security
-    implementation 'org.bitbucket.b_c:jose4j:0.7.11'
+    implementation 'org.bitbucket.b_c:jose4j:0.9.1'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
     implementation 'org.jasypt:jasypt:1.9.3'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // web
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
@@ -33,6 +33,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'org.postgresql:postgresql'
+
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
 
     // gson
     implementation 'com.google.code.gson:gson:2.9.0'
@@ -43,6 +45,10 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-devtools"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // documentation
+    implementation "org.springdoc:springdoc-openapi-ui:1.6.11"
+    implementation "org.springdoc:springdoc-openapi-security:1.6.12"
 
     implementation project(":common")
 
@@ -58,4 +64,34 @@ configurations['implementation'].exclude(group: 'org.springframework.boot', modu
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    manifest {
+        attributes(
+                "Specification-Title": title,
+                "Specification-Version": serviceVersion,
+                "Specification-Vendor": vendor,
+                "Implementation-Title": title,
+                "Implementation-Version": serviceVersion,
+                "Implementation-Vendor": vendor,
+                "Implementation-Vendor-Id": vendorId,
+                "Bundle-SymbolicName": serviceBundleSymbolicName
+        )
+    }
+}
+
+bootWar {
+    manifest {
+        attributes(
+                "Specification-Title": title,
+                "Specification-Version": serviceVersion,
+                "Specification-Vendor": vendor,
+                "Implementation-Title": title,
+                "Implementation-Version": serviceVersion,
+                "Implementation-Vendor": vendor,
+                "Implementation-Vendor-Id": vendorId,
+                "Bundle-SymbolicName": serviceBundleSymbolicName
+        )
+    }
 }

@@ -10,17 +10,17 @@ spring:
 
 server:
   port: 8081
-  ssl:
-    enabled: true
-    protocol: TLS
-    enabled-protocols: TLSv1.2
-    key-store: certs/Server-keystore.p12
-    key-store-type: PKCS12
-    key-store-password: password
-    client-auth: need
-    trust-store: certs/Server-truststore.p12
-    trust-store-type: PKCS12
-    trust-store-password: password
+#  ssl:
+#    enabled: true
+#    protocol: TLS
+#    enabled-protocols: TLSv1.2
+#    key-store: certs/Server-keystore.p12
+#    key-store-type: PKCS12
+#    key-store-password: password
+#    client-auth: need
+#    trust-store: certs/Server-truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: password
 
 jasypt:
   encryptor:
@@ -33,3 +33,7 @@ yofik:
 #    16 bytes
     jwe-key: ENC(AFU0CPRBYMRRmKZEVXylhi5prPEQO/ocPlzim0x8ZrA=)
     admin-password: ENC(JiDCOAk77HU4etGWYul/4g==)
+
+logging:
+  level:
+    ru.yofik.athena.common.fine: debug

@@ -3,7 +3,7 @@ package ru.yofik.athena.messenger.api.http.chat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.web.bind.annotation.*;
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.api.http.MessengerV1Response;
 import ru.yofik.athena.messenger.api.http.MessengerV1ResponseStatus;
 import ru.yofik.athena.messenger.api.http.chat.request.*;

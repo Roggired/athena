@@ -1,7 +1,7 @@
 package ru.yofik.athena.messenger.domain.user.service;
 
 import org.springframework.stereotype.Service;
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.api.http.user.request.UpdateUserRequest;
 import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
 import ru.yofik.athena.messenger.domain.user.model.User;

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.RequestScope;
-import ru.yofik.athena.common.Page;
+import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.api.exception.InvalidDataException;
 import ru.yofik.athena.messenger.api.exception.ResourceNotFoundException;
 import ru.yofik.athena.messenger.api.http.chat.request.CreateGroupChatRequest;
