@@ -26,6 +26,8 @@ dependencies {
     implementation 'org.jasypt:jasypt:1.9.3'
 //    implementation 'org.springframework.boot:spring-boot-starter-security'
 
+    implementation("org.liquibase:liquibase-core")
+
     // web
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.0.Final'
@@ -41,14 +43,13 @@ dependencies {
 
     // dev tools
     implementation 'org.springframework.boot:spring-boot-configuration-processor'
-    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
     compileOnly "org.springframework.boot:spring-boot-devtools"
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
     // documentation
     implementation "org.springdoc:springdoc-openapi-ui:1.6.11"
-    implementation "org.springdoc:springdoc-openapi-security:1.6.12"
+//    implementation "org.springdoc:springdoc-openapi-security:1.6.12"
 
     implementation project(":common")
 
@@ -59,8 +60,6 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
 }
-
-configurations['implementation'].exclude(group: 'org.springframework.boot', module: 'spring-boot-starter-logging')
 
 tasks.named('test') {
     useJUnitPlatform()

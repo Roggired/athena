@@ -22,7 +22,7 @@ CREATE TABLE session
     last_login_date   TIMESTAMP    NOT NULL
 );
 
-CREATE TABLE users
+CREATE TABLE athena_users
 (
     id             BIGSERIAL PRIMARY KEY,
     login          VARCHAR(15)                        NOT NULL,

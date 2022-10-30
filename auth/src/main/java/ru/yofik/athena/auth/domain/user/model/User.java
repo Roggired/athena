@@ -12,14 +12,14 @@ import java.util.Base64;
 @Getter
 @Setter
 @Entity
-@Table(name = "users")
+@Table(name = "athena_users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
     private String login;
-    @Column
+    @Enumerated(EnumType.STRING)
     private Role role;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "lock_id")
