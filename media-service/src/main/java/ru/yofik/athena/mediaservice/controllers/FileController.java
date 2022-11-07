@@ -4,6 +4,7 @@ import io.minio.*;
 import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,26 +25,26 @@ public class FileController {
     }
 
     @PostMapping
-    public ResponseEntity uploadFile(@RequestBody MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-
-        minioClient.uploadObject(UploadObjectArgs.builder()
-                .bucket("athena-test-bucket")
-                .object(file.getName())
-                .filename(file.getOriginalFilename())
-                .contentType(file.getContentType())
-                .build()
+    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket("athena-test-bucket")
+                        .object(file.getName())
+                        .contentType(file.getContentType())
+                        .stream(file.getInputStream(), file.getSize(), 0)
+                        .build()
         );
 
-        return new ResponseEntity(HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/{object}")
-    public void getObject(@PathVariable("object") String object) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        minioClient.getObject(GetObjectArgs.builder()
+    @GetMapping(value = "/{object}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public byte[] getObject(@PathVariable("object") String object) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        return minioClient.getObject(GetObjectArgs.builder()
                 .bucket("athena-test-bucket")
                 .object(object)
                 .build()
-        );
+        ).readAllBytes();
     }
 
 }

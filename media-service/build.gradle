@@ -37,6 +37,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 	//tests
 //	testImplementation 'org.springframework.boot:spring-boot-starter-test'
