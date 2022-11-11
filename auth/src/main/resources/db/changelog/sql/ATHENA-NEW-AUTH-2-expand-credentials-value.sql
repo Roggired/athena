@@ -1,0 +1,1 @@
+ALTER TABLE credentials ALTER COLUMN value TYPE varchar(255);

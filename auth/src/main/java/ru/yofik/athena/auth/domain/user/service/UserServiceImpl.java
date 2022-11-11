@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
         var springPage = userRepository.findAllByFilters(
                 request.login,
                 request.allowedDeviceId,
-                request.role,
+                request.role == null ? null : request.role.toString(),
                 PageRequest.of(
                         pageMeta.sequentialNumber,
                         pageMeta.size,

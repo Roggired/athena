@@ -45,9 +45,9 @@ public class NewPage<T>{
     public static class Meta {
         public List<String> sort = Collections.emptyList();
         @PositiveOrZero
-        public int sequentialNumber;
+        public Integer sequentialNumber;
         @Positive
-        public int size;
-        public long elementsTotal;
+        public Integer size;
+        public Long elementsTotal;
     }
 }

@@ -1,6 +1,5 @@
 package ru.yofik.athena.auth.service.user;
 
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.springframework.data.domain.Page;
@@ -163,7 +162,7 @@ public class UserRepositoryMockFactory {
     private static Page<User> returnUsersByFilters(InvocationOnMock invocation) {
         var login = (String) invocation.getArgument(0);
         var allowedDeviceId = (String) invocation.getArgument(1);
-        var role = (Role) invocation.getArgument(2);
+        var role = (String) invocation.getArgument(2);
         var pageable = (Pageable) invocation.getArgument(3);
 
         return new PageImpl<>(
@@ -171,7 +170,7 @@ public class UserRepositoryMockFactory {
                         .stream()
                         .filter(user -> login == null || user.getLogin().startsWith(login))
                         .filter(user -> allowedDeviceId == null || user.getSession().getAllowedDeviceId().startsWith(allowedDeviceId))
-                        .filter(user -> role == null || user.getRole().equals(role))
+                        .filter(user -> role == null || user.getRole().equals(Role.valueOf(role)))
                         .map(user -> new User(
                                 user.getId(),
                                 user.getLogin(),

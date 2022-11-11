@@ -184,7 +184,7 @@ public class UserServiceTest {
                 List.of(),
                 0,
                 2,
-                0
+                0L
         );
 
         var filters = new FilteredUsersRequest();
@@ -205,7 +205,7 @@ public class UserServiceTest {
                 List.of(),
                 0,
                 2,
-                0
+                0L
         );
 
         var filters = new FilteredUsersRequest();

@@ -36,7 +36,7 @@ public class GlobalExceptionMapper {
                 .body(
                         AuthV1Response.of(
                                 AuthV1ResponseStatus.RESOURCE_NOT_FOUND,
-                                e.getMessage()
+                                "Requested element not found"
                         )
                 );
     }
