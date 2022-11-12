@@ -1,6 +1,7 @@
 package ru.yofik.athena.auth.api;
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,6 +13,7 @@ import ru.yofik.athena.common.api.exceptions.NotFoundException;
 import ru.yofik.athena.common.api.exceptions.UniquenessViolationException;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionMapper {
     @ExceptionHandler
     public ResponseEntity<AuthV1Response> handleUniquenessViolation(
@@ -73,6 +75,7 @@ public class GlobalExceptionMapper {
     public ResponseEntity<?> handleOthers(
             RuntimeException e
     ) {
+       log.error("Unexpected exception", e);
         return ResponseEntity
                 .internalServerError()
                 .body(
