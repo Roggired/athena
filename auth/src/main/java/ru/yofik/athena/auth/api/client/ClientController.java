@@ -40,6 +40,7 @@ public class ClientController {
 
     @DeleteMapping("/{id}")
     public AuthV1Response deleteClient(@PathVariable("id") long id) {
+        clientService.deleteClient(id);
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_DELETED,
                 "Deleted"
