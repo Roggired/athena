@@ -28,7 +28,6 @@ public class UserController {
             @RequestBody @Valid CreateUserRequest request
     ) {
         request.login = request.login.trim();
-        request.allowedDeviceId = request.allowedDeviceId.trim();
         if (request.password != null) request.password = request.password.trim();
 
         return AuthV1Response.of(
@@ -66,6 +65,8 @@ public class UserController {
             NewPage.Meta pageMeta,
             @RequestBody @Valid FilteredUsersRequest request
     ) {
+        if (request.login != null) request.login = request.login.trim();
+
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_RETURNED,
                 userService.getUsersPageable(pageMeta, request).map(UserShortView::from)

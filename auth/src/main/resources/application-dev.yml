@@ -3,37 +3,17 @@ spring:
     url: jdbc:postgresql://localhost:5432/messenger
     username: messenger
     password: messenger
-#  redis:
-#    host: localhost
-#    port: 6379
-#    ssl: false
 
 server:
   port: 8081
-#  ssl:
-#    enabled: true
-#    protocol: TLS
-#    enabled-protocols: TLSv1.2
-#    key-store: certs/Server-keystore.p12
-#    key-store-type: PKCS12
-#    key-store-password: password
-#    client-auth: need
-#    trust-store: certs/Server-truststore.p12
-#    trust-store-type: PKCS12
-#    trust-store-password: password
-
-jasypt:
-  encryptor:
-    password: ${JASYPT_ENCRYPTOR_PASSWORD:}
-    algorithm: PBEWithMD5AndDES
-    iv-generator-classname: org.jasypt.iv.NoIvGenerator
-
-yofik:
-  security:
-#    16 bytes
-    jwe-key: ENC(AFU0CPRBYMRRmKZEVXylhi5prPEQO/ocPlzim0x8ZrA=)
-    admin-password: ENC(JiDCOAk77HU4etGWYul/4g==)
+  servlet:
+    session:
+      cookie:
+        max-age: 30m
+        http-only: true
+        secure: false
 
 logging:
   level:
     ru.yofik.athena.auth: debug
+    org.springframework.security: trace

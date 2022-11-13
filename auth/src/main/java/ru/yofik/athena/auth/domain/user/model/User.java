@@ -5,7 +5,6 @@ import ru.yofik.athena.auth.utils.TimeUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Base64;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -17,7 +16,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column
     private String login;
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -34,8 +32,7 @@ public class User {
 
     public static User newUser(
             String login,
-            String invitation,
-            String allowedDeviceId
+            String invitation
     ) {
         return new User(
                 0,
@@ -43,14 +40,13 @@ public class User {
                 Role.USER,
                 new Lock(0, false, ""),
                 Credentials.newUserCredentials(invitation),
-                Session.newSession(allowedDeviceId)
+                Session.newSession()
         );
     }
 
     public static User newAdmin(
             String login,
-            String password,
-            String allowedDeviceId
+            String password
     ) {
         return new User(
                 0,
@@ -58,7 +54,7 @@ public class User {
                 Role.ADMIN,
                 new Lock(0, false, ""),
                 Credentials.newAdminCredentials(password),
-                Session.newSession(allowedDeviceId)
+                null
         );
     }
 
@@ -77,8 +73,7 @@ public class User {
         return credentials.isExpired(currentTime);
     }
 
-    public boolean challengeCredentials(String userCredentials, String allowedDeviceId) {
-        if (!session.getAllowedDeviceId().equals(allowedDeviceId)) return false;
+    public boolean challengeCredentials(String userCredentials) {
         return credentials.challenge(userCredentials);
     }
 
@@ -86,20 +81,8 @@ public class User {
         return credentials.getExpirationDate();
     }
 
-    public String hashedCredentials() {
-        return credentials.getValue();
-    }
-
-
-    public boolean isAllowed(String deviceId) {
-        return deviceId.equals(session.getAllowedDeviceId());
-    }
-
-    public String getAllowedDeviceId() {
-        return session.getAllowedDeviceId();
-    }
-
     public LocalDateTime getLastLoginDate() {
+        if (session == null) return TimeUtils.infinity();
         return session.getLastLoginDate();
     }
 }

@@ -5,6 +5,7 @@ import ru.yofik.athena.auth.utils.TimeUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,16 +17,14 @@ public class Session {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column
-    private String allowedDeviceId;
-    @Column
+    private String sessionId;
     private LocalDateTime lastLoginDate;
 
 
-    public static Session newSession(String allowedDeviceId) {
+    public static Session newSession() {
         return new Session(
                 0,
-                allowedDeviceId,
+                UUID.randomUUID().toString(),
                 TimeUtils.infinity()
         );
     }

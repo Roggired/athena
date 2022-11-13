@@ -60,13 +60,11 @@ public class UserServiceTest {
         request.login = "12345";
         request.role = Role.USER;
         request.password = null;
-        request.allowedDeviceId = "2222";
 
         var user = userService.createUser(request);
         Assertions.assertEquals(10L, user.getId(), "Wrong id");
         Assertions.assertEquals(request.login, user.getLogin(), "Wrong login");
         Assertions.assertEquals(request.role, user.getRole(), "Wrong role");
-        Assertions.assertEquals(request.allowedDeviceId, user.getAllowedDeviceId(), "Wrong allowed device id");
         Assertions.assertTrue(user.getCredentialsExpirationDate().isAfter(TimeUtils.now()), "Credentials expiration date for user must be at least after now(UTC)");
         Assertions.assertFalse(user.isLocked(), "Created user account must not be locked");
         Assertions.assertTrue(user.getLockReason().isEmpty(), "Created user account must have empty lock reason");
@@ -80,7 +78,6 @@ public class UserServiceTest {
         request.login = "qwerty";
         request.role = Role.USER;
         request.password = null;
-        request.allowedDeviceId = "2222";
 
         Assertions.assertThrows(
                 UniquenessViolationException.class,
@@ -95,7 +92,6 @@ public class UserServiceTest {
         request.login = "12345";
         request.role = Role.ADMIN;
         request.password = null;
-        request.allowedDeviceId = "2222";
 
         Assertions.assertThrows(
                 InvalidDataException.class,
@@ -107,7 +103,6 @@ public class UserServiceTest {
         request1.login = "12345";
         request1.role = Role.ADMIN;
         request1.password = "";
-        request1.allowedDeviceId = "2222";
 
         Assertions.assertThrows(
                 InvalidDataException.class,
@@ -119,7 +114,6 @@ public class UserServiceTest {
         request2.login = "12345";
         request2.role = Role.USER;
         request2.password = "qwerqwerwqerqwer";
-        request2.allowedDeviceId = "2222";
 
         Assertions.assertThrows(
                 InvalidDataException.class,

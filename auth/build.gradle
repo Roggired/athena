@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.6'
+    id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'war'
@@ -24,7 +24,7 @@ dependencies {
     implementation 'org.bitbucket.b_c:jose4j:0.9.1'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
     implementation 'org.jasypt:jasypt:1.9.3'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     implementation("org.liquibase:liquibase-core")
 
@@ -33,6 +33,7 @@ dependencies {
     implementation group: 'org.hibernate', name: 'hibernate-validator', version: '7.0.0.Final'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'org.postgresql:postgresql'
 

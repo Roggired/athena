@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class SessionTest {
     @Test
     void sessionCreatesCorrectly() {
-        var session = Session.newSession("123");
+        var session = Session.newSession();
 
         assertEquals(
                 0,
@@ -19,11 +19,6 @@ public class SessionTest {
         assertEquals(
                 TimeUtils.infinity(),
                 session.getLastLoginDate()
-        );
-
-        assertEquals(
-                "123",
-                session.getAllowedDeviceId()
         );
     }
 }

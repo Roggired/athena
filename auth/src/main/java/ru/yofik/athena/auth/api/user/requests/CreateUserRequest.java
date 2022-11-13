@@ -11,8 +11,6 @@ public class CreateUserRequest {
     @NotBlank
     @Length(min = 3, max = 16)
     public String login;
-    @NotBlank
-    public String allowedDeviceId;
     public Role role;
     public String password;
 }

@@ -13,8 +13,7 @@ public class UserTest {
     void userCreatesCorrectly() {
         var user = User.newUser(
                 "qwerty",
-                "123",
-                "zxc"
+                "123"
         );
 
         assertEquals(
@@ -43,34 +42,20 @@ public class UserTest {
     }
 
     @Test
-    void isAllowedCorrect() {
-        var user = User.newUser(
-                "qwerty",
-                "123",
-                "zxc"
-        );
-        assertTrue(user.isAllowed("zxc"));
-    }
-
-    @Test
     void challengeReturnsCorrectly() {
         var user = User.newUser(
                 "qwerty",
-                "123",
-                "zxc"
+                "123"
         );
-        assertTrue(user.challengeCredentials("123", "zxc"));
-        assertFalse(user.challengeCredentials("567", "zxc"));
-        assertFalse(user.challengeCredentials("123", "123"));
-        assertFalse(user.challengeCredentials("567", "123"));
+        assertTrue(user.challengeCredentials("123"));
+        assertFalse(user.challengeCredentials("567"));
     }
 
     @Test
     void adminCreatesCorrectly() {
         var admin = User.newAdmin(
                 "qwerty",
-                "12345678",
-                "zxc"
+                "12345678"
         );
 
         assertEquals(
@@ -94,7 +79,7 @@ public class UserTest {
         assertEquals(TimeUtils.infinity(), admin.getCredentialsExpirationDate());
         assertFalse(admin.isCredentialsExpired());
 
-        assertNotNull(admin.getSession());
+        assertNull(admin.getSession());
         assertEquals(TimeUtils.infinity(), admin.getLastLoginDate());
     }
 
@@ -104,8 +89,7 @@ public class UserTest {
                 InvalidDataException.class,
                 () -> User.newAdmin(
                         "qwerty",
-                        "12345",
-                        "zxc"
+                        "12345"
                 )
         );
     }

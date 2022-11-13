@@ -11,5 +11,6 @@ public interface UserService {
     User updateUser(long id, UpdateUserRequest request);
     void deleteUser(long id);
     User getUser(long id);
+    User getUser(String login);
     NewPage<User> getUsersPageable(NewPage.Meta pageMeta, FilteredUsersRequest request);
 }

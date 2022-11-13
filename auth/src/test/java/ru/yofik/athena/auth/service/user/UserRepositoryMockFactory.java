@@ -101,7 +101,6 @@ public class UserRepositoryMockFactory {
         when(userRepositoryMock.findAllByFilters(
                 any(),
                 any(),
-                any(),
                 any()
         )).then(UserRepositoryMockFactory::returnUsersByFilters);
 
@@ -161,15 +160,13 @@ public class UserRepositoryMockFactory {
 
     private static Page<User> returnUsersByFilters(InvocationOnMock invocation) {
         var login = (String) invocation.getArgument(0);
-        var allowedDeviceId = (String) invocation.getArgument(1);
-        var role = (String) invocation.getArgument(2);
-        var pageable = (Pageable) invocation.getArgument(3);
+        var role = (String) invocation.getArgument(1);
+        var pageable = (Pageable) invocation.getArgument(2);
 
         return new PageImpl<>(
                 USER_MAP.values()
                         .stream()
                         .filter(user -> login == null || user.getLogin().startsWith(login))
-                        .filter(user -> allowedDeviceId == null || user.getSession().getAllowedDeviceId().startsWith(allowedDeviceId))
                         .filter(user -> role == null || user.getRole().equals(Role.valueOf(role)))
                         .map(user -> new User(
                                 user.getId(),

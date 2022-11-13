@@ -27,9 +27,7 @@ public class Credentials {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column
     private String value;
-    @Column
     private LocalDateTime expirationDate;
 
 

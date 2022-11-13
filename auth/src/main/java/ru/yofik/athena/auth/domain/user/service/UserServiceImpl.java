@@ -1,31 +1,30 @@
 package ru.yofik.athena.auth.domain.user.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yofik.athena.common.api.exceptions.InvalidDataException;
-import ru.yofik.athena.common.api.exceptions.NotFoundException;
-import ru.yofik.athena.common.api.exceptions.UniquenessViolationException;
 import ru.yofik.athena.auth.api.user.requests.CreateUserRequest;
 import ru.yofik.athena.auth.api.user.requests.FilteredUsersRequest;
 import ru.yofik.athena.auth.api.user.requests.UpdateUserRequest;
-import ru.yofik.athena.auth.domain.user.repository.UserRepository;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.model.User;
+import ru.yofik.athena.auth.domain.user.repository.UserRepository;
+import ru.yofik.athena.common.api.exceptions.InvalidDataException;
+import ru.yofik.athena.common.api.exceptions.NotFoundException;
+import ru.yofik.athena.common.api.exceptions.UniquenessViolationException;
 import ru.yofik.athena.common.domain.NewPage;
 
 import java.util.UUID;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
 
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -46,14 +45,12 @@ public class UserServiceImpl implements UserService {
         if (request.role == Role.ADMIN) {
             user = User.newAdmin(
                     request.login,
-                    request.password.trim(),
-                    request.allowedDeviceId
+                    request.password.trim()
             );
         } else {
             user = User.newUser(
                     request.login,
-                    UUID.randomUUID().toString(),
-                    request.allowedDeviceId
+                    UUID.randomUUID().toString()
             );
         }
 
@@ -75,10 +72,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void deleteUser(long id) {
-        userRepository.findById(id)
-                .orElseThrow(NotFoundException::new);
-
+        userRepository.findById(id).orElseThrow(NotFoundException::new);
         userRepository.deleteById(id);
     }
 
@@ -89,10 +85,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUser(String login) {
+        return userRepository.findByLogin(login)
+                .orElseThrow(NotFoundException::new);
+    }
+
+    @Override
     public NewPage<User> getUsersPageable(NewPage.Meta pageMeta, FilteredUsersRequest request) {
         var springPage = userRepository.findAllByFilters(
                 request.login,
-                request.allowedDeviceId,
                 request.role == null ? null : request.role.toString(),
                 PageRequest.of(
                         pageMeta.sequentialNumber,

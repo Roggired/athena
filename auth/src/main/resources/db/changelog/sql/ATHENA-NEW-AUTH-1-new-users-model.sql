@@ -11,15 +11,15 @@ CREATE TABLE lock
 CREATE TABLE credentials
 (
     id              BIGSERIAL PRIMARY KEY,
-    value           VARCHAR(63) NOT NULL,
+    value           VARCHAR(255) NOT NULL,
     expiration_date TIMESTAMP    NOT NULL
 );
 
 CREATE TABLE session
 (
-    id                BIGSERIAL PRIMARY KEY,
-    allowed_device_id VARCHAR(255) NOT NULL,
-    last_login_date   TIMESTAMP    NOT NULL
+    id              BIGSERIAL PRIMARY KEY,
+    session_id      VARCHAR(255) NOT NULL,
+    last_login_date TIMESTAMP    NOT NULL
 );
 
 CREATE TABLE athena_users
@@ -29,5 +29,5 @@ CREATE TABLE athena_users
     role           VARCHAR(15)                        NOT NULL,
     lock_id        BIGINT REFERENCES lock (id)        NOT NULL,
     credentials_id BIGINT REFERENCES credentials (id) NOT NULL,
-    session_id     BIGINT REFERENCES session (id)     NOT NULL
+    session_id     BIGINT REFERENCES session (id)
 );

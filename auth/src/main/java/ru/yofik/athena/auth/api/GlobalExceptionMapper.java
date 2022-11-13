@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.yofik.athena.common.api.AuthV1Response;
@@ -66,6 +67,20 @@ public class GlobalExceptionMapper {
                 .body(
                         AuthV1Response.of(
                                 AuthV1ResponseStatus.INVALID_DATA,
+                                e.getMessage()
+                        )
+                );
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<?> handleAthenaAuthentication(
+            ru.yofik.athena.common.api.exceptions.AuthenticationException e
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        AuthV1Response.of(
+                                AuthV1ResponseStatus.UNAUTHENTICATED,
                                 e.getMessage()
                         )
                 );

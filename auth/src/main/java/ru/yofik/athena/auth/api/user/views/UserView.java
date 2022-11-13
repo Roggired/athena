@@ -14,7 +14,6 @@ public class UserView {
     public boolean isLocked;
     public String lockReason;
     public LocalDateTime credentialsExpirationDate;
-    public String allowedDeviceId;
     public LocalDateTime lastLoginDate;
 
 
@@ -26,7 +25,6 @@ public class UserView {
                 user.isLocked(),
                 user.getLockReason(),
                 user.getCredentialsExpirationDate(),
-                user.getAllowedDeviceId(),
                 user.getLastLoginDate()
         );
     }

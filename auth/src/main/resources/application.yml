@@ -19,3 +19,9 @@ spring:
   devtools:
     restart:
       enabled: true
+
+athena:
+  auth:
+    preconfigured-admin:
+      login: admin
+      password: 12345678

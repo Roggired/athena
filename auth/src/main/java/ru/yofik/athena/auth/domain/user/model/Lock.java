@@ -15,9 +15,7 @@ public class Lock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @Column
     private boolean locked;
-    @Column
     private String reason;
 
     @Override
