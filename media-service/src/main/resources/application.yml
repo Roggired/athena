@@ -1,0 +1,10 @@
+minio.url=http://localhost:9000
+minio.access.name=ADMIN
+minio.access.secret=ADMIN111
+#minio.bucket.name=athena-test-bucket
+#minio.default.folder=/
+  
+#spring.servlet.multipart.enabled=true
+#spring.servlet.multipart.file-size-threshold=2KB
+#spring.servlet.multipart.max-file-size=5MB
+#spring.servlet.multipart.max-request-size=10MB

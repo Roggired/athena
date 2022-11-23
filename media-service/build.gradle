@@ -26,15 +26,18 @@ dependencies {
 	//starter
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	//minio
+	implementation group: 'io.minio', name: 'minio', version: '8.4.5'
+
 	//other dependencies
 	implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.9.0'
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-common', version: '1.6.11'
 	implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.1'
-	implementation group: 'io.minio', name: 'minio', version: '8.4.5'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
 	//tests
 //	testImplementation 'org.springframework.boot:spring-boot-starter-test'
