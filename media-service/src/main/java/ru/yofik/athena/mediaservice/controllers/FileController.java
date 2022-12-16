@@ -3,6 +3,7 @@ package ru.yofik.athena.mediaservice.controllers;
 import io.minio.*;
 import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,12 +40,14 @@ public class FileController {
     }
 
     @GetMapping(value = "/{object}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public byte[] getObject(@PathVariable("object") String object) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
-        return minioClient.getObject(GetObjectArgs.builder()
+    public ResponseEntity<?> getObject(@PathVariable("object") String object) throws ServerException, InsufficientDataException, ErrorResponseException, IOException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
+        InputStreamResource resource = new InputStreamResource(minioClient.getObject(GetObjectArgs.builder()
                 .bucket("athena-test-bucket")
                 .object(object)
-                .build()
-        ).readAllBytes();
+                .build())
+        );
+
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
 }
