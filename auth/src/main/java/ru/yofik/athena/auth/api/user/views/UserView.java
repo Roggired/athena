@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserView {
     public long id;
+    public String email;
     public String login;
     public Role role;
     public boolean isLocked;
@@ -20,6 +21,7 @@ public class UserView {
     public static UserView from(User user) {
         return new UserView(
                 user.getId(),
+                user.getEmail(),
                 user.getLogin(),
                 user.getRole(),
                 user.isLocked(),

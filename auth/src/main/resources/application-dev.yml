@@ -13,6 +13,24 @@ server:
         http-only: true
         secure: false
 
+mail-service:
+  fromEmail: example@example.com
+  activationLinkUrl: http://172.31.0.3:8080/api/v1/auth/activate
+  resetPasswordUrl: http://172.31.0.3:8080/api/v1/auth/reset-password
+
+auth:
+  access-token-expiration-duration: 15m
+  refresh-token-expiration-duration: 30d
+  change-password-code-duration: 30m
+  keys-file-name: ec_keys.pem
+  jwks-url: http://172.31.0.3:8080/api/v1/auth/jwks
+  kid: 5467ebcw9vht1
+
+code:
+  generator:
+    long-code-length: 31
+    short-code-length: 5
+
 logging:
   level:
     ru.yofik.athena.auth: debug

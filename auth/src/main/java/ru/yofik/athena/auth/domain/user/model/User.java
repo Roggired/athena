@@ -16,6 +16,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String email;
     private String login;
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -31,11 +32,13 @@ public class User {
 
 
     public static User newUser(
+            String email,
             String login,
             String invitation
     ) {
         return new User(
                 0,
+                email,
                 login,
                 Role.USER,
                 new Lock(0, false, ""),
@@ -45,16 +48,19 @@ public class User {
     }
 
     public static User newAdmin(
+            String email,
             String login,
-            String password
+            String password,
+            boolean isPasswordTemporary
     ) {
         return new User(
                 0,
+                email,
                 login,
                 Role.ADMIN,
                 new Lock(0, false, ""),
-                Credentials.newAdminCredentials(password),
-                null
+                Credentials.newAdminCredentials(password, isPasswordTemporary),
+                Session.newSession()
         );
     }
 
@@ -69,7 +75,7 @@ public class User {
 
 
     public boolean isCredentialsExpired() {
-        var currentTime = TimeUtils.now();
+        var currentTime = TimeUtils.nowUTC();
         return credentials.isExpired(currentTime);
     }
 
@@ -84,5 +90,15 @@ public class User {
     public LocalDateTime getLastLoginDate() {
         if (session == null) return TimeUtils.infinity();
         return session.getLastLoginDate();
+    }
+
+    public void lock(String reason) {
+        lock.setLocked(true);
+        lock.setReason(reason);
+    }
+
+    public void unlock() {
+        lock.setLocked(false);
+        lock.setReason("");
     }
 }

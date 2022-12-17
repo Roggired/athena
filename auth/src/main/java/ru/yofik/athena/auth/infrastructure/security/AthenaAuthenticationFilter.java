@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import ru.yofik.athena.auth.domain.auth.model.Access;
-import ru.yofik.athena.auth.domain.auth.service.AccessService;
-import ru.yofik.athena.auth.domain.user.model.Role;
+import ru.yofik.athena.auth.domain.auth.model.InternalAccess;
+import ru.yofik.athena.auth.domain.auth.service.AuthService;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ public class AthenaAuthenticationFilter implements Filter {
     private static final String BEARER_TOKEN_AUTHORIZATION_PREFIX = "Bearer ";
 
 
-    private final AccessService accessService;
+    private final AuthService authService;
 
 
     @Override
@@ -32,16 +31,17 @@ public class AthenaAuthenticationFilter implements Filter {
         var securityContext = SecurityContextHolder.getContext();
 
         if (isUserAuthenticatedAsAdmin(session)) {
-            var maybeAccess = session.getAttribute(Access.ACCESS_SERVLET_SESSION_KEY);
-            if (maybeAccess.getClass() != Access.class) {
+            var maybeAccess = session.getAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY);
+            if (maybeAccess.getClass() != InternalAccess.class) {
                 throw new IllegalStateException(WRONG_ACCESS_CLASS_MESSAGE);
             }
 
-            securityContext.setAuthentication((Access) maybeAccess);
+            securityContext.setAuthentication((InternalAccess) maybeAccess);
         } else {
             var accessToken = extractAccessToken(httpRequest);
             if (accessToken != null) {
-                securityContext.setAuthentication(new Access(0, Role.USER, "1"));
+                var internalAccess = authService.checkUserAccess(accessToken);
+                securityContext.setAuthentication(internalAccess);
             }
         }
 
@@ -49,7 +49,7 @@ public class AthenaAuthenticationFilter implements Filter {
     }
 
     private boolean isUserAuthenticatedAsAdmin(HttpSession session) {
-        return session.getAttribute(Access.ACCESS_SERVLET_SESSION_KEY) != null;
+        return session.getAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY) != null;
     }
 
     private String extractAccessToken(HttpServletRequest request) {

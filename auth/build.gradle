@@ -21,9 +21,9 @@ repositories {
 
 dependencies {
     //security
-    implementation 'org.bitbucket.b_c:jose4j:0.9.1'
-    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
-    implementation 'org.jasypt:jasypt:1.9.3'
+    implementation("com.nimbusds:nimbus-jose-jwt:9.25.4")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.72")
+    implementation("org.bouncycastle:bcpkix-jdk18on:1.72")
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
     implementation("org.liquibase:liquibase-core")
@@ -34,6 +34,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation "org.springframework.boot:spring-boot-starter-mail"
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'org.postgresql:postgresql'
 

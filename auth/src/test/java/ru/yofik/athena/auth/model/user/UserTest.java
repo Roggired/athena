@@ -12,8 +12,9 @@ public class UserTest {
     @Test
     void userCreatesCorrectly() {
         var user = User.newUser(
+                "qwerty@qwerty.com",
                 "qwerty",
-                "123"
+                "1234"
         );
 
         assertEquals(
@@ -34,7 +35,7 @@ public class UserTest {
         assertFalse(user.isLocked());
 
         assertNotNull(user.getCredentials());
-        assertTrue(TimeUtils.now().plusHours(24).isAfter(user.getCredentialsExpirationDate()));
+        assertTrue(TimeUtils.nowUTC().plusHours(24).isAfter(user.getCredentialsExpirationDate()));
         assertFalse(user.isCredentialsExpired());
 
         assertNotNull(user.getSession());
@@ -45,17 +46,20 @@ public class UserTest {
     void challengeReturnsCorrectly() {
         var user = User.newUser(
                 "qwerty",
-                "123"
+                "123",
+                "1234"
         );
-        assertTrue(user.challengeCredentials("123"));
+        assertTrue(user.challengeCredentials("1234"));
         assertFalse(user.challengeCredentials("567"));
     }
 
     @Test
     void adminCreatesCorrectly() {
         var admin = User.newAdmin(
+                "qwerty@qwerty.com",
                 "qwerty",
-                "12345678"
+                "12345678",
+                false
         );
 
         assertEquals(
@@ -79,7 +83,7 @@ public class UserTest {
         assertEquals(TimeUtils.infinity(), admin.getCredentialsExpirationDate());
         assertFalse(admin.isCredentialsExpired());
 
-        assertNull(admin.getSession());
+        assertNotNull(admin.getSession());
         assertEquals(TimeUtils.infinity(), admin.getLastLoginDate());
     }
 
@@ -89,7 +93,9 @@ public class UserTest {
                 InvalidDataException.class,
                 () -> User.newAdmin(
                         "qwerty",
-                        "12345"
+                        "12345",
+                        "1234",
+                        false
                 )
         );
     }

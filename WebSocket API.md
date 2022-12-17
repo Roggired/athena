@@ -277,6 +277,6 @@ NOTE:
 1. To connect to the server via websocket, a client sends special HTTP request (handshake). As soon as this
    request is HTTP, we can use the `Authorization` header to secure websocket endpoints. So, when you are trying to
    connect, you need to specify `Authorization` header as below:
-   `Authorization: Bearer <client-token> <access-token>`
+   `Authorization: Bearer <client-token> <internalAccess-token>`
 2. After the connection is established, Messenger service will not expect any authentication information as soon as
    websockets are long-lived connections.

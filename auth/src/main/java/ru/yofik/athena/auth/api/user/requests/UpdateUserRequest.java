@@ -10,4 +10,7 @@ public class UpdateUserRequest {
     @NotBlank
     @Length(min = 3, max = 16)
     public String login;
+    @NotBlank
+    @Length(min = 3)
+    public String email;
 }

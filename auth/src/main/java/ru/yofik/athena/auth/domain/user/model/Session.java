@@ -24,8 +24,18 @@ public class Session {
     public static Session newSession() {
         return new Session(
                 0,
-                UUID.randomUUID().toString(),
+                "",
                 TimeUtils.infinity()
         );
+    }
+
+
+    public void startSession() {
+        this.sessionId = UUID.randomUUID().toString();
+        this.lastLoginDate = TimeUtils.nowUTC();
+    }
+
+    public void stopSession() {
+        this.sessionId = "";
     }
 }

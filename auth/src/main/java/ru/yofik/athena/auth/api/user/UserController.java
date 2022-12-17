@@ -9,6 +9,7 @@ import ru.yofik.athena.auth.api.user.requests.UpdateUserRequest;
 import ru.yofik.athena.auth.api.user.views.UserShortView;
 import ru.yofik.athena.auth.api.user.views.UserView;
 import ru.yofik.athena.auth.domain.user.service.UserService;
+import ru.yofik.athena.auth.utils.SecurityUtils;
 import ru.yofik.athena.common.api.AuthV1Response;
 import ru.yofik.athena.common.api.AuthV1ResponseStatus;
 import ru.yofik.athena.common.domain.NewPage;
@@ -27,9 +28,6 @@ public class UserController {
     public AuthV1Response createUser(
             @RequestBody @Valid CreateUserRequest request
     ) {
-        request.login = request.login.trim();
-        if (request.password != null) request.password = request.password.trim();
-
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_CREATED,
                 UserView.from(userService.createUser(request))
@@ -41,8 +39,6 @@ public class UserController {
             @PathVariable("id") long id,
             @RequestBody @Valid UpdateUserRequest request
     ) {
-        request.login = request.login.trim();
-
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_UPDATED,
                 UserView.from(userService.updateUser(id, request))
@@ -65,8 +61,6 @@ public class UserController {
             NewPage.Meta pageMeta,
             @RequestBody @Valid FilteredUsersRequest request
     ) {
-        if (request.login != null) request.login = request.login.trim();
-
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_RETURNED,
                 userService.getUsersPageable(pageMeta, request).map(UserShortView::from)
@@ -80,6 +74,15 @@ public class UserController {
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_RETURNED,
                 UserView.from(userService.getUser(id))
+        );
+    }
+
+    @GetMapping("/my")
+    public AuthV1Response getMyUser() {
+        var internalAccess = SecurityUtils.getCurrentInternalAccess();
+        return AuthV1Response.of(
+                AuthV1ResponseStatus.RESOURCE_RETURNED,
+                UserView.from(userService.getUser(internalAccess.getUserId()))
         );
     }
 }

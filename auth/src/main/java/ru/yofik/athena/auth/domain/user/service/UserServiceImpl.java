@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.yofik.athena.auth.api.user.requests.CreateUserRequest;
 import ru.yofik.athena.auth.api.user.requests.FilteredUsersRequest;
 import ru.yofik.athena.auth.api.user.requests.UpdateUserRequest;
+import ru.yofik.athena.auth.domain.auth.service.code.CodeGenerator;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.model.User;
 import ru.yofik.athena.auth.domain.user.repository.UserRepository;
@@ -18,13 +19,12 @@ import ru.yofik.athena.common.api.exceptions.NotFoundException;
 import ru.yofik.athena.common.api.exceptions.UniquenessViolationException;
 import ru.yofik.athena.common.domain.NewPage;
 
-import java.util.UUID;
-
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final CodeGenerator codeGenerator;
 
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -44,13 +44,16 @@ public class UserServiceImpl implements UserService {
         User user;
         if (request.role == Role.ADMIN) {
             user = User.newAdmin(
+                    request.email,
                     request.login,
-                    request.password.trim()
+                    request.password.trim(),
+                    true
             );
         } else {
             user = User.newUser(
+                    request.email,
                     request.login,
-                    UUID.randomUUID().toString()
+                    codeGenerator.generateShort()
             );
         }
 
@@ -61,13 +64,34 @@ public class UserServiceImpl implements UserService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public User updateUser(long id, UpdateUserRequest request) {
         var user = userRepository.findById(id).orElseThrow(NotFoundException::new);
-        var userByLogin = userRepository.findByLogin(request.login);
 
+        var userByLogin = userRepository.findByLogin(request.login);
         if (userByLogin.isPresent() && id != userByLogin.get().getId()) {
+            throw new UniquenessViolationException();
+        }
+        var userByEmail = userRepository.findByEmail(request.email);
+        if (userByEmail.isPresent() && id != userByEmail.get().getId()) {
             throw new UniquenessViolationException();
         }
 
         user.setLogin(request.login);
+        user.setEmail(request.email);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        userRepository.findById(user.getId()).orElseThrow(NotFoundException::new);
+
+        var userByLogin = userRepository.findByLogin(user.getLogin());
+        if (userByLogin.isPresent() && userByLogin.get().getId() != user.getId()) {
+            throw new UniquenessViolationException();
+        }
+        var userByEmail = userRepository.findByEmail(user.getEmail());
+        if (userByEmail.isPresent() && userByEmail.get().getId() != user.getId()) {
+            throw new UniquenessViolationException();
+        }
+
         return userRepository.save(user);
     }
 

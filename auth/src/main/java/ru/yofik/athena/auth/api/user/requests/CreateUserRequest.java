@@ -9,8 +9,11 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 public class CreateUserRequest {
     @NotBlank
-    @Length(min = 3, max = 16)
+    @Length(min = 3, max = 63)
     public String login;
+    @NotBlank
+    @Length(min = 3, max = 255)
+    public String email;
     public Role role;
     public String password;
 }

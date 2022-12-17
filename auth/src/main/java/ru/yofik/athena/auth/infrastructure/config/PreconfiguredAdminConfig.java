@@ -6,7 +6,11 @@ import org.hibernate.validator.constraints.Length;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import ru.yofik.athena.auth.api.auth.requests.AdminSignInRequest;
+import ru.yofik.athena.auth.api.auth.requests.ChangeAdminTemporaryPasswordRequest;
 import ru.yofik.athena.auth.api.user.requests.CreateUserRequest;
+import ru.yofik.athena.auth.domain.auth.service.AuthService;
+import ru.yofik.athena.auth.domain.auth.service.PasswordNeedToBeChangedException;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.service.UserService;
 import ru.yofik.athena.common.api.exceptions.NotFoundException;
@@ -18,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 @ConfigurationProperties(prefix = "athena.auth.preconfigured-admin")
 public class PreconfiguredAdminConfig implements CommandLineRunner {
     private final UserService userService;
+    private final AuthService authService;
 
     @Setter
     @NotBlank
@@ -36,9 +41,23 @@ public class PreconfiguredAdminConfig implements CommandLineRunner {
         } catch (NotFoundException e) {
             var request = new CreateUserRequest();
             request.login = login;
+            request.email = "root";
             request.password = password;
             request.role = Role.ADMIN;
             userService.createUser(request);
+
+            var loginRequest = new AdminSignInRequest();
+            loginRequest.login = request.login;
+            loginRequest.password = request.password;
+
+            try {
+                authService.loginAdmin(loginRequest);
+            } catch (PasswordNeedToBeChangedException ex) {
+                var changePasswordRequest = new ChangeAdminTemporaryPasswordRequest();
+                changePasswordRequest.code = ex.getAdminChangePasswordResponse().changePasswordCode;
+                changePasswordRequest.newPassword = request.password;
+                authService.changeAdminTemporaryPassword(changePasswordRequest);
+            }
         }
     }
 }

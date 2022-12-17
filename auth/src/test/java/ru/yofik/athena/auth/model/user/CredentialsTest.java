@@ -38,7 +38,7 @@ public class CredentialsTest {
 
     @Test
     void adminCredentialsCreatesCorrectly() throws NoSuchAlgorithmException {
-        var adminCredentials = Credentials.newAdminCredentials("qwerty1234");
+        var adminCredentials = Credentials.newAdminCredentials("qwerty1234", false);
         var digestedString = Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-512").digest("qwerty1234".getBytes(StandardCharsets.UTF_8)));
 
         assertEquals(
@@ -58,7 +58,7 @@ public class CredentialsTest {
     void adminCredentialsThrowsOnTooShortPassword() {
         assertThrows(
                 InvalidDataException.class,
-                () -> Credentials.newAdminCredentials("1234")
+                () -> Credentials.newAdminCredentials("1234", false)
         );
     }
 }

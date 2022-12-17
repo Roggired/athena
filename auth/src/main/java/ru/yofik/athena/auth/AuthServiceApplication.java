@@ -8,7 +8,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication
 @EnableConfigurationProperties
-@ConfigurationPropertiesScan("ru.yofik.athena.auth.infrastructure.config")
+@ConfigurationPropertiesScan("ru.yofik.athena.auth.infrastructure.config.properties")
 public class AuthServiceApplication extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(AuthServiceApplication.class, args);

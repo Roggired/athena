@@ -25,6 +25,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
                     "LEFT JOIN FETCH u.credentials creds " +
                     "LEFT JOIN FETCH u.lock lock " +
                     "LEFT JOIN FETCH u.session session " +
+                    "WHERE u.email = :email"
+    )
+    Optional<User> findByEmail(String email);
+
+    @Query(
+            value = "SELECT u FROM User u " +
+                    "LEFT JOIN FETCH u.credentials creds " +
+                    "LEFT JOIN FETCH u.lock lock " +
+                    "LEFT JOIN FETCH u.session session " +
                     "WHERE (COALESCE(:login, NULL) IS NULL OR u.login LIKE CONCAT(CAST(:login AS text), '%')) AND " +
                     "(COALESCE(:role, NULL) IS NULL OR u.role = CAST(:role AS text))",
             countQuery = "SELECT COUNT(u) FROM User u " +

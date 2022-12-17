@@ -3,6 +3,7 @@ package ru.yofik.athena.auth.service.user;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yofik.athena.auth.domain.auth.service.code.DevCodeGenerator;
 import ru.yofik.athena.common.api.exceptions.InvalidDataException;
 import ru.yofik.athena.common.api.exceptions.NotFoundException;
 import ru.yofik.athena.common.api.exceptions.UniquenessViolationException;
@@ -27,7 +28,7 @@ public class UserServiceTest {
     @BeforeEach
     public void setup() {
         userRepositoryMock = UserRepositoryMockFactory.create();
-        userService = new UserServiceImpl(userRepositoryMock);
+        userService = new UserServiceImpl(userRepositoryMock, new DevCodeGenerator());
     }
 
     @Test
@@ -65,7 +66,7 @@ public class UserServiceTest {
         Assertions.assertEquals(10L, user.getId(), "Wrong id");
         Assertions.assertEquals(request.login, user.getLogin(), "Wrong login");
         Assertions.assertEquals(request.role, user.getRole(), "Wrong role");
-        Assertions.assertTrue(user.getCredentialsExpirationDate().isAfter(TimeUtils.now()), "Credentials expiration date for user must be at least after now(UTC)");
+        Assertions.assertTrue(user.getCredentialsExpirationDate().isAfter(TimeUtils.nowUTC()), "Credentials expiration date for user must be at least after now(UTC)");
         Assertions.assertFalse(user.isLocked(), "Created user account must not be locked");
         Assertions.assertTrue(user.getLockReason().isEmpty(), "Created user account must have empty lock reason");
         Assertions.assertFalse(user.isCredentialsExpired(), "Credentials expiration date for created user must not be expired");

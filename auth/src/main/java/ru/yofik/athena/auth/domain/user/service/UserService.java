@@ -9,6 +9,7 @@ import ru.yofik.athena.common.domain.NewPage;
 public interface UserService {
     User createUser(CreateUserRequest request);
     User updateUser(long id, UpdateUserRequest request);
+    User updateUser(User user);
     void deleteUser(long id);
     User getUser(long id);
     User getUser(String login);

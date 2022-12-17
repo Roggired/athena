@@ -26,6 +26,7 @@ public class UserRepositoryMockFactory {
             1L,
             new User(
                     1L,
+                    "qwerty@qwerty.com",
                     "qwerty",
                     Role.USER,
                     new Lock(
@@ -36,7 +37,8 @@ public class UserRepositoryMockFactory {
                     new Credentials(
                             1L,
                             "q1w1e1-r1t1y1-12345-12345",
-                            TimeUtils.now().plusHours(2)
+                            false,
+                            TimeUtils.nowUTC().plusHours(2)
                     ),
                     new Session(
                             1L,
@@ -47,6 +49,7 @@ public class UserRepositoryMockFactory {
             2L,
             new User(
                     2L,
+                    "adminadmin@admin.com",
                     "adminadmin",
                     Role.ADMIN,
                     new Lock(
@@ -57,6 +60,7 @@ public class UserRepositoryMockFactory {
                     new Credentials(
                             2L,
                             "1111",
+                            false,
                             TimeUtils.infinity()
                     ),
                     new Session(
@@ -68,6 +72,7 @@ public class UserRepositoryMockFactory {
             3L,
             new User(
                     3L,
+                    "abcde@abcde.com",
                     "abcde",
                     Role.USER,
                     new Lock(
@@ -78,7 +83,8 @@ public class UserRepositoryMockFactory {
                     new Credentials(
                             3L,
                             "q2w2e2-r2t2y2-12345-12345",
-                            TimeUtils.now().plusHours(2)
+                            false,
+                            TimeUtils.nowUTC().plusHours(2)
                     ),
                     new Session(
                             3L,
@@ -116,6 +122,7 @@ public class UserRepositoryMockFactory {
         return Optional.of(
                 new User(
                         user.getId(),
+                        user.getEmail(),
                         user.getLogin(),
                         user.getRole(),
                         user.getLock(),
@@ -150,6 +157,7 @@ public class UserRepositoryMockFactory {
                 .findAny()
                 .map(user -> new User(
                         user.getId(),
+                        user.getEmail(),
                         user.getLogin(),
                         user.getRole(),
                         user.getLock(),
@@ -170,6 +178,7 @@ public class UserRepositoryMockFactory {
                         .filter(user -> role == null || user.getRole().equals(Role.valueOf(role)))
                         .map(user -> new User(
                                 user.getId(),
+                                user.getEmail(),
                                 user.getLogin(),
                                 user.getRole(),
                                 user.getLock(),

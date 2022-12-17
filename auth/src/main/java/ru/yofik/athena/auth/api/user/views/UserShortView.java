@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserShortView {
     public long id;
+    public String email;
     public String login;
     public Role role;
     public LocalDateTime lastLoginDate;
@@ -18,6 +19,7 @@ public class UserShortView {
     public static UserShortView from(User user) {
         return new UserShortView(
                 user.getId(),
+                user.getEmail(),
                 user.getLogin(),
                 user.getRole(),
                 user.getLastLoginDate(),
