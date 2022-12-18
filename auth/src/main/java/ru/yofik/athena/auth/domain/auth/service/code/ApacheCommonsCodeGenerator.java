@@ -8,7 +8,7 @@ import ru.yofik.athena.auth.infrastructure.config.properties.ApacheCommonsCodeGe
 
 @RequiredArgsConstructor
 @Service
-@Profile(value = {"stage", "prod"})
+@Profile({"prod"})
 public class ApacheCommonsCodeGenerator implements CodeGenerator {
     private final ApacheCommonsCodeGeneratorProperties apacheCommonsCodeGeneratorProperties;
 

@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("dev")
+@Profile({"dev", "stage"})
 public final class DevCodeGenerator implements CodeGenerator {
     public String generateShort() {
         return "1234";
