@@ -19,6 +19,7 @@ public class SpringSecurityConfig {
     public SecurityFilterChain httpSecurity(HttpSecurity http) throws Exception {
         http.csrf().disable();
 
+        http.sessionManagement().sessionFixation().none();
         http.addFilterBefore(
                 new AthenaAuthenticationFilter(authService),
                 UsernamePasswordAuthenticationFilter.class
@@ -36,6 +37,12 @@ public class SpringSecurityConfig {
                 .mvcMatchers("/api/v2/auth/**")
                 .permitAll()
                 .mvcMatchers("/api/v2/user-management/**")
+                .hasAuthority(Role.ADMIN.name())
+                .mvcMatchers("/fonts/**", "/img/**", "/svg/**", "/js/**", "/css/**", "/", "/index", "/index.html", "/favicon.ico")
+                .permitAll()
+                .mvcMatchers("/auth/**")
+                .permitAll()
+                .mvcMatchers("/admin-panel/**")
                 .hasAuthority(Role.ADMIN.name())
                 .anyRequest()
                 .denyAll();

@@ -1,8 +1,8 @@
 package ru.yofik.athena.auth.domain.auth.service;
 
-import ru.yofik.athena.auth.api.auth.requests.AdminSignInRequest;
-import ru.yofik.athena.auth.api.auth.requests.ChangeAdminTemporaryPasswordRequest;
-import ru.yofik.athena.auth.api.auth.requests.UserSignInRequest;
+import ru.yofik.athena.auth.api.rest.auth.requests.AdminSignInRequest;
+import ru.yofik.athena.auth.api.rest.auth.requests.ChangeAdminTemporaryPasswordRequest;
+import ru.yofik.athena.auth.api.rest.auth.requests.UserSignInRequest;
 import ru.yofik.athena.auth.domain.auth.model.InternalAccess;
 import ru.yofik.athena.auth.domain.auth.model.UserTokenAccess;
 

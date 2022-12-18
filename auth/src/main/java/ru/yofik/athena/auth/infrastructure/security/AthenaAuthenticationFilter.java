@@ -1,6 +1,7 @@
 package ru.yofik.athena.auth.infrastructure.security;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class AthenaAuthenticationFilter implements Filter {
     private static final String WRONG_ACCESS_CLASS_MESSAGE = "AthenaAuthenticationFilter has found object in the " +
             "servlet session by ru.yofik.athena.auth.domain.auth.model.Access#ACCESS_SERVLET_SESSION_KEY, but the " +
@@ -26,8 +28,13 @@ public class AthenaAuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         var httpRequest = (HttpServletRequest) request;
-        var session = httpRequest.getSession();
+        var session = httpRequest.getSession(false);
 
+        if (session == null) {
+            log.debug("No session found");
+        } else {
+            log.debug("Is session new? " + session.isNew() + " session id: " + session.getId() + " max inactive interval: " + session.getMaxInactiveInterval());
+        }
         var securityContext = SecurityContextHolder.getContext();
 
         if (isUserAuthenticatedAsAdmin(session)) {
@@ -49,7 +56,7 @@ public class AthenaAuthenticationFilter implements Filter {
     }
 
     private boolean isUserAuthenticatedAsAdmin(HttpSession session) {
-        return session.getAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY) != null;
+        return session != null && session.getAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY) != null;
     }
 
     private String extractAccessToken(HttpServletRequest request) {

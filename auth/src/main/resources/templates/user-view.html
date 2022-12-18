@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="page :: commonHeader(_, ~{::link}, _)">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/user-view.css}">
+</head>
+<body>
+<div class="background">
+    <div class="td-all th-all">
+        <div class="flex-row flex-center th-90per">
+            <div class="flex-column flex-center" style="background-color: white; width: 1200px; border-radius: 45px;" th:styleappend="${user.role.name() != T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()} ? 'height: 620px;' : 'height: 520px;'">
+                <div class="flex-column flex-center td-h-2 td-all">
+                    <div class="subtitle-font subtitle-label" th:text="${user.isLocked} ? ${user.role}+ ' ID: ' + ${user.id} + ' - заблокирован': ${user.role} + ' ID: ' + ${user.id}"></div>
+                </div>
+                <div class="flex-row flex-center" style="margin-top: 30px;">
+                    <fieldset form="update-form" class="td-all" style="border: none;">
+                        <div class="flex-row th-65px td-all flex-center">
+                            <div class="regular-font view-label td-150px" style="margin-right: 37px;">Логин :</div>
+                            <input type="text"
+                                   form="update-form"
+                                   class="regular-font view-input td-400px"
+                                   name="login"
+                                   th:value="${user.login}"
+                                   placeholder="Логин"
+                            />
+                        </div>
+                        <div class="flex-row th-65px td-all flex-center mt-20px">
+                            <div class="regular-font view-label td-150px" style="margin-right: 37px;">Email :</div>
+                            <input type="text"
+                                   form="update-form"
+                                   class="regular-font view-input td-400px"
+                                   name="email"
+                                   th:value="${user.email}"
+                                   placeholder="Email"
+                            />
+                        </div>
+                        <div class="flex-row th-65px td-all flex-center mt-20px">
+                            <div class="regular-font view-label td-600px" style="background-color: var(--text-primary-color);" th:if="${invitation != null}" th:text="|Код приглашения : ${invitation}|"></div>
+                        </div>
+                        <div class="flex-row th-65px td-all flex-center mt-20px">
+                            <div class="regular-font view-label" th:classappend="(${{user.lastLoginDate}} == 'никогда') ? 'td-600px' : 'td-600px'" th:text="|Дата последнего входа (UTC) : ${{user.lastLoginDate}}|"></div>
+                        </div>
+                        <div class="flex-row th-65px td-all flex-center mt-20px" th:if="${user.role.name() != T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()}">
+                            <div class="regular-font view-label" th:classappend="(${{user.credentialsExpirationDate}} == 'никогда') ? 'td-600px' : 'td-600px'" th:text="|Приглашение истекает (UTC) : ${{user.credentialsExpirationDate}}|"></div>
+                        </div>
+                    </fieldset>
+                    <div class="flex-column td-200px" style="margin-left: 50px;">
+                        <form class="th-65px" th:action="@{/admin-panel/actions/generate-invitation}" method="post" th:if="${user.role.name() != T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()}">
+                            <div class="flex-row flex-center">
+                                <input type="text"
+                                       class="regular-font login-input"
+                                       name="id"
+                                       th:value="${user.id}"
+                                       hidden="hidden"
+                                />
+                            </div>
+                            <div class="flex-row flex-center td-all td-h-2">
+                                <input type="submit" class="btn btn-font view-btn" value="Пригласить"/>
+                            </div>
+                        </form>
+                        <form id="update-form" class="th-65px" th:classappend="${user.role.name() != T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()} ? 'mt-20px' : ''" th:action="@{/admin-panel/actions/update-user}" method="post">
+                            <div class="flex-row flex-center">
+                                <input type="text"
+                                       class="regular-font login-input"
+                                       name="id"
+                                       th:value="${user.id}"
+                                       hidden="hidden"
+                                />
+                            </div>
+                            <div class="flex-row flex-center td-all td-h-2">
+                                <input type="submit" class="btn btn-font view-btn" value="Сохранить"/>
+                            </div>
+                        </form>
+                        <form class="th-65px mt-20px" th:action="@{/admin-panel/actions/lock-user}" method="post">
+                            <div class="flex-row flex-center">
+                                <input type="text"
+                                       class="regular-font login-input"
+                                       name="id"
+                                       th:value="${user.id}"
+                                       hidden="hidden"
+                                />
+                            </div>
+                            <div class="flex-row flex-center td-all td-h-2">
+                                <input type="submit" class="btn btn-font view-btn" value="Заблокировать"/>
+                            </div>
+                        </form>
+                        <form class="th-65px mt-20px" th:action="@{/admin-panel/actions/unlock-user}" method="post">
+                            <div class="flex-row flex-center">
+                                <input type="text"
+                                       class="regular-font login-input"
+                                       name="id"
+                                       th:value="${user.id}"
+                                       hidden="hidden"
+                                />
+                            </div>
+                            <div class="flex-row flex-center td-all td-h-2">
+                                <input type="submit" class="btn btn-font view-btn" value="Разблокировать"/>
+                            </div>
+                        </form>
+                        <form class="th-65px mt-20px" th:action="@{/admin-panel/actions/delete-user}" method="post">
+                            <div class="flex-row flex-center">
+                                <input type="text"
+                                       class="regular-font login-input"
+                                       name="id"
+                                       th:value="${user.id}"
+                                       hidden="hidden"
+                                />
+                            </div>
+                            <div class="flex-row flex-center td-all td-h-2">
+                                <input type="submit" class="btn btn-font view-btn delete-btn" value="Удалить"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,8 +1,8 @@
 package ru.yofik.athena.auth.domain.user.service;
 
-import ru.yofik.athena.auth.api.user.requests.CreateUserRequest;
-import ru.yofik.athena.auth.api.user.requests.FilteredUsersRequest;
-import ru.yofik.athena.auth.api.user.requests.UpdateUserRequest;
+import ru.yofik.athena.auth.api.rest.user.requests.CreateUserRequest;
+import ru.yofik.athena.auth.api.rest.user.requests.FilteredUsersRequest;
+import ru.yofik.athena.auth.api.rest.user.requests.UpdateUserRequest;
 import ru.yofik.athena.auth.domain.user.model.User;
 import ru.yofik.athena.common.domain.NewPage;
 

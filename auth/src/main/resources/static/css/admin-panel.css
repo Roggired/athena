@@ -1,0 +1,54 @@
+.table-container {
+    border: 1px solid var(--primary-color);
+}
+
+.table-header {
+    background-color: var(--primary-color);
+    border-bottom: 1px solid var(--primary-color);
+    font-weight: bold;
+}
+
+.header-cell {
+    background-color: var(--primary-color);
+    color: var(--text-or-icons-color);
+}
+
+.table-row {
+    background-color: var(--text-or-icons-color);
+    color: var(--text-primary-color);
+}
+
+.table-row:hover {
+    background-color: var(--accent-color);
+    color: var(--text-or-icons-color);
+}
+
+.table-cell {
+    background-color: inherit;
+    color: inherit;
+}
+
+.subtitle-label {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.left-arrow-primary, .right-arrow-primary {
+    width: 20px;
+    height: 20px;
+}
+
+.left-arrow-primary, .right-arrow-primary > path {
+    fill: var(--primary-color);
+    stroke-width: .6;
+    transition: fill 0.2s ease-out;
+    cursor: pointer;
+}
+
+.left-arrow-primary:hover, .right-arrow-primary:hover > path {
+    fill: var(--text-primary-color);
+}
+
+.left-arrow-primary {
+    transform: rotate(180deg);
+}

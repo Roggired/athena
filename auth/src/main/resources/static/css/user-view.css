@@ -1,0 +1,50 @@
+.view-input {
+    /*width: 300px;*/
+    height: 35px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: var(--primary-color);
+    padding-left: 10px;
+    color: var(--primary-color);
+}
+
+.view-input::placeholder {
+    color: var(--accent-color);
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 60%;
+}
+
+.view-input:focus {
+    outline-color: var(--accent-color);
+}
+
+.view-label {
+    height: 45px;
+    line-height: 45px;
+    /*width: 350px;*/
+    text-align: center;
+    /*padding-left: 40px;*/
+    font-weight: bold;
+    color: var(--text-or-icons-color);
+    background-color: var(--primary-color);
+    border-radius: 15px;
+}
+
+.view-btn {
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    line-height: 50px;
+    background-color: var(--primary-dark-color);
+    /*font-weight: bold;*/
+    /*font-size: 24px;*/
+}
+
+.delete-btn {
+    background-color: var(--delete-color);
+}
+
+.delete-btn:hover {
+    background-color: var(--delete-accent-color);
+}

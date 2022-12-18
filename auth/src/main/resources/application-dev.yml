@@ -34,4 +34,5 @@ code:
 logging:
   level:
     ru.yofik.athena.auth: debug
+    org.thymeleaf.engine: debug
     org.springframework.security: trace

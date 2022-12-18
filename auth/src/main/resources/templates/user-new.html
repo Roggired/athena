@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="page :: commonHeader(_, ~{::link}, _)">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="background">
+    <div class="td-all th-all">
+        <div class="flex-row flex-center th-90per">
+            <div class="flex-column flex-center flex-align-center" style="background-color: white; height: 500px; width: 700px; border-radius: 45px;">
+                <div class="flex-column flex-center td-h-2">
+                    <span class="subtitle-font subtitle-label">Новый пользователь</span>
+                </div>
+                <form id="login-form" class="flex-column flex-justify-between td-h-9" style="margin-top: 40px;" th:action="@{/admin-panel/actions/create-user}" method="post">
+                    <div class="flex-column flex-center td-h-7">
+                        <div class="flex-row flex-center td-h-2">
+                            <input type="text"
+                                   class="regular-font login-input"
+                                   name="login"
+                                   placeholder="Логин"
+                            />
+                        </div>
+                        <div class="flex-row flex-center td-h-2">
+                            <input type="text"
+                                   class="regular-font login-input"
+                                   name="email"
+                                   placeholder="Email"
+                            />
+                        </div>
+                        <div class="flex-row flex-center td-h-2">
+                            <input type="text"
+                                   class="regular-font login-input"
+                                   name="role"
+                                   placeholder="Роль"
+                            />
+                        </div>
+                    </div>
+                    <div class="flex-row flex-center td-all" style="margin-top: 50px;">
+                        <input type="submit" class="btn btn-font login-btn" value="Создать"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

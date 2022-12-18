@@ -5,13 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yofik.athena.auth.api.admin.requests.*;
+import ru.yofik.athena.auth.api.rest.admin.requests.*;
 import ru.yofik.athena.auth.domain.admin.model.NewInvitationResponse;
 import ru.yofik.athena.auth.domain.auth.service.code.CodeGenerator;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.service.UserService;
 import ru.yofik.athena.auth.utils.SecurityUtils;
 import ru.yofik.athena.common.api.exceptions.AuthenticationException;
+import ru.yofik.athena.common.api.exceptions.InvalidDataException;
 
 @Service
 @RequiredArgsConstructor
@@ -77,6 +78,10 @@ public class AdminServiceImpl implements AdminService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public NewInvitationResponse generateUserInvitation(GenerateUserInvitationRequest request) {
         var user = userService.getUser(request.userId);
+        if (user.getRole() != Role.USER) {
+            throw new InvalidDataException();
+        }
+
         var newInvitation = codeGenerator.generateLong();
         user.getCredentials().changeUserCredentials(newInvitation);
         userService.updateUser(user);

@@ -5,8 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yofik.athena.auth.api.auth.requests.*;
-import ru.yofik.athena.auth.domain.auth.model.AccessResponse;
+import ru.yofik.athena.auth.api.rest.auth.requests.*;
 import ru.yofik.athena.auth.domain.auth.model.InternalAccess;
 import ru.yofik.athena.auth.domain.auth.model.AdminChangePasswordResponse;
 import ru.yofik.athena.auth.domain.auth.model.UserTokenAccess;
@@ -37,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
 
     @Override
+    @Transactional(isolation = Isolation.REPEATABLE_READ)
     public InternalAccess loginAdmin(AdminSignInRequest request) throws PasswordNeedToBeChangedException {
         User admin;
         try {
@@ -61,6 +61,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         admin.getSession().startSession();
+        userService.updateUser(admin);
         return new InternalAccess(
                 admin.getId(),
                 admin.getRole(),

@@ -1,6 +1,6 @@
 package ru.yofik.athena.auth.domain.admin.service;
 
-import ru.yofik.athena.auth.api.admin.requests.*;
+import ru.yofik.athena.auth.api.rest.admin.requests.*;
 import ru.yofik.athena.auth.domain.admin.model.NewInvitationResponse;
 
 public interface AdminService {
