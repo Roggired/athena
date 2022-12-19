@@ -1,4 +1,6 @@
 spring:
+  liquibase:
+    change-log: db/changelog/db-changelog.xml
   profiles:
     active: dev
   devtools:

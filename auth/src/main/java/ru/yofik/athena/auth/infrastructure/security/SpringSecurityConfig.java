@@ -28,6 +28,8 @@ public class SpringSecurityConfig {
         http.securityContext().securityContextRepository(new NullSecurityContextRepository());
 
         http.authorizeHttpRequests()
+                .mvcMatchers("/api/v2/users/my")
+                .hasAuthority(Role.USER.name())
                 .mvcMatchers("/api/v2/users/**")
                 .hasAuthority(Role.ADMIN.name())
                 .mvcMatchers("/api/v2/auth/admins/sign-out")

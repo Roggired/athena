@@ -170,6 +170,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String getPublicJwksAsJson() {
-        return jwtFactory.getPublicJWKAsJson();
+        return "{\"keys\":[" + jwtFactory.getPublicJWKAsJson() + "]}";
     }
 }

@@ -7,9 +7,9 @@ import org.springframework.stereotype.Service;
 @Profile({"dev", "stage"})
 public final class DevCodeGenerator implements CodeGenerator {
     public String generateShort() {
-        return "1234";
+        return "123";
     }
     public String generateLong() {
-        return "1234567890";
+        return "123";
     }
 }

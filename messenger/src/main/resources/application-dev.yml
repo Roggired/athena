@@ -14,16 +14,22 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/messenger
+    url: jdbc:postgresql://172.25.0.2:5432/messenger
     username: messenger
     password: messenger
   jpa:
     hibernate:
       ddl-auto: validate
   redis:
-    host: localhost
+    host: 172.25.0.5
     port: 6379
     ssl: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:8081/api/v2/auth/jwks
+          jws-algorithms: ES256
 
 jasypt:
   encryptor:

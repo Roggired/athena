@@ -1,5 +1,5 @@
 plugins {
-    id 'org.springframework.boot' version '2.6.6'
+    id 'org.springframework.boot' version '2.7.4'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id 'war'
@@ -25,6 +25,9 @@ dependencies {
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
     implementation 'org.jasypt:jasypt:1.9.3'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+
+    implementation("org.liquibase:liquibase-core")
 
     // web
     implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
