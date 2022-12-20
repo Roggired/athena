@@ -63,8 +63,8 @@ jobs:
           scp messenger-0.3.0.war stage:~/athena-stage/messenger/
       - name: Run server
         run: |
-          ssh stage 'docker stop auth-athena-stage && docker rm auth-athena-stage && cd ~/athena-stage/auth && docker build -t auth-service-stage:latest . && docker run --name auth-athena-stage --network athena-stage -d -p 8081:8081 auth-service-stage:latest'
-          ssh stage 'docker stop messenger-athena-stage && docker rm messenger-athena-stage && cd ~/athena-stage/messenger && docker build -t messenger-service-stage:latest . && docker run --name messenger-athena-stage --network athena-stage -d -p 8080:8080 messenger-service-stage:latest'
+          ssh stage 'docker stop auth-athena-stage && docker rm auth-athena-stage && cd ~/athena-stage/auth && docker build -t auth-service-stage:latest . && docker run --name auth-athena-stage --network athena-stage --ip 172.18.0.3 -d -p 8081:8081 auth-service-stage:latest'
+          ssh stage 'docker stop messenger-athena-stage && docker rm messenger-athena-stage && cd ~/athena-stage/messenger && docker build -t messenger-service-stage:latest . && docker run --name messenger-athena-stage --network athena-stage --ip 172.18.0.4 -d -p 8080:8080 messenger-service-stage:latest'
           ssh stage 'sleep 60'
       - name: Install Postman CLI
         run: |
