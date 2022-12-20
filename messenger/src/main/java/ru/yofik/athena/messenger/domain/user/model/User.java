@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class User {
     @EqualsAndHashCode.Include
     private final long id;
-    private String name;
+    private String email;
     private String login;
     private boolean online;
     private LocalDateTime lastOnlineTime; // in UTC

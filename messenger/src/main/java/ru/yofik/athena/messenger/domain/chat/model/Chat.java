@@ -71,7 +71,7 @@ public class Chat {
                 .filter(user -> !user.equals(userFor))
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
-        this.name = otherUser.getName();
+        this.name = otherUser.getLogin();
         return this;
     }
 

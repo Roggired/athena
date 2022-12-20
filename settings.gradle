@@ -1,6 +1,5 @@
 rootProject.name = 'athena'
 include 'auth'
-include 'db'
 include 'common'
 include 'messenger'
 

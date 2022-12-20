@@ -1,11 +1,13 @@
 package ru.yofik.athena.messenger.domain.user.service;
 
 import org.springframework.stereotype.Service;
+import ru.yofik.athena.common.domain.NewPage;
 import ru.yofik.athena.common.domain.Page;
 import ru.yofik.athena.messenger.api.http.user.request.UpdateUserRequest;
 import ru.yofik.athena.messenger.domain.notification.service.NotificationService;
 import ru.yofik.athena.messenger.domain.user.model.User;
 import ru.yofik.athena.messenger.domain.user.repository.UserRepository;
+import ru.yofik.athena.messenger.infrastructure.integration.auth.FilteredUsersRequest;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,9 +20,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<User> getPage(Page.Meta pageMeta) {
+    public NewPage<User> getPage(NewPage.Meta pageMeta) {
         var currentUser = userRepository.getCurrentUser();
-        var page = userRepository.getPage(pageMeta)
+        var page = userRepository.getPage(pageMeta, new FilteredUsersRequest(null, null))
                 .map(user -> {
                     user.setOnline(notificationService.isUserActive(user.getId()));
                     return user;
@@ -33,12 +35,12 @@ public class UserServiceImpl implements UserService {
         return page;
     }
 
-    private Page<User> replaceCurrentUser(Page<User> page, Page.Meta pageMeta, User currentUser) {
-        var nextPageMeta = new Page.Meta(
-                pageMeta.getSequentialNumber() + 1,
-                pageMeta.getSize()
+    private NewPage<User> replaceCurrentUser(NewPage<User> page, NewPage.Meta pageMeta, User currentUser) {
+        var nextPageMeta = new NewPage.Meta(
+                pageMeta.sequentialNumber + 1,
+                pageMeta.size
         );
-        var nextPage = userRepository.getPage(nextPageMeta)
+        var nextPage = userRepository.getPage(nextPageMeta, new FilteredUsersRequest(null, null))
                 .map(user -> {
                     user.setOnline(notificationService.isUserActive(user.getId()));
                     return user;
@@ -69,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(UpdateUserRequest request) {
         var currentUser = userRepository.getCurrentUser();
-        currentUser.setName(request.name);
+        currentUser.setEmail(request.email);
         currentUser.setLogin(request.login);
 
         return userRepository.updateUser(

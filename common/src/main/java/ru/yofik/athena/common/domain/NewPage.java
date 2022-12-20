@@ -49,5 +49,14 @@ public class NewPage<T>{
         @Positive
         public Integer size;
         public Long elementsTotal;
+
+        public Meta(Integer sequentialNumber, Integer size) {
+            this.sequentialNumber = sequentialNumber;
+            this.size = size;
+        }
+
+        public Meta() {
+
+        }
     }
 }

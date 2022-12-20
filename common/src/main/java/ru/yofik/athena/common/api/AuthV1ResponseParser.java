@@ -18,6 +18,16 @@ public final class AuthV1ResponseParser {
         return Objects.equals(authV1Response.status, expectedStatus.getStatus());
     }
 
+    public static <T> T parsePayloadForRetrofit(AuthV1Response authV1Response, Class<T> payloadType) {
+        var stringPayload = GSON.toJson(authV1Response.payload);
+        return GSON.fromJson(stringPayload, payloadType);
+    }
+
+    public static Object parsePayloadForRetrofit(AuthV1Response authV1Response, TypeToken<?> payloadType) {
+        var stringPayload = GSON.toJson(authV1Response.payload);
+        return GSON.fromJson(stringPayload, payloadType.getType());
+    }
+
     public static <T> T parsePayload(AuthV1Response authV1Response, Class<T> payloadType) {
         return GSON.fromJson((String) authV1Response.payload, payloadType);
     }

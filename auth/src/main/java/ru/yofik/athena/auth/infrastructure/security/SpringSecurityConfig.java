@@ -31,7 +31,7 @@ public class SpringSecurityConfig {
                 .mvcMatchers("/api/v2/users/my")
                 .hasAuthority(Role.USER.name())
                 .mvcMatchers("/api/v2/users/**")
-                .hasAuthority(Role.ADMIN.name())
+                .authenticated()
                 .mvcMatchers("/api/v2/auth/admins/sign-out")
                 .hasAuthority(Role.ADMIN.name())
                 .mvcMatchers("/api/v2/auth/users/sign-out")

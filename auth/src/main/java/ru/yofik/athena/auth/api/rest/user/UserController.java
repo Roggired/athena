@@ -57,12 +57,13 @@ public class UserController {
 
     @PostMapping(value = "/filtered", produces = MediaType.APPLICATION_JSON_VALUE)
     public AuthV1Response getUsersPageable(
-            NewPage.Meta pageMeta,
+            int sequentialNumber,
+            int size,
             @RequestBody @Valid FilteredUsersRequest request
     ) {
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_RETURNED,
-                userService.getUsersPageable(pageMeta, request).map(UserShortView::from)
+                userService.getUsersPageable(new NewPage.Meta(sequentialNumber, size), request).map(UserShortView::from)
         );
     }
 

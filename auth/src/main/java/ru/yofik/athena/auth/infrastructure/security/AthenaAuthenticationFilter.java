@@ -37,19 +37,17 @@ public class AthenaAuthenticationFilter implements Filter {
         }
         var securityContext = SecurityContextHolder.getContext();
 
-        if (isUserAuthenticatedAsAdmin(session)) {
+        var accessToken = extractAccessToken(httpRequest);
+        if (accessToken != null) {
+            var internalAccess = authService.checkUserAccess(accessToken);
+            securityContext.setAuthentication(internalAccess);
+        } else if (isUserAuthenticatedAsAdmin(session)) {
             var maybeAccess = session.getAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY);
             if (maybeAccess.getClass() != InternalAccess.class) {
                 throw new IllegalStateException(WRONG_ACCESS_CLASS_MESSAGE);
             }
 
             securityContext.setAuthentication((InternalAccess) maybeAccess);
-        } else {
-            var accessToken = extractAccessToken(httpRequest);
-            if (accessToken != null) {
-                var internalAccess = authService.checkUserAccess(accessToken);
-                securityContext.setAuthentication(internalAccess);
-            }
         }
 
         chain.doFilter(request, response);

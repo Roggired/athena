@@ -1,1 +1,0 @@
-docker start yofik-messenger-db yofik-messenger-redis

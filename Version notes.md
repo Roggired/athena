@@ -1,5 +1,25 @@
 ## Versions Notes
 
+v0.3.0:
+- auth service has been rewritten. Admin service has been integrated into auth service:
+  - **issue#50** New user model
+  - **issue#56** New admin authentication
+  - **issue#57** New user authentication
+  - **issue#58** New admin registration
+  - **issue#59** Temporary password for admin account (not implemented in admin panel website)
+  - **issue#61** User account creation by admin manually
+  - **issue#62** New invitation for user triggered by admin manually
+  - **issue#63** User lock and unlock with lock reason (lock reason not implemented in admin panel website)
+  - **issue#65** If user uses invalid refreshToken, his account will be locked automatically
+  - **issue#70** New design for admin panel website
+- messenger service has been refactored dut to changes in auth service:
+  - **issue#72** Messenger service has been refactoring. Now it is using new auth REST API (currently, user's names are not supported)
+- admin service and respective gradle module has been removed
+- Postgres and Redis docker containers for dev environment now creating via docker-compose. Liquibase migrations have been moved from 
+db gradle module to messenger and auth modules. DB gradle module has been removed
+- add CI\CD pipeline for unit and functional testing. Add stage environment in RuVDS
+- Jasypt encryption has been removed
+
 v0.2.3:
 - **issue#41** fix bug with LocalDateTime parsing on MacOC
 

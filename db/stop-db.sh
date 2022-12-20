@@ -1,1 +1,0 @@
-docker stop yofik-messenger-db yofik-messenger-redis

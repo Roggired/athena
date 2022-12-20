@@ -1,13 +1,14 @@
 package ru.yofik.athena.common.api;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AuthV1Response {
-    public final int httpStatusCode;
-    public final String status;
-    public final Object payload;
+    public int httpStatusCode;
+    public String status;
+    public Object payload;
 
+    public AuthV1Response() {}
 
     public static AuthV1Response of(AuthV1ResponseStatus authV1ResponseStatus, Object payload) {
         return new AuthV1Response(

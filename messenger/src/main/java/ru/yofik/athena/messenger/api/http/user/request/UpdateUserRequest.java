@@ -9,5 +9,5 @@ public class UpdateUserRequest {
     @NotBlank
     public String login;
     @NotBlank
-    public String name;
+    public String email;
 }

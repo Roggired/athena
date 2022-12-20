@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'ru.yofik.athena'
-version = '0.1.2'
+version = '0.3.0'
 sourceCompatibility = '11'
 
 configurations {
@@ -23,7 +23,6 @@ dependencies {
     //security
     implementation 'org.bitbucket.b_c:jose4j:0.7.11'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
-    implementation 'org.jasypt:jasypt:1.9.3'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
@@ -35,8 +34,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.apache.httpcomponents:httpclient:4.5.13'
-    implementation 'org.apache.httpcomponents:fluent-hc:4.5.13'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-jackson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
     runtimeOnly 'org.postgresql:postgresql'
 
     // websocket
@@ -71,4 +72,34 @@ configurations['implementation'].exclude(group: 'org.springframework.boot', modu
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+bootJar {
+    manifest {
+        attributes(
+                "Specification-Title": title,
+                "Specification-Version": serviceVersion,
+                "Specification-Vendor": vendor,
+                "Implementation-Title": title,
+                "Implementation-Version": serviceVersion,
+                "Implementation-Vendor": vendor,
+                "Implementation-Vendor-Id": vendorId,
+                "Bundle-SymbolicName": serviceBundleSymbolicName
+        )
+    }
+}
+
+bootWar {
+    manifest {
+        attributes(
+                "Specification-Title": title,
+                "Specification-Version": serviceVersion,
+                "Specification-Vendor": vendor,
+                "Implementation-Title": title,
+                "Implementation-Version": serviceVersion,
+                "Implementation-Vendor": vendor,
+                "Implementation-Vendor-Id": vendorId,
+                "Bundle-SymbolicName": serviceBundleSymbolicName
+        )
+    }
 }

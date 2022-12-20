@@ -11,10 +11,10 @@ public class UserViewMapper implements ConversionServiceConfig.Mapper<User, User
     public UserView convert(User user) {
         return new UserView(
                 user.getId(),
-                user.getName(),
+                user.getEmail(),
                 user.getLogin(),
                 user.isOnline(),
-                user.getLastOnlineTime().toString()
+                user.getLastOnlineTime() != null ? user.getLastOnlineTime().toString() : null
         );
     }
 }

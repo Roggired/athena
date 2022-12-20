@@ -1,2 +1,0 @@
-docker run -d --name yofik-messenger-db -p 5432:5432 -e POSTGRES_DB=messenger -e POSTGRES_USER=messenger -e POSTGRES_PASSWORD=messenger postgres:latest
-docker run -d --name yofik-messenger-redis -p 6379:6379 redis:latest

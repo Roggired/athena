@@ -1,16 +1,16 @@
 server:
   port: 8080
-  ssl:
-    enabled: false
-    protocol: TLS
-    enabled-protocols: TLSv1.2
-    key-store: certs/Server-keystore.p12
-    key-store-type: PKCS12
-    key-store-password: password
-    client-auth: need
-    trust-store: certs/Server-truststore.p12
-    trust-store-type: PKCS12
-    trust-store-password: password
+#  ssl:
+#    enabled: false
+#    protocol: TLS
+#    enabled-protocols: TLSv1.2
+#    key-store: certs/Server-keystore.p12
+#    key-store-type: PKCS12
+#    key-store-password: password
+#    client-auth: need
+#    trust-store: certs/Server-truststore.p12
+#    trust-store-type: PKCS12
+#    trust-store-password: password
 
 spring:
   datasource:
@@ -31,7 +31,7 @@ spring:
           jwk-set-uri: http://localhost:8081/api/v2/auth/jwks
           jws-algorithms: ES256
 
-jasypt:
-  encryptor:
-    password: ${JASYPT_ENCRYPTOR_PASSWORD:}
-    algorithm: PBEWithMD5AndDES
+auth-service:
+  baseUrl: http://localhost:8081/
+  truststore: <configure me for stage and prod>
+  truststorePassword: <configure me for stage and prod>

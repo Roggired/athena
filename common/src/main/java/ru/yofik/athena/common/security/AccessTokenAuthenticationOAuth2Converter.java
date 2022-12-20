@@ -16,6 +16,7 @@ public class AccessTokenAuthenticationOAuth2Converter implements Converter<Jwt, 
         }
 
         return new AccessTokenAuthentication(
+                source.getTokenValue(),
                 userId,
                 Set.of(role)
         );
