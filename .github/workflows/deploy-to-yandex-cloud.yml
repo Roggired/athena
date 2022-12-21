@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Authenticate in Docker Registry
         run: |
-          docker login --username json_key --password $YANDEX_CLOUD_SERVICE_ACC_JSON_KEY cr.yandex
+          docker login --username json_key --password "$YANDEX_CLOUD_SERVICE_ACC_JSON_KEY" cr.yandex
         env:
           YANDEX_CLOUD_SERVICE_ACC_JSON_KEY: ${{ secrets.YANDEX_CLOUD_SERVICE_ACC_JSON_KEY }}
       - name: Obtain auth war
