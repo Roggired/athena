@@ -20,6 +20,9 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+
     //security
     implementation("com.nimbusds:nimbus-jose-jwt:9.25.4")
     implementation("org.bouncycastle:bcprov-jdk18on:1.72")
