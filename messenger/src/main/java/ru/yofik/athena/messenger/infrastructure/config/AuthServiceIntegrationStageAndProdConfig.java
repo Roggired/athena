@@ -26,26 +26,26 @@ import java.security.cert.CertificateException;
 public class AuthServiceIntegrationStageAndProdConfig {
     @Bean
     public AuthUserApi authUserApi(AuthServiceProperties authServiceProperties) throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException {
-        var keyStore = KeyStore.getInstance(
-                new File(authServiceProperties.getTruststore()), 
-                authServiceProperties.getTruststorePassword().toCharArray()
-        );
+//        var keyStore = KeyStore.getInstance(
+//                new File(authServiceProperties.getTruststore()),
+//                authServiceProperties.getTruststorePassword().toCharArray()
+//        );
 
-        var trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        trustManagerFactory.init(keyStore);
-        var trustManagers= trustManagerFactory.getTrustManagers();
-        var x509TrustManager = (X509TrustManager) trustManagers[0];
+//        var trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+//        trustManagerFactory.init(keyStore);
+//        var trustManagers= trustManagerFactory.getTrustManagers();
+//        var x509TrustManager = (X509TrustManager) trustManagers[0];
 
-        var sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, new X509TrustManager[] { x509TrustManager }, null);
-        var sslSocketFactory = sslContext.getSocketFactory();
+//        var sslContext = SSLContext.getInstance("TLS");
+//        sslContext.init(null, new X509TrustManager[] { x509TrustManager }, null);
+//        var sslSocketFactory = sslContext.getSocketFactory();
 
         var httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         var okhttpClient = new OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
-                .sslSocketFactory(sslSocketFactory, x509TrustManager)
+//                .sslSocketFactory(sslSocketFactory, x509TrustManager)
                 .build();
         var retrofit = new Retrofit.Builder()
                 .baseUrl(authServiceProperties.getBaseUrl())
