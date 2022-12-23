@@ -23,9 +23,7 @@ public class SecurityConfig {
                 .antMatchers("/api/v1/chats/**")
                 .hasAuthority("USER")
                 .antMatchers("/ws-api/v1/notifications")
-                .hasAuthority("USER")
-                .antMatchers("/actuator/**")
-                .permitAll();
+                .hasAuthority("USER");
 
         return http.build();
     }

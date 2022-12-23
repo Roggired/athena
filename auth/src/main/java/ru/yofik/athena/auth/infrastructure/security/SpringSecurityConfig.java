@@ -46,8 +46,6 @@ public class SpringSecurityConfig {
                 .permitAll()
                 .mvcMatchers("/admin-panel/**")
                 .hasAuthority(Role.ADMIN.name())
-                .mvcMatchers("/actuator/**")
-                .permitAll()
                 .anyRequest()
                 .denyAll();
 
