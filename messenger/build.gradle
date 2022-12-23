@@ -20,9 +20,6 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-
     //security
     implementation 'org.bitbucket.b_c:jose4j:0.7.11'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'

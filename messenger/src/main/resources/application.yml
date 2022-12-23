@@ -16,10 +16,3 @@ logging:
           descriptor:
             sql:
               BasicBinder: WARN
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include:
-          - prometheus
