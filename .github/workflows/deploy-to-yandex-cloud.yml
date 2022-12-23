@@ -56,4 +56,3 @@ jobs:
           echo -e 'FROM openjdk:11\nCOPY messenger-0.3.0.war /app/app.war' >> messenger-deploy/Dockerfile &&
           docker build --tag cr.yandex/crp5k3dr812s2e3dqnt7/messenger-service:latest messenger-deploy &&
           docker push cr.yandex/crp5k3dr812s2e3dqnt7/messenger-service:latest
-          END
