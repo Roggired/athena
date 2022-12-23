@@ -37,25 +37,21 @@ body {
     height: 100vh;
 }
 
-.header {
-    width: 100vw;
-    height: 10vh;
-    text-align: center;
-    background-color: var(--primary-color);
-    color: var(--text-or-icons-color);
+.navbar {
+    height: 100%;
+    width: 80px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: var(--primary-dark-color);
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: 3px 3px 2px var(--text-primary-color);
 }
 
-.athena-title {
-    background-color: var(--primary-color);
-    color: var(--text-or-icons-color);
-}
-
-.footer {
-    width: 100vw;
-    height: 10vh;
-    text-align: center;
-    background-color: var(--primary-color);
-    color: var(--text-or-icons-color);
+.icon:hover path, .icon:hover polygon {
+    transition: 200ms ease-out;
+    fill: var(--accent-color);
 }
 /*-----------------------------------------------------------------------*/
 
@@ -306,6 +302,7 @@ body {
     height: 50px;
     width: 200px;
     transition: background-color 0.2s ease-out;
+    box-shadow: 2px 2px 2px var(--text-primary-color);
 }
 
 .dark-btn {

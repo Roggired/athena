@@ -29,6 +29,15 @@
     color: inherit;
 }
 
+.table-cell-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+    color: inherit;
+}
+
 .subtitle-label {
     color: var(--primary-color);
     font-weight: bold;

@@ -7,7 +7,7 @@
 <div class="background">
     <div class="td-all th-all">
         <div class="flex-row flex-center th-90per">
-            <div class="flex-column flex-center" style="background-color: white; width: 1200px; height: 620px; border-radius: 45px;">
+            <div class="flex-column flex-center" style="background-color: white; width: 1200px; box-shadow: 3px 3px 2px var(--hover-color); height: 620px; border-radius: 45px;">
                 <div class="flex-column flex-center td-h-2 td-all">
                     <div class="subtitle-font subtitle-label" th:text="${user.isLocked} ? ${user.role}+ ' ID: ' + ${user.id} + ' - заблокирован': ${user.role} + ' ID: ' + ${user.id}"></div>
                 </div>
@@ -35,6 +35,13 @@
                         </div>
                         <div class="flex-row th-65px td-all flex-center mt-20px">
                             <div class="regular-font view-label td-600px" style="background-color: var(--text-primary-color);" th:if="${invitation != null}" th:text="|Код приглашения : ${invitation}|"></div>
+                            <input type="password"
+                                   form="change-admin-password-form"
+                                   class="regular-font view-input" style="width: 584px;"
+                                   name="newPassword"
+                                   th:if="${user.role.name() == T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()}"
+                                   placeholder="Новый пароль"
+                            />
                         </div>
                         <div class="flex-row th-65px td-all flex-center mt-20px">
                             <div class="regular-font view-label" th:classappend="(${{user.lastLoginDate}} == 'никогда') ? 'td-600px' : 'td-600px'" th:text="|Дата последнего входа (UTC) : ${{user.lastLoginDate}}|"></div>
@@ -44,13 +51,6 @@
                                  th:text="|Приглашение истекает (UTC) : ${{user.credentialsExpirationDate}}|"
                                  th:if="${user.role.name() != T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()}"
                             ></div>
-                            <input type="password"
-                                   form="change-admin-password-form"
-                                   class="regular-font view-input" style="width: 584px;"
-                                   name="newPassword"
-                                   th:if="${user.role.name() == T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()}"
-                                   placeholder="Новый пароль"
-                            />
                         </div>
                     </fieldset>
                     <div class="flex-column td-200px" style="margin-left: 50px;">
@@ -136,6 +136,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div th:replace="page :: navbar">
     </div>
 </div>
 </body>

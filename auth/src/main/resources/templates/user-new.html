@@ -7,7 +7,7 @@
 <div class="background">
     <div class="td-all th-all">
         <div class="flex-row flex-center th-90per">
-            <div class="flex-column flex-center flex-align-center" style="background-color: white; height: 500px; width: 700px; border-radius: 45px;">
+            <div class="flex-column flex-center flex-align-center" style="background-color: white; box-shadow: 3px 3px 2px var(--hover-color); height: 500px; width: 700px; border-radius: 45px;">
                 <div class="flex-column flex-center td-h-2">
                     <span class="subtitle-font subtitle-label">Новый пользователь</span>
                 </div>
@@ -38,11 +38,13 @@
                         </div>
                     </div>
                     <div class="flex-row flex-center td-all" style="margin-top: 50px;">
-                        <input type="submit" class="btn btn-font login-btn" value="Создать"/>
+                        <input type="submit" class="btn btn-font" value="Создать"/>
                     </div>
                 </form>
             </div>
         </div>
+    </div>
+    <div th:replace="page :: navbar">
     </div>
 </div>
 </body>

@@ -7,9 +7,9 @@
 <div class="background">
     <div class="td-all th-all">
         <div class="flex-row flex-center th-90per">
-            <div class="flex-column flex-center" style="background-color: white; height: 900px; width: 1400px; border-radius: 45px;">
+            <div class="flex-column flex-center" style="background-color: white; box-shadow: 3px 3px 2px var(--hover-color); height: 900px; width: 1200px; border-radius: 45px;">
                 <div class="flex-column flex-center td-h-2">
-                    <span class="subtitle-font subtitle-label">Список пользователей</span>
+                    <span class="subtitle-font subtitle-label">Пользователи</span>
                 </div>
                 <div class="td-h-1"></div>
                 <div class="flex-column flex-center td-h-2">
@@ -20,26 +20,32 @@
                                th:value="${login}"
                                placeholder="Поиск по логину..."
                         />
-                        <input type="submit" class="btn btn-font" style="margin-left: 40px;" value="Поиск"/>
+                        <input type="submit" class="btn btn-font" style="margin-left: 30px; height: 41px; line-height: 41px; width: 150px;" value="Поиск"/>
                     </form>
                 </div>
                 <div class="table-container mt-20px" th:unless="${#lists.isEmpty(users)}">
-                    <div class="flex-row table-header">
+                    <div class="flex-row table-header th-65px">
                         <div class="regular-font td-g td-100px header-cell">ID</div>
                         <div class="regular-font td-g td-250px header-cell">Логин</div>
                         <div class="regular-font td-g td-400px header-cell">Email</div>
-                        <div class="regular-font td-g td-100px header-cell">Роль</div>
-                        <div class="regular-font td-g td-300px header-cell">Дата последнего входа (UTC)</div>
-                        <div class="regular-font td-g td-150px header-cell">Статус</div>
+                        <div class="regular-font td-g td-100px header-cell">Админ</div>
+<!--                        <div class="regular-font td-g td-300px header-cell">Дата последнего входа (UTC)</div>-->
+                        <div class="regular-font td-g td-150px header-cell">
+                            <img src="/svg/blocked-icon.svg" alt="Статус" draggable="false" width="25" height="25"/>
+                        </div>
                     </div>
                     <span th:unless="${!#lists.isEmpty(users)}" class="regular-font dark-font mt-20px td-all">Нет пользователей</span>
                     <div class="flex-row table-row" th:each="user : ${users}" th:onclick="|goTo('@{/admin-panel/user-views/view(id=${user.id})}')|">
                         <div th:text="${#numbers.formatInteger(user.id, 1)}" class="td-g td-100px regular-font table-cell"></div>
                         <div th:text="${user.login}" class="td-g td-250px regular-font table-cell" style="text-align: left;"></div>
                         <div th:text="${user.email}" class="td-g td-400px regular-font table-cell" style="text-align: left;"></div>
-                        <div th:text="${user.role.name()}" class="td-g td-100px regular-font table-cell"></div>
-                        <div th:text="${{user.lastLoginDate}}" class="td-g td-300px regular-font table-cell"></div>
-                        <div th:text="${user.isLocked ? 'заблокирован' : '-'}" class="td-g td-150px regular-font table-cell"></div>
+                        <div class="td-g td-100px regular-font table-cell table-cell-center">
+                            <img src="/svg/yes-icon.svg" alt="админ" width="20" height="20" draggable="false" th:if="${user.role.name() == T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()}"/>
+                        </div>
+<!--                        <div th:text="${{user.lastLoginDate}}" class="td-g td-300px regular-font table-cell"></div>-->
+                        <div class="td-g td-150px regular-font table-cell table-cell-center">
+                            <img src="/svg/yes-icon.svg" alt="заблокирован" width="20" height="20" draggable="false" th:if="${user.isLocked}"/>
+                        </div>
                     </div>
                 </div>
                 <div class="flex-row flex-center td-h-2">
@@ -62,6 +68,8 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div th:replace="page :: navbar">
     </div>
 </div>
 </body>
