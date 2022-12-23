@@ -53,3 +53,24 @@
 .left-arrow-primary {
     transform: rotate(180deg);
 }
+
+.search-input {
+    width: 500px;
+    height: 35px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: var(--primary-color);
+    padding-left: 10px;
+    color: var(--primary-color);
+}
+
+.search-input::placeholder {
+    color: var(--accent-color);
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 60%;
+}
+
+.search-input:focus {
+    outline-color: var(--accent-color);
+}

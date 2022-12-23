@@ -36,7 +36,8 @@ public class AdminPanelMvcController {
     @GetMapping
     public String getAdminPanel(
             Integer pageNumber,
-            Model model
+            Model model,
+            String login
     ) {
         if (pageNumber == null || pageNumber < 0) pageNumber = 0;
         var pageMeta = new NewPage.Meta(
@@ -45,11 +46,17 @@ public class AdminPanelMvcController {
                 10,
                 0L
         );
+
         var request = new FilteredUsersRequest();
+        if (login != null) {
+            request.login = login.trim();
+        }
+
         var page = userService.getUsersPageable(pageMeta, request).map(UserShortView::from);
         var totalPages = page.getMeta().elementsTotal / page.getMeta().size;
         if (page.getMeta().elementsTotal % page.getMeta().size != 0) totalPages++;
 
+        model.addAttribute("login", login);
         model.addAttribute("users", page.getContent());
         model.addAttribute("totalPages", totalPages);
         model.addAttribute("currentPage", page.getMeta().sequentialNumber);
