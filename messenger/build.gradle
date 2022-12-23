@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'ru.yofik.athena'
-version = '0.3.0'
+version = '0.3.1'
 sourceCompatibility = '11'
 
 configurations {
@@ -75,6 +75,7 @@ tasks.named('test') {
 }
 
 bootJar {
+    archiveFileName="messenger.jar"
     manifest {
         attributes(
                 "Specification-Title": title,
@@ -90,6 +91,7 @@ bootJar {
 }
 
 bootWar {
+    archiveFileName="messenger.war"
     manifest {
         attributes(
                 "Specification-Title": title,

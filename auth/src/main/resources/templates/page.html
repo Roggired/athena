@@ -10,25 +10,5 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
-<div class="background">
-    <div th:fragment="header" th:class="${login != null and login} ? 'header flex-row flex-justify-between flex-center' : 'header flex-row flex-center'">
-        <div class="title-font athena-title" th:style="${login != null and login} ? 'margin-left: 50px;' : ''">
-            Афина
-        </div>
-        <div class="btn btn-font" th:if="${login != null and login}" th:onclick="|goTo('@{/admin-panel/user}')|">
-            Пользователи
-        </div>
-        <button class="btn btn-font" style="margin-right: 50px;"
-                th:if="${login != null and login}"
-                th:onclick="|goTo('@{/athena/logout}')|">
-            Выйти
-        </button>
-    </div>
-    <div th:fragment="content">
-    </div>
-    <div th:fragment="footer" class="footer flex-column flex-center">
-        <span class="low-font">2022, Афина v0.3.0</span>
-    </div>
-</div>
 </body>
 </html>

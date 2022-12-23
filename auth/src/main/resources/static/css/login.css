@@ -19,6 +19,47 @@
     outline-color: var(--accent-color);
 }
 
+@keyframes input-error-flicker {
+    from {
+        left: 0;
+    }
+    25% {
+        left: -20px;
+    }
+    50% {
+        left: 0;
+    }
+    75% {
+        left: -20px;
+    }
+    to {left: 0; }
+}
+
+.login-input-error {
+    position: relative;
+    animation-name: input-error-flicker;
+    animation-duration: 200ms;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-out;
+
+    border-color: var(--delete-color);
+    color: var(--delete-color);
+}
+
+.login-input-error::placeholder {
+    color: var(--delete-color);
+}
+
+.login-input-error:focus {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    outline-color: var(--accent-color);
+}
+
+.login-input-error:focus::placeholder {
+    color: var(--accent-color);
+}
+
 .login-label {
     text-align: right;
     color: var(--primary-color);

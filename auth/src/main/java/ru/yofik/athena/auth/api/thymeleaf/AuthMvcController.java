@@ -13,6 +13,7 @@ import ru.yofik.athena.auth.domain.auth.model.AdminChangePasswordResponse;
 import ru.yofik.athena.auth.domain.auth.model.InternalAccess;
 import ru.yofik.athena.auth.domain.auth.service.AuthService;
 import ru.yofik.athena.auth.domain.auth.service.PasswordNeedToBeChangedException;
+import ru.yofik.athena.common.api.exceptions.AuthenticationException;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,12 +38,15 @@ public class AuthMvcController {
         try {
             var internalAccess = authService.loginAdmin(request);
             servletRequest.getSession().setAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY, internalAccess);
-            model.addAttribute("isAfterReset", false);
             return "redirect:/admin-panel";
         } catch (PasswordNeedToBeChangedException e) {
             var changePassword = e.getAdminChangePasswordResponse();
             servletRequest.getSession().setAttribute("change-password-code", changePassword);
             return "reset-password";
+        } catch (AuthenticationException e) {
+            model.addAttribute("isAuthenticationError", true);
+            model.addAttribute("login", request.login);
+            return "login";
         }
     }
 
@@ -54,8 +58,7 @@ public class AuthMvcController {
     ) {
         var httpSession = servletRequest.getSession(false);
         if (httpSession == null) {
-            model.addAttribute("isAfterReset", false);
-            return "login";
+            return "redirect:/index";
         }
 
         var maybeChangePassword = httpSession.getAttribute("change-password-code");
@@ -78,7 +81,6 @@ public class AuthMvcController {
         if (httpSession != null) {
             servletRequest.getSession().removeAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY);
         }
-        model.addAttribute("isAfterReset", false);
-        return "login";
+        return "redirect:/index";
     }
 }

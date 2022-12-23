@@ -45,10 +45,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void changePasswordForOtherAdmin(ChangePasswordForOtherAdminRequest request) {
+        var currentAdminId = SecurityUtils.getCurrentInternalAccess().getUserId();
         var otherAdmin = userService.getUser(request.userId);
         otherAdmin.getCredentials().changeAdminCredentials(
                 request.newPassword,
-                true
+                currentAdminId != otherAdmin.getId()
         );
         userService.updateUser(otherAdmin);
     }

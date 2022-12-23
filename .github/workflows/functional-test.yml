@@ -19,12 +19,12 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: ready auth war
-          path: auth/build/libs/auth-0.3.0.war
+          path: auth/build/libs/auth.war
           retention-days: 1
       - uses: actions/upload-artifact@v3
         with:
           name: ready messenger war
-          path: messenger/build/libs/messenger-0.3.0.war
+          path: messenger/build/libs/messenger.war
           retention-days: 1
   automated-api-tests:
     needs: unit-tests
@@ -53,14 +53,14 @@ jobs:
           name: ready auth war
       - name: Deploy auth war
         run: |
-          scp auth-0.3.0.war stage:~/athena-stage/auth/
+          scp auth.war stage:~/athena-stage/auth/
       - name: Obtain messenger war
         uses: actions/download-artifact@v3
         with:
           name: ready messenger war
       - name: Deploy messenger war
         run: |
-          scp messenger-0.3.0.war stage:~/athena-stage/messenger/
+          scp messenger.war stage:~/athena-stage/messenger/
       - name: Run server
         run: |
           ssh stage 'docker stop auth-athena-stage && docker rm auth-athena-stage && cd ~/athena-stage/auth && docker build -t auth-service-stage:latest . && docker run --name auth-athena-stage --network athena-stage --ip 172.18.0.3 -d -p 8081:8081 auth-service-stage:latest'

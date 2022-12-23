@@ -9,9 +9,6 @@ on:
 permissions:
   contents: read
 
-env:
-  ARTIFACT_NAME: auth-0.3.0.war
-
 jobs:
   unit-tests:
     runs-on: ubuntu-latest
@@ -22,12 +19,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
-      - name: Build with Gradle
+      - name: Test with Gradle
         uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
         with:
-          arguments: build
-      - uses: actions/upload-artifact@v3
-        with:
-          name: ready war
-          path: auth/build/libs/$ARTIFACT_NAME
-          retention-days: 1
+          arguments: test

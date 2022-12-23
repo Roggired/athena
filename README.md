@@ -1,4 +1,4 @@
-## Messenger v.0.3.0
+## Messenger v.0.3.1
 
 ## Version Notes
 

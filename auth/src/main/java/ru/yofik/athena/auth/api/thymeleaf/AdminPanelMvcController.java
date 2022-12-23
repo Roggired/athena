@@ -1,6 +1,7 @@
 package ru.yofik.athena.auth.api.thymeleaf;
 
 import lombok.RequiredArgsConstructor;
+import org.bouncycastle.cert.ocsp.Req;
 import org.bouncycastle.math.raw.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.yofik.athena.auth.api.rest.admin.requests.ChangePasswordForOtherAdminRequest;
 import ru.yofik.athena.auth.api.rest.admin.requests.GenerateUserInvitationRequest;
 import ru.yofik.athena.auth.api.rest.admin.requests.LockUserRequest;
 import ru.yofik.athena.auth.api.rest.admin.requests.UnlockUserRequest;
@@ -61,25 +63,35 @@ public class AdminPanelMvcController {
         return "admin-panel";
     }
 
-    @GetMapping("/user-views/new")
+    @GetMapping("/user-views/new-user")
     public String newUserView() {
         return "user-new";
+    }
+
+    @GetMapping("/user-views/new-admin")
+    public String newAdminView() {
+        return "admin-new";
     }
 
     @PostMapping("/actions/create-user")
     public String actionCreateUser(
             @RequestParam("login") String login,
             @RequestParam("email") String email,
-            @RequestParam("role") String role
+            @RequestParam("role") String role,
+            @RequestParam("password") String password
     ) {
         login = login.trim();
         email = email.trim();
         role = role.trim();
+        password = password.trim();
 
         var createUserRequest = new CreateUserRequest();
         createUserRequest.login = login;
         createUserRequest.email = email;
         createUserRequest.role = Role.valueOf(role);
+        if (createUserRequest.role == Role.ADMIN) {
+            createUserRequest.password = password;
+        }
 
         var user = UserView.from(userService.createUser(createUserRequest));
         return "redirect:/admin-panel/user-views/view?id=" + user.id;
@@ -150,5 +162,30 @@ public class AdminPanelMvcController {
     ) {
         userService.deleteUser(id);
         return "redirect:/admin-panel";
+    }
+
+    @PostMapping("/actions/set-admin-password")
+    public String actionSetAdminPassword(
+            @RequestParam("id") long id,
+            @RequestParam("newPassword") String newPassword,
+            Model model
+    ) {
+        newPassword = newPassword.trim();
+
+        if (newPassword.isBlank()) {
+            var user = UserView.from(userService.getUser(id));
+            model.addAttribute("user", user);
+            return "user-view";
+        }
+
+        var request = new ChangePasswordForOtherAdminRequest();
+        request.userId = id;
+        request.newPassword = newPassword;
+
+        adminService.changePasswordForOtherAdmin(request);
+        var user = UserView.from(userService.getUser(id));
+        model.addAttribute("user", user);
+        model.addAttribute("successfullySetPassword", true);
+        return "user-view";
     }
 }

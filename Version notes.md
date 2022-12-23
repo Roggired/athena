@@ -1,5 +1,8 @@
 ## Versions Notes
 
+v0.3.1:
+- minor improvements on admin-panel website
+
 v0.3.0:
 - auth service has been rewritten. Admin service has been integrated into auth service:
   - **issue#50** New user model

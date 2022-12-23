@@ -9,6 +9,7 @@
 }
 
 .header-cell {
+    /*transition: background-color 50ms ease-out;*/
     background-color: var(--primary-color);
     color: var(--text-or-icons-color);
 }

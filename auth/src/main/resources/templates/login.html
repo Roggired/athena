@@ -13,18 +13,29 @@
                 </div>
                 <form id="login-form" style="margin-left: 50px;" class="flex-column flex-justify-between td-h-9" th:action="@{/auth/login}" method="post">
                     <div class="flex-column flex-center td-h-7">
-                        <div class="flex-row flex-center td-h-2" th:style="${isAfterReset} ? '' : 'display: none;'">
+                        <div class="flex-row flex-center td-h-2" th:style="${isAfterReset != null && isAfterReset} ? '' : 'display: none;'">
                             <span class="regular-font login-label">
                                 Пароль сброшен, войдите еще раз
                             </span>
                         </div>
                         <div class="flex-row flex-center td-h-2">
-                            <label for="username-input" class="regular-font td-h-2 login-label"></label>
-                            <input id="username-input" name="login" type="text" class="regular-font login-input" placeholder="Логин"/>
+                            <input id="username-input"
+                                   name="login"
+                                   type="text"
+                                   class="regular-font login-input"
+                                   placeholder="Логин"
+                                   th:value="${login}"
+                                   th:classappend="${isAuthenticationError != null && isAuthenticationError} ? 'login-input-error': ''"
+                            />
                         </div>
                         <div class="flex-row flex-center td-h-2">
-                            <label for="password-input" class="regular-font td-h-2 login-label"></label>
-                            <input id="password-input" name="password" type="password" class="regular-font login-input" placeholder="Пароль"/>
+                            <input id="password-input"
+                                   name="password"
+                                   type="password"
+                                   class="regular-font login-input"
+                                   placeholder="Пароль"
+                                   th:classappend="${isAuthenticationError != null && isAuthenticationError} ? 'login-input-error': ''"
+                            />
                         </div>
                     </div>
                     <div class="flex-row flex-center td-all">

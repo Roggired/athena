@@ -45,8 +45,9 @@
                         </svg>
                     </a>
                 </div>
-                <div class="flex-column flex-center td-h-3">
-                    <button class="btn btn-font" style="font-weight: bold;" th:onclick="|goTo('@{/admin-panel/user-views/new}')|">Добавить</button>
+                <div class="flex-row flex-space-evenly td-h-3 td-all">
+                    <button class="btn btn-font" style="font-weight: bold; width: 300px;" th:onclick="|goTo('@{/admin-panel/user-views/new-user}')|">Добавить пользователя</button>
+                    <button class="btn btn-font" style="font-weight: bold; width: 300px;" th:onclick="|goTo('@{/admin-panel/user-views/new-admin}')|">Добавить админа</button>
                 </div>
             </div>
         </div>
