@@ -10,7 +10,6 @@ import ru.yofik.athena.auth.domain.auth.repository.UserRegistrationRequestReposi
 import ru.yofik.athena.auth.domain.auth.service.*;
 import ru.yofik.athena.auth.domain.auth.service.jwt.JwtChecker;
 import ru.yofik.athena.auth.domain.auth.service.jwt.JwtFactory;
-import ru.yofik.athena.auth.domain.auth.service.mail.DevMailService;
 import ru.yofik.athena.auth.domain.auth.service.mail.MailService;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.model.User;

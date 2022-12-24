@@ -12,9 +12,9 @@ import java.util.Locale;
 
 @RequiredArgsConstructor
 @Component
-@Profile("dev")
+@Profile(value = {"stage", "dev"})
 @Slf4j
-public class DevMailService implements MailService {
+public class DevAndStageMailService implements MailService {
     private final MessageSource messageSource;
     private final MailServiceProperties mailServiceProperties;
 

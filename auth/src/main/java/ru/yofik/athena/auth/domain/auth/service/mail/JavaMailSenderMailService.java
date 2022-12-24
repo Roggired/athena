@@ -11,7 +11,7 @@ import ru.yofik.athena.auth.infrastructure.config.properties.MailServiceProperti
 import java.util.Locale;
 
 @Service
-@Profile(value = {"stage", "prod"})
+@Profile(value = {"prod"})
 public class JavaMailSenderMailService implements MailService {
     private final MessageSource messageSource;
     private final MailServiceProperties mailServiceProperties;
