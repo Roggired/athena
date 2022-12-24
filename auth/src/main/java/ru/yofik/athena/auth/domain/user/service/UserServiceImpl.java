@@ -10,7 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.yofik.athena.auth.api.rest.user.requests.CreateUserRequest;
 import ru.yofik.athena.auth.api.rest.user.requests.FilteredUsersRequest;
 import ru.yofik.athena.auth.api.rest.user.requests.UpdateUserRequest;
+import ru.yofik.athena.auth.domain.auth.service.InvitationService;
 import ru.yofik.athena.auth.domain.auth.service.code.CodeGenerator;
+import ru.yofik.athena.auth.domain.auth.service.mail.MailService;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.model.User;
 import ru.yofik.athena.auth.domain.user.repository.UserRepository;
@@ -19,12 +21,14 @@ import ru.yofik.athena.common.api.exceptions.NotFoundException;
 import ru.yofik.athena.common.api.exceptions.UniquenessViolationException;
 import ru.yofik.athena.common.domain.NewPage;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final CodeGenerator codeGenerator;
+    private final InvitationService invitationService;
 
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
@@ -35,6 +39,10 @@ public class UserServiceImpl implements UserService {
 
         if (request.role == Role.USER && request.password != null) {
             throw new InvalidDataException("Password cannot be specified for USER");
+        }
+
+        if (request.role == Role.ADMIN && request.withNotification != null) {
+            throw new InvalidDataException("With notification flag cannot be specified for ADMIN");
         }
 
         if (userRepository.findByLogin(request.login).isPresent()) {
@@ -53,8 +61,15 @@ public class UserServiceImpl implements UserService {
             user = User.newUser(
                     request.email,
                     request.login,
-                    codeGenerator.generateShort()
+                    "no-invitation"
             );
+
+            user = userRepository.save(user);
+            if (request.withNotification != null && request.withNotification) {
+                invitationService.inviteUser(user);
+            } else {
+                invitationService.inviteUserWithoutEmailNotification(user);
+            }
         }
 
         return userRepository.save(user);
@@ -103,15 +118,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUser(long id) {
+    public User getUserById(long id) {
         return userRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
     }
 
     @Override
-    public User getUser(String login) {
+    public User getUserByLogin(String login) {
         return userRepository.findByLogin(login)
                 .orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public List<User> getAdmins() {
+        return userRepository.findAllAdmins();
     }
 
     @Override

@@ -1,0 +1,127 @@
+.table-container {
+    width: 90%;
+}
+
+.request-wrapper {
+    margin-top: 20px;
+    border-radius: 30px;
+    border-style: solid;
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+
+    box-shadow: 3px 3px 2px var(--primary-dark-color);
+}
+
+.custom-checkbox {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.custom-checkbox+label {
+    display: inline-flex;
+    align-items: center;
+    user-select: none;
+}
+
+.custom-checkbox+label::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+    flex-grow: 0;
+    border-style: solid;
+    border-width: 0;
+    border-radius: 7px;
+    margin-right: 0.5em;
+    background-color: var(--text-or-icons-color);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 50% 50%;
+}
+
+.custom-checkbox:checked+label::before {
+    background-color: var(--text-primary-color);
+    background-image: url("/svg/checked-icon.svg");
+}
+
+
+.inverse-font-color {
+    color: var(--text-or-icons-color);
+}
+
+.subtitle-label {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.left-arrow-primary, .right-arrow-primary {
+    width: 20px;
+    height: 20px;
+}
+
+.left-arrow-primary, .right-arrow-primary > path {
+    fill: var(--primary-color);
+    stroke-width: .6;
+    transition: fill 0.2s ease-out;
+    cursor: pointer;
+}
+
+.left-arrow-primary:hover, .right-arrow-primary:hover > path {
+    fill: var(--text-primary-color);
+}
+
+.left-arrow-primary {
+    transform: rotate(180deg);
+}
+
+.search-input {
+    width: 500px;
+    height: 35px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: var(--primary-color);
+    padding-left: 10px;
+    color: var(--primary-color);
+}
+
+.search-input::placeholder {
+    color: var(--accent-color);
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 60%;
+}
+
+.search-input:focus {
+    outline-color: var(--accent-color);
+}
+
+.new-login-input {
+    width: 300px;
+    height: 35px;
+    border-radius: 10px;
+    border-style: solid;
+    border-color: var(--primary-color);
+    padding-left: 10px;
+    color: var(--primary-color);
+}
+
+.new-login-input::placeholder {
+    color: var(--accent-color);
+    font-size: 20px;
+    font-weight: bold;
+    opacity: 60%;
+}
+
+.new-login-input:focus {
+    outline-color: var(--accent-color);
+}
+
+.delete-btn {
+    background-color: var(--delete-color);
+}
+
+.delete-btn:hover {
+    background-color: var(--delete-accent-color);
+}

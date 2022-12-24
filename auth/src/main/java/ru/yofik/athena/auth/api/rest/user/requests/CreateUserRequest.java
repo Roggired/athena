@@ -16,4 +16,5 @@ public class CreateUserRequest {
     public String email;
     public Role role;
     public String password;
+    public Boolean withNotification;
 }

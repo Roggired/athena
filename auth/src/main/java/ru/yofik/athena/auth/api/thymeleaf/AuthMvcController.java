@@ -38,7 +38,7 @@ public class AuthMvcController {
         try {
             var internalAccess = authService.loginAdmin(request);
             servletRequest.getSession().setAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY, internalAccess);
-            return "redirect:/admin-panel";
+            return "redirect:/admin-panel/users-table";
         } catch (PasswordNeedToBeChangedException e) {
             var changePassword = e.getAdminChangePasswordResponse();
             servletRequest.getSession().setAttribute("change-password-code", changePassword);

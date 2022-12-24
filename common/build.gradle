@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'ru.yofik.athena'
-version '0.3.0'
+version '0.3.2'
 sourceCompatibility = '11'
 
 repositories {

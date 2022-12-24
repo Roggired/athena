@@ -6,12 +6,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.yofik.athena.auth.api.rest.auth.requests.AdminSignInRequest;
 import ru.yofik.athena.auth.api.rest.auth.requests.UserSignInRequest;
-import ru.yofik.athena.auth.domain.auth.service.AuthService;
-import ru.yofik.athena.auth.domain.auth.service.AuthServiceImpl;
-import ru.yofik.athena.auth.domain.auth.service.PasswordNeedToBeChangedException;
-import ru.yofik.athena.auth.domain.auth.service.TokenService;
+import ru.yofik.athena.auth.domain.auth.repository.UserRegistrationRequestRepository;
+import ru.yofik.athena.auth.domain.auth.service.*;
 import ru.yofik.athena.auth.domain.auth.service.jwt.JwtChecker;
 import ru.yofik.athena.auth.domain.auth.service.jwt.JwtFactory;
+import ru.yofik.athena.auth.domain.auth.service.mail.DevMailService;
+import ru.yofik.athena.auth.domain.auth.service.mail.MailService;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.model.User;
 import ru.yofik.athena.auth.domain.user.service.ResetPasswordCodeService;
@@ -53,7 +53,10 @@ public class AuthServiceImplTest {
                 resetPasswordCodeService,
                 authProperties,
                 jwtFactory,
-                new TokenService(jwtChecker)
+                new TokenService(jwtChecker),
+                Mockito.mock(InvitationService.class),
+                Mockito.mock(UserRegistrationRequestRepository.class),
+                Mockito.mock(MailService.class)
         );
     }
 
@@ -64,7 +67,7 @@ public class AuthServiceImplTest {
         var password = "12345678";
         var stubAdmin = User.newAdmin("qwerty@qwerty.com", login, password, false);
         stubAdmin.setId(1L);
-        when(userService.getUser(eq(login))).thenReturn(stubAdmin);
+        when(userService.getUserByLogin(eq(login))).thenReturn(stubAdmin);
 
         var adminRequest = new AdminSignInRequest();
         adminRequest.login = login;
@@ -82,7 +85,7 @@ public class AuthServiceImplTest {
         var login = "qwerty";
         var password = "12345678";
 
-        when(userService.getUser(eq(login))).thenThrow(new NotFoundException());
+        when(userService.getUserByLogin(eq(login))).thenThrow(new NotFoundException());
         var request = new AdminSignInRequest();
         request.login = login;
         request.password = password;
@@ -99,7 +102,7 @@ public class AuthServiceImplTest {
 
         var stubUser = User.newUser("qwerty@qwerty.com", login, "1234");
         stubUser.setId(1L);
-        when(userService.getUser(eq(login))).thenReturn(stubUser);
+        when(userService.getUserByLogin(eq(login))).thenReturn(stubUser);
 
         var request = new AdminSignInRequest();
         request.login = login;
@@ -119,7 +122,7 @@ public class AuthServiceImplTest {
         var stubAdmin = User.newAdmin("qwerty@qwerty.com", login, password + "1234", false);
         stubAdmin.setId(1L);
 
-        when(userService.getUser(eq(login))).thenReturn(stubAdmin);
+        when(userService.getUserByLogin(eq(login))).thenReturn(stubAdmin);
 
         var request = new AdminSignInRequest();
         request.login = login;
@@ -136,7 +139,7 @@ public class AuthServiceImplTest {
         var stubUser = User.newUser("qwerty@qwerty.com", "qwerty", "1234");
         stubUser.setId(1L);
 
-        when(userService.getUser(eq(stubUser.getId()))).thenReturn(stubUser);
+        when(userService.getUserById(eq(stubUser.getId()))).thenReturn(stubUser);
         when(userService.updateUser(any())).thenReturn(stubUser);
 
         var loginRequest = new UserSignInRequest();

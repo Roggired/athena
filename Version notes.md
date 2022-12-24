@@ -1,5 +1,9 @@
 ## Versions Notes
 
+v0.3.2:
+- **issue#60** Add request sign-up function
+- **issue#64** Add request sign-in function
+
 v0.3.1:
 - minor improvements on admin-panel website
 

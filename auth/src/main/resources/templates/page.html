@@ -13,7 +13,7 @@
     <div th:fragment="navbar" class="flex-column flex-align-center navbar" style="justify-content: flex-start;">
         <img src="/svg/logo-small.svg" draggable="false" alt="" width="50" height="50" style="margin-top: 50px;"/>
         <div style="width: 60px; height: 3px; background-color: var(--text-or-icons-color); margin-top: 25px; border-radius: 3px;"></div>
-        <a th:href="@{/admin-panel}">
+        <a th:href="@{/admin-panel/users-table}">
             <svg class="icon"
                  width="45"
                  height="40"
@@ -29,7 +29,7 @@
                                 c44.751,14.319,79.909,57.848,91.213,113.038C354.023,354.828,352.019,360.798,347.601,364.67z"/>
             </svg>
         </a>
-        <a th:href="@{/admin-panel}">
+        <a th:href="@{/admin-panel/registration-requests-table}">
             <svg class="icon"
                  width="40"
                  height="40"

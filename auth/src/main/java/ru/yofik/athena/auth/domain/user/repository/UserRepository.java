@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.yofik.athena.auth.domain.user.model.User;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -45,4 +46,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
             String role,
             Pageable pageable
     );
+
+    @Query(
+            value = "SELECT u FROM User u " +
+                    "LEFT JOIN FETCH u.credentials creds " +
+                    "LEFT JOIN FETCH u.lock lock " +
+                    "LEFT JOIN FETCH u.session session " +
+                    "WHERE u.role = 'ADMIN'"
+    )
+    List<User> findAllAdmins();
 }

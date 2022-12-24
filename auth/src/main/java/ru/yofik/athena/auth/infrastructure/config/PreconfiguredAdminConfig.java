@@ -37,7 +37,7 @@ public class PreconfiguredAdminConfig implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            userService.getUser(login);
+            userService.getUserByLogin(login);
         } catch (NotFoundException e) {
             var request = new CreateUserRequest();
             request.login = login;

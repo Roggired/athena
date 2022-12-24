@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yofik.athena.auth.api.rest.admin.requests.*;
 import ru.yofik.athena.auth.domain.admin.model.NewInvitationResponse;
+import ru.yofik.athena.auth.domain.auth.service.InvitationService;
 import ru.yofik.athena.auth.domain.auth.service.code.CodeGenerator;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.service.UserService;
@@ -19,13 +20,13 @@ import ru.yofik.athena.common.api.exceptions.InvalidDataException;
 @Slf4j
 public class AdminServiceImpl implements AdminService {
     private final UserService userService;
-    private final CodeGenerator codeGenerator;
+    private final InvitationService invitationService;
 
 
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void lockUser(LockUserRequest request) {
-        var user = userService.getUser(request.userId);
+        var user = userService.getUserById(request.userId);
         if (!user.isLocked()) {
             user.lock(request.reason);
             userService.updateUser(user);
@@ -35,7 +36,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void unlockUser(UnlockUserRequest request) {
-        var user = userService.getUser(request.userId);
+        var user = userService.getUserById(request.userId);
         if (user.isLocked()) {
             user.unlock();
             userService.updateUser(user);
@@ -46,7 +47,7 @@ public class AdminServiceImpl implements AdminService {
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public void changePasswordForOtherAdmin(ChangePasswordForOtherAdminRequest request) {
         var currentAdminId = SecurityUtils.getCurrentInternalAccess().getUserId();
-        var otherAdmin = userService.getUser(request.userId);
+        var otherAdmin = userService.getUserById(request.userId);
         otherAdmin.getCredentials().changeAdminCredentials(
                 request.newPassword,
                 currentAdminId != otherAdmin.getId()
@@ -62,7 +63,7 @@ public class AdminServiceImpl implements AdminService {
             throw new IllegalStateException("AccessService#changeAdminItselfPassword method can be used only by authenticated admins");
         }
 
-        var admin = userService.getUser(internalAccess.getUserId());
+        var admin = userService.getUserById(internalAccess.getUserId());
         if (!admin.challengeCredentials(request.oldPassword)) {
             throw new AuthenticationException();
         }
@@ -78,13 +79,17 @@ public class AdminServiceImpl implements AdminService {
     @Override
     @Transactional(isolation = Isolation.REPEATABLE_READ)
     public NewInvitationResponse generateUserInvitation(GenerateUserInvitationRequest request) {
-        var user = userService.getUser(request.userId);
+        var user = userService.getUserById(request.userId);
         if (user.getRole() != Role.USER) {
             throw new InvalidDataException();
         }
 
-        var newInvitation = codeGenerator.generateLong();
-        user.getCredentials().changeUserCredentials(newInvitation);
+        String newInvitation;
+        if (request.withNotification != null && request.withNotification) {
+            newInvitation = invitationService.inviteUser(user);
+        } else {
+            newInvitation = invitationService.inviteUserWithoutEmailNotification(user);
+        }
         userService.updateUser(user);
 
         return new NewInvitationResponse(newInvitation);

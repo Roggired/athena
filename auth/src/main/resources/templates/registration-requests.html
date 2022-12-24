@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="page :: commonHeader(_, ~{::link}, _)">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/registration-requests.css}">
+</head>
+<body>
+<div class="background">
+    <div class="td-all th-all">
+        <div class="flex-row flex-center th-90per">
+            <div class="flex-column flex-center" style="background-color: white; box-shadow: 3px 3px 2px var(--hover-color); height: 900px; width: 1200px; border-radius: 45px;">
+                <div class="flex-column flex-center td-h-2">
+                    <span class="subtitle-font subtitle-label">Запросы на регистрацию</span>
+                </div>
+                <div class="td-h-1"></div>
+                <div class="flex-column flex-center td-h-2">
+                    <form th:action="@{/admin-panel/registration-requests-table(pageNumber=${leftPageNumber})}" method="get">
+                        <input type="text"
+                               class="regular-font search-input td-500px"
+                               name="email"
+                               th:value="${email}"
+                               placeholder="Поиск по email..."
+                        />
+                        <input type="submit" class="btn btn-font" style="margin-left: 30px; height: 41px; line-height: 41px; width: 150px;" value="Поиск"/>
+                    </form>
+                </div>
+                <div class="table-container mt-20px"
+                     th:classappend="${#lists.isEmpty(requests) ? 'flex-row flex-center' : ''}">
+                    <span th:if="${#lists.isEmpty(requests)}" class="regular-font mt-20px">Нет запросов</span>
+                    <div class="flex-row request-wrapper td-h-5 td-all" th:each="request : ${requests}" style="justify-content: flex-start;">
+                        <div class="flex-column flex-space-evenly td-h-3" style="margin-left: 50px;">
+                            <div th:text="${request.email}" class="td-g td-400px regular-font inverse-font-color" style="text-align: left; font-weight: bold;"></div>
+                            <div th:text="${{request.requestedAt}}" class="td-g td-400px regular-font inverse-font-color mt-20px" style="text-align: left;"></div>
+                        </div>
+                        <div class="flex-column td-h-3">
+                            <input type="text"
+                                   form="approve-form"
+                                   class="regular-font new-login-input"
+                                   name="login"
+                                   placeholder="Логин"
+                                   th:if="${!request.isApproved()}"
+                            />
+                            <div class="flex-row mt-20px"
+                                 style="flex-direction: row; align-items: center;"
+                                 th:if="${!request.isApproved()}"
+                            >
+                                <input th:id="${'with-notification-input-' + request.id}"
+                                       type="checkbox"
+                                       class="custom-checkbox"
+                                       form="approve-form"
+                                       name="withNotification"
+                                />
+                                <label class="regular-font inverse-font-color"
+                                       th:for="${'with-notification-input-' + request.id}"
+                                >
+                                    Уведомить
+                                </label>
+                            </div>
+                            <div th:if="${request.isApproved}"
+                                 th:text="${'Дата одобрения: ' + #temporals.format(request.approvedAt, 'HH:MM dd.MM.yyyy')}"
+                                 class="td-g regular-font inverse-font-color"
+                                 style="text-align: right;">
+                            </div>
+                            <div th:if="${request.isApproved}"
+                                 th:text="${'ID пользователя: ' + request.createdUserId}"
+                                 class="td-g regular-font inverse-font-color mt-20px"
+                                 style="text-align: right;">
+                            </div>
+                        </div>
+                        <div class="flex-column td-h-3"
+                             style="justify-content: flex-start;"
+                             th:styleappend="${request.isApproved()} ? 'margin-left: 15%;' : 'margin-left: 10%;'"
+                        >
+                            <form id="approve-form"
+                                  th:action="@{/admin-panel/actions/approve-registration-request}"
+                                  method="post"
+                                  th:if="${!request.isApproved}"
+                            >
+                                <input type="text"
+                                       class="regular-font"
+                                       name="requestId"
+                                       th:value="${request.id}"
+                                       hidden
+                                />
+                                <input type="submit" class="btn btn-font" style="margin-left: 30px; height: 41px; line-height: 41px; width: 150px;" value="Одобрить"/>
+                            </form>
+                            <form th:action="@{/admin-panel/actions/reject-registration-request}"
+                                  method="post"
+                                  th:if="${!request.isApproved}"
+                                  class="mt-20px"
+                            >
+                                <input type="text"
+                                       class="regular-font"
+                                       name="requestId"
+                                       th:value="${request.id}"
+                                       hidden
+                                />
+                                <input type="text"
+                                       class="regular-font"
+                                       name="pageNumber"
+                                       th:value="${currentPage}"
+                                       hidden
+                                />
+                                <input type="text"
+                                       class="regular-font"
+                                       name="email"
+                                       th:value="${email}"
+                                       hidden
+                                />
+                                <input type="submit" class="btn btn-font delete-btn" style="margin-left: 30px; height: 41px; line-height: 41px; width: 150px;" value="Отклонить"/>
+                            </form>
+                            <img src="/svg/approved-icon.svg"
+                                 alt="Approved"
+                                 draggable="false"
+                                 width="45"
+                                 height="45"
+                                 th:if="${request.isApproved()}"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div class="flex-row flex-center td-h-2">
+                    <a th:href="@{/admin-panel/registration-requests-table(pageNumber=${leftPageNumber},email=${email})}"
+                        th:if="${!#lists.isEmpty(requests)}"
+                    >
+                        <svg class="left-arrow-primary" viewBox="0 0 29 52">
+                            <path class="arrow" fill-rule="evenodd" clip-rule="evenodd" d="M0.84939 51.1539C-0.28313 50.0257 -0.28313 48.1965 0.84939 47.0684L21.9988 26L0.849388 4.93164C-0.283132 3.80346 -0.283132 1.97432 0.849388 0.846134C1.98191 -0.282044 3.81809 -0.282044 4.95061 0.846134L28.1506 23.9572C29.2831 25.0854 29.2831 26.9146 28.1506 28.0428L4.95061 51.1539C3.81809 52.282 1.98191 52.282 0.84939 51.1539Z"/>
+                        </svg>
+                    </a>
+                    <span class="btn-font"
+                          style="margin-left: 20px; margin-right: 20px; margin-top: 2px;"
+                          th:text="${currentPage + 1} + '  из  ' + ${totalPages}"
+                          th:if="${!#lists.isEmpty(requests)}"
+                    >
+                    </span>
+                    <a th:href="@{/admin-panel/registration-requests-table(pageNumber=${rightPageNumber},email=${email})}"
+                       th:if="${!#lists.isEmpty(requests)}"
+                    >
+                        <svg class="right-arrow-primary" viewBox="0 0 29 52">
+                            <path class="arrow" fill-rule="evenodd" clip-rule="evenodd" d="M0.84939 51.1539C-0.28313 50.0257 -0.28313 48.1965 0.84939 47.0684L21.9988 26L0.849388 4.93164C-0.283132 3.80346 -0.283132 1.97432 0.849388 0.846134C1.98191 -0.282044 3.81809 -0.282044 4.95061 0.846134L28.1506 23.9572C29.2831 25.0854 29.2831 26.9146 28.1506 28.0428L4.95061 51.1539C3.81809 52.282 1.98191 52.282 0.84939 51.1539Z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="page :: navbar">
+    </div>
+</div>
+</body>
+</html>

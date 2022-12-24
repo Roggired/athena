@@ -1,8 +1,6 @@
 package ru.yofik.athena.auth.api.thymeleaf;
 
 import lombok.RequiredArgsConstructor;
-import org.bouncycastle.cert.ocsp.Req;
-import org.bouncycastle.math.raw.Mod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,13 +26,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/admin-panel")
-public class AdminPanelMvcController {
+public class UsersMvcController {
     private final AdminService adminService;
     private final UserService userService;
 
 
-    @GetMapping
-    public String getAdminPanel(
+    @GetMapping("/users-table")
+    public String getUsersTable(
             Integer pageNumber,
             Model model,
             String login
@@ -67,7 +65,7 @@ public class AdminPanelMvcController {
         if (rightPageNumber >= totalPages) rightPageNumber = (int) totalPages - 1;
         model.addAttribute("rightPageNumber", rightPageNumber);
 
-        return "admin-panel";
+        return "users";
     }
 
     @GetMapping("/user-views/new-user")
@@ -96,6 +94,7 @@ public class AdminPanelMvcController {
         createUserRequest.login = login;
         createUserRequest.email = email;
         createUserRequest.role = Role.valueOf(role);
+        createUserRequest.withNotification = true;
         if (createUserRequest.role == Role.ADMIN) {
             createUserRequest.password = password;
         }
@@ -106,7 +105,7 @@ public class AdminPanelMvcController {
 
     @GetMapping("/user-views/view")
     public String concreteUserView(long id, Model model) {
-        var user = UserView.from(userService.getUser(id));
+        var user = UserView.from(userService.getUserById(id));
         model.addAttribute("user", user);
         return "user-view";
     }
@@ -156,8 +155,9 @@ public class AdminPanelMvcController {
     ) {
         var request = new GenerateUserInvitationRequest();
         request.userId = id;
+        request.withNotification = true;
         var invitation = adminService.generateUserInvitation(request);
-        var user = UserView.from(userService.getUser(id));
+        var user = UserView.from(userService.getUserById(id));
         model.addAttribute("user", user);
         model.addAttribute("invitation", invitation.newInvitation);
         return "user-view";
@@ -168,7 +168,7 @@ public class AdminPanelMvcController {
             @RequestParam("id") long id
     ) {
         userService.deleteUser(id);
-        return "redirect:/admin-panel";
+        return "redirect:/admin-panel/users-table";
     }
 
     @PostMapping("/actions/set-admin-password")
@@ -180,7 +180,7 @@ public class AdminPanelMvcController {
         newPassword = newPassword.trim();
 
         if (newPassword.isBlank()) {
-            var user = UserView.from(userService.getUser(id));
+            var user = UserView.from(userService.getUserById(id));
             model.addAttribute("user", user);
             return "user-view";
         }
@@ -190,7 +190,7 @@ public class AdminPanelMvcController {
         request.newPassword = newPassword;
 
         adminService.changePasswordForOtherAdmin(request);
-        var user = UserView.from(userService.getUser(id));
+        var user = UserView.from(userService.getUserById(id));
         model.addAttribute("user", user);
         model.addAttribute("successfullySetPassword", true);
         return "user-view";

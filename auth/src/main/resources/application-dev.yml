@@ -15,8 +15,8 @@ server:
 
 mail-service:
   fromEmail: example@example.com
-  activationLinkUrl: http://172.31.0.3:8080/api/v1/auth/activate
-  resetPasswordUrl: http://172.31.0.3:8080/api/v1/auth/reset-password
+  invitationLink: http://localhost:8081/api/v1/auth/users/sign-in
+  resetPasswordUrl: http://localhost:8081/api/v1/auth/admins/reset-password
 
 auth:
   access-token-expiration-duration: 15m
@@ -33,6 +33,6 @@ code:
 
 logging:
   level:
-    ru.yofik.athena.auth: debug
-    org.thymeleaf.engine: debug
-    org.springframework.security: trace
+    ru.yofik.athena.auth: info
+#    org.thymeleaf.engine: debug
+#    org.springframework.security: trace

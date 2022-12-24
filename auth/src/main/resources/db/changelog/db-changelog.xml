@@ -6,4 +6,5 @@
     <include file="db/changelog/sql/ATHENA-NEW-AUTH-1-new-users-model.sql"/>
     <include file="db/changelog/sql/ATHENA-NEW-AUTH-2-client-model.sql"/>
     <include file="db/changelog/sql/ATHENA-NEW-AUTH-3-user-model-refactoring.sql"/>
+    <include file="db/changelog/sql/ATHENA-NEW-AUTH-4-user-registration-request.sql"/>
 </databaseChangeLog>

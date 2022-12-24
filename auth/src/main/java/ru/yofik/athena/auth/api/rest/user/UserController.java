@@ -73,7 +73,7 @@ public class UserController {
     ) {
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_RETURNED,
-                UserView.from(userService.getUser(id))
+                UserView.from(userService.getUserById(id))
         );
     }
 
@@ -82,7 +82,7 @@ public class UserController {
         var internalAccess = SecurityUtils.getCurrentInternalAccess();
         return AuthV1Response.of(
                 AuthV1ResponseStatus.RESOURCE_RETURNED,
-                UserView.from(userService.getUser(internalAccess.getUserId()))
+                UserView.from(userService.getUserById(internalAccess.getUserId()))
         );
     }
 }

@@ -44,7 +44,7 @@ public class ThymeleafConfig implements WebMvcConfigurer {
                 return "никогда";
             }
 
-            return source.format(DateTimeFormatter.ofPattern("HH:mm:ss dd.MM.yyyy"));
+            return source.format(DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy"));
         }
     }
 }

@@ -24,7 +24,7 @@ public class DevMailService implements MailService {
         var invitationLink = removeSlashOnBaseUrlEnd(mailServiceProperties.invitationLink) +
                 "?invitation=" + invitationCode + "&userId=" + user.getId();
 
-        log.debug(
+        log.info(
                 "Invitation code: " + invitationCode + " encoded in the invitation link " + invitationLink + " " +
                 "has been 'sent' for user: " + user.getEmail() + System.lineSeparator() +
                 "Full information about the message: " + System.lineSeparator() +
@@ -38,32 +38,30 @@ public class DevMailService implements MailService {
                                 new Locale("ru")
                         ),
                         user.getEmail(),
-                        invitationLink
+                        invitationLink,
+                        user.getId(),
+                        invitationCode
                 )
         );
     }
 
     @Override
-    public void sendResetPasswordLinkToUser(User user, String resetCode) {
-        var resetPasswordLink = removeSlashOnBaseUrlEnd(mailServiceProperties.resetPasswordUrl) +
-                "?code=" + resetCode + "&userId=" + user.getId();
-
-        log.debug(
-                "Reset password code: " + resetCode + " encoded in the reset password link: " + resetPasswordLink +
-                        "if in corresponding user object no reset password object" + System.lineSeparator() +
+    public void sendNotificationAboutNewUserRegistrationRequest(User admin, String newUserEmail) {
+        log.info(
+                "Notification about new user registration request" +
+                        "has been 'sent' for user: " + admin.getEmail() + System.lineSeparator() +
                         "Full information about the message: " + System.lineSeparator() +
                         "From: " + mailServiceProperties.fromEmail + System.lineSeparator() +
-                        "To: " + user.getEmail() + System.lineSeparator() +
-                        "Subject: " + getTranslation(messageSource, MailService.SUBJECT_RESET_PASSWORD_TRANSLATION_KEY, new Locale("ru")) + System.lineSeparator() +
+                        "To: " + admin.getEmail() + System.lineSeparator() +
+                        "Subject: " + getTranslation(messageSource, MailService.SUBJECT_NEW_USER_REGISTRATION_REQUEST_TRANSLATION_KEY, new Locale("ru")) + System.lineSeparator() +
                         "Text: " + String.format(
-                                getTranslation(
-                                        messageSource,
-                                        MailService.TEXT_RESET_PASSWORD_TRANSLATION_KEY,
-                                        new Locale("ru")
-                                ),
-                                user.getEmail(),
-                                resetPasswordLink
-                        )
+                        getTranslation(
+                                messageSource,
+                                MailService.TEXT_NEW_USER_REGISTRATION_REQUEST_TRANSLATION_KEY,
+                                new Locale("ru")
+                        ),
+                        newUserEmail
+                )
         );
     }
 }

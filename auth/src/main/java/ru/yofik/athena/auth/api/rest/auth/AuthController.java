@@ -2,10 +2,7 @@ package ru.yofik.athena.auth.api.rest.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.yofik.athena.auth.api.rest.auth.requests.AdminSignInRequest;
-import ru.yofik.athena.auth.api.rest.auth.requests.ChangeAdminTemporaryPasswordRequest;
-import ru.yofik.athena.auth.api.rest.auth.requests.RefreshUserAccessRequest;
-import ru.yofik.athena.auth.api.rest.auth.requests.UserSignInRequest;
+import ru.yofik.athena.auth.api.rest.auth.requests.*;
 import ru.yofik.athena.auth.domain.auth.model.InternalAccess;
 import ru.yofik.athena.auth.domain.auth.service.AuthService;
 import ru.yofik.athena.auth.domain.auth.service.PasswordNeedToBeChangedException;
@@ -67,6 +64,17 @@ public class AuthController {
         );
     }
 
+    @PostMapping("/users/request-sign-up")
+    public AuthV1Response userRequestSignUp(
+            @RequestBody @Valid RequestUserRegistrationRequest request
+    ) {
+        authService.requestUserRegistration(request);
+        return AuthV1Response.of(
+                AuthV1ResponseStatus.OPERATION_OK,
+                "Ok"
+        );
+    }
+
     @PostMapping("/users/sign-in")
     public AuthV1Response userSignIn(
             @RequestBody @Valid UserSignInRequest request
@@ -74,6 +82,17 @@ public class AuthController {
         return AuthV1Response.of(
                 AuthV1ResponseStatus.OPERATION_OK,
                 authService.loginUser(request)
+        );
+    }
+
+    @PostMapping("/users/request-sign-in")
+    public AuthV1Response userRequestSignIn(
+            @RequestBody @Valid RequestUserLoginRequest request
+    ) {
+        authService.requestUserLogin(request);
+        return AuthV1Response.of(
+                AuthV1ResponseStatus.OPERATION_OK,
+                "Ok"
         );
     }
 

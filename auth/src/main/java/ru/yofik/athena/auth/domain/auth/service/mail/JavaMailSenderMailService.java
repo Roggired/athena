@@ -46,7 +46,9 @@ public class JavaMailSenderMailService implements MailService {
                                 new Locale("ru")
                         ),
                         user.getEmail(),
-                        invitationLink
+                        invitationLink,
+                        user.getId(),
+                        invitationCode
                 )
         );
 
@@ -54,17 +56,14 @@ public class JavaMailSenderMailService implements MailService {
     }
 
     @Override
-    public void sendResetPasswordLinkToUser(User user, String resetCode) {
-        var resetPasswordLink = removeSlashOnBaseUrlEnd(mailServiceProperties.resetPasswordUrl) +
-                "?code=" + resetCode + "&userId=" + user.getId();
-
+    public void sendNotificationAboutNewUserRegistrationRequest(User admin, String newUserEmail) {
         var message = new SimpleMailMessage();
         message.setFrom(mailServiceProperties.fromEmail);
-        message.setTo(user.getEmail());
+        message.setTo(admin.getEmail());
         message.setSubject(
                 getTranslation(
                         messageSource,
-                        MailService.SUBJECT_RESET_PASSWORD_TRANSLATION_KEY,
+                        MailService.SUBJECT_NEW_USER_REGISTRATION_REQUEST_TRANSLATION_KEY,
                         new Locale("ru")
                 )
         );
@@ -72,11 +71,10 @@ public class JavaMailSenderMailService implements MailService {
                 String.format(
                         getTranslation(
                                 messageSource,
-                                MailService.TEXT_RESET_PASSWORD_TRANSLATION_KEY,
+                                MailService.TEXT_NEW_USER_REGISTRATION_REQUEST_TRANSLATION_KEY,
                                 new Locale("ru")
                         ),
-                        user.getEmail(),
-                        resetPasswordLink
+                        newUserEmail
                 )
         );
 

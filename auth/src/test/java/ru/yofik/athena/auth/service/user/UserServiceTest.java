@@ -3,6 +3,8 @@ package ru.yofik.athena.auth.service.user;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import ru.yofik.athena.auth.domain.auth.service.InvitationService;
 import ru.yofik.athena.auth.domain.auth.service.code.DevCodeGenerator;
 import ru.yofik.athena.common.api.exceptions.InvalidDataException;
 import ru.yofik.athena.common.api.exceptions.NotFoundException;
@@ -28,7 +30,7 @@ public class UserServiceTest {
     @BeforeEach
     public void setup() {
         userRepositoryMock = UserRepositoryMockFactory.create();
-        userService = new UserServiceImpl(userRepositoryMock, new DevCodeGenerator());
+        userService = new UserServiceImpl(userRepositoryMock, Mockito.mock(InvitationService.class));
     }
 
     @Test
@@ -41,7 +43,7 @@ public class UserServiceTest {
 
     @Test
     public void getUserReturnsCorrectly() {
-        var user = userService.getUser(1L);
+        var user = userService.getUserById(1L);
         Assertions.assertEquals(1L, user.getId(), "Wrong id");
         Assertions.assertEquals("qwerty", user.getLogin(), "Wrong login");
     }
@@ -50,7 +52,7 @@ public class UserServiceTest {
     public void getUserThrowsOnWrongId() {
         Assertions.assertThrows(
                 NotFoundException.class,
-                () -> userService.getUser(10L),
+                () -> userService.getUserById(10L),
                 "UserServiceImpl must throws on getUser with not existed id"
         );
     }

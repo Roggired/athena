@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="page :: commonHeader(_, ~{::link}, _)">
-    <link type="text/css" rel="stylesheet" th:href="@{/css/admin-panel.css}">
+    <link type="text/css" rel="stylesheet" th:href="@{/css/users.css}">
 </head>
 <body>
 <div class="background">
@@ -13,7 +13,7 @@
                 </div>
                 <div class="td-h-1"></div>
                 <div class="flex-column flex-center td-h-2">
-                    <form th:action="@{/admin-panel(pageNumber=${leftPageNumber})}" method="get">
+                    <form th:action="@{/admin-panel/users-table(pageNumber=${leftPageNumber})}" method="get">
                         <input type="text"
                                class="regular-font search-input td-500px"
                                name="login"
@@ -29,7 +29,6 @@
                         <div class="regular-font td-g td-250px header-cell">Логин</div>
                         <div class="regular-font td-g td-400px header-cell">Email</div>
                         <div class="regular-font td-g td-100px header-cell">Админ</div>
-<!--                        <div class="regular-font td-g td-300px header-cell">Дата последнего входа (UTC)</div>-->
                         <div class="regular-font td-g td-150px header-cell">
                             <img src="/svg/blocked-icon.svg" alt="Статус" draggable="false" width="25" height="25"/>
                         </div>
@@ -42,21 +41,20 @@
                         <div class="td-g td-100px regular-font table-cell table-cell-center">
                             <img src="/svg/yes-icon.svg" alt="админ" width="20" height="20" draggable="false" th:if="${user.role.name() == T(ru.yofik.athena.auth.domain.user.model.Role).ADMIN.name()}"/>
                         </div>
-<!--                        <div th:text="${{user.lastLoginDate}}" class="td-g td-300px regular-font table-cell"></div>-->
                         <div class="td-g td-150px regular-font table-cell table-cell-center">
                             <img src="/svg/yes-icon.svg" alt="заблокирован" width="20" height="20" draggable="false" th:if="${user.isLocked}"/>
                         </div>
                     </div>
                 </div>
                 <div class="flex-row flex-center td-h-2">
-                    <a th:href="@{/admin-panel(pageNumber=${leftPageNumber},login=${login})}">
+                    <a th:href="@{/admin-panel/users-table(pageNumber=${leftPageNumber},login=${login})}">
                         <svg class="left-arrow-primary" viewBox="0 0 29 52">
                             <path class="arrow" fill-rule="evenodd" clip-rule="evenodd" d="M0.84939 51.1539C-0.28313 50.0257 -0.28313 48.1965 0.84939 47.0684L21.9988 26L0.849388 4.93164C-0.283132 3.80346 -0.283132 1.97432 0.849388 0.846134C1.98191 -0.282044 3.81809 -0.282044 4.95061 0.846134L28.1506 23.9572C29.2831 25.0854 29.2831 26.9146 28.1506 28.0428L4.95061 51.1539C3.81809 52.282 1.98191 52.282 0.84939 51.1539Z"/>
                         </svg>
                     </a>
                     <span class="btn-font" style="margin-left: 20px; margin-right: 20px; margin-top: 2px;" th:text="${currentPage + 1} + '  из  ' + ${totalPages}">
                     </span>
-                    <a th:href="@{/admin-panel(pageNumber=${rightPageNumber},login=${login})}">
+                    <a th:href="@{/admin-panel/users-table(pageNumber=${rightPageNumber},login=${login})}">
                         <svg class="right-arrow-primary" viewBox="0 0 29 52">
                             <path class="arrow" fill-rule="evenodd" clip-rule="evenodd" d="M0.84939 51.1539C-0.28313 50.0257 -0.28313 48.1965 0.84939 47.0684L21.9988 26L0.849388 4.93164C-0.283132 3.80346 -0.283132 1.97432 0.849388 0.846134C1.98191 -0.282044 3.81809 -0.282044 4.95061 0.846134L28.1506 23.9572C29.2831 25.0854 29.2831 26.9146 28.1506 28.0428L4.95061 51.1539C3.81809 52.282 1.98191 52.282 0.84939 51.1539Z"/>
                         </svg>

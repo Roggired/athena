@@ -15,7 +15,7 @@ public class IndexMvcController {
 
         var maybeInternalAccess = httpSession.getAttribute(InternalAccess.ACCESS_SERVLET_SESSION_KEY);
         if (maybeInternalAccess != null && maybeInternalAccess.getClass() == InternalAccess.class) {
-            return "redirect:/admin-panel";
+            return "redirect:/admin-panel/users-table";
         }
 
         return "login";
