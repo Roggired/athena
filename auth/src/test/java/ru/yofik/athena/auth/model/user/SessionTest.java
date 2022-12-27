@@ -2,7 +2,7 @@ package ru.yofik.athena.auth.model.user;
 
 import org.junit.jupiter.api.Test;
 import ru.yofik.athena.auth.domain.user.model.Session;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

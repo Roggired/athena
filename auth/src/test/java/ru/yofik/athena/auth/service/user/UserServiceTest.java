@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import ru.yofik.athena.auth.domain.auth.service.InvitationService;
-import ru.yofik.athena.auth.domain.auth.service.code.DevCodeGenerator;
 import ru.yofik.athena.common.api.exceptions.InvalidDataException;
 import ru.yofik.athena.common.api.exceptions.NotFoundException;
 import ru.yofik.athena.common.api.exceptions.UniquenessViolationException;
@@ -16,7 +15,7 @@ import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.repository.UserRepository;
 import ru.yofik.athena.auth.domain.user.service.UserService;
 import ru.yofik.athena.auth.domain.user.service.UserServiceImpl;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 import ru.yofik.athena.common.domain.NewPage;
 import java.util.List;
 

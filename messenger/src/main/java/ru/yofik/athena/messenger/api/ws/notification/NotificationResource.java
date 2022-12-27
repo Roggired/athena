@@ -1,15 +1,15 @@
 package ru.yofik.athena.messenger.api.ws.notification;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.redis.core.TimeToLive;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.util.Assert;
 import org.springframework.web.socket.WebSocketSession;
 import ru.yofik.athena.common.security.AccessTokenAuthentication;
+import ru.yofik.athena.common.utils.TimeUtils;
 import ru.yofik.athena.messenger.api.ws.AbstractWebSocketResource;
 import ru.yofik.athena.messenger.api.ws.AthenaWSMessage;
-import ru.yofik.athena.messenger.api.ws.NotificationSubscriptionKey;
-import ru.yofik.athena.messenger.api.ws.WebSocketSubscriptionType;
 import ru.yofik.athena.messenger.domain.user.repository.UserRepository;
 import ru.yofik.athena.messenger.infrastructure.storage.sql.user.entity.UserLastOnlineRecord;
 import ru.yofik.athena.messenger.infrastructure.storage.sql.user.repository.CrudUserLastOnlineRecordRepository;
@@ -28,7 +28,7 @@ public class NotificationResource extends AbstractWebSocketResource {
     }
 
     @Override
-    protected void handleAthenaWSMessage(WebSocketSession session, AthenaWSMessage message) throws Exception {
+    protected void handleAthenaWSMessage(WebSocketSession session, AthenaWSMessage message) {
         log.info("Got new WS messages: " + message);
         var authentication = (AccessTokenAuthentication) session.getPrincipal();
         Assert.notNull(authentication, "ChatResource cannot get user!");
@@ -42,10 +42,10 @@ public class NotificationResource extends AbstractWebSocketResource {
         securityContext.setAuthentication(authentication);
 
         var user = userRepository.getUser(userId);
-        subscribe(session, new NotificationSubscriptionKey(user.getId()), WebSocketSubscriptionType.NOTIFICATION);
+        subscribe(user.getId(), session);
 
         var userLastOnlineRecord = crudUserLastOnlineRecordRepository.findByUserId(user.getId());
-        var lastOnlineTime = Instant.now().atZone(ZoneId.of("UTC")).toLocalDateTime();
+        var lastOnlineTime = TimeUtils.nowUTC();
 
         if (userLastOnlineRecord.isPresent()) {
             userLastOnlineRecord.get().setLastOnlineTime(lastOnlineTime);

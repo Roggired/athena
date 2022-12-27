@@ -15,12 +15,11 @@ import ru.yofik.athena.auth.domain.auth.repository.UserRegistrationRequestReposi
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.model.User;
 import ru.yofik.athena.auth.domain.user.service.UserService;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 import ru.yofik.athena.common.api.exceptions.NotFoundException;
 import ru.yofik.athena.common.domain.NewPage;
 
 import java.util.List;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service

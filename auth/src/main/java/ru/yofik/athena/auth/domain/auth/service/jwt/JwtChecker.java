@@ -9,7 +9,7 @@ import ru.yofik.athena.auth.domain.auth.model.JwtClaim;
 import ru.yofik.athena.auth.domain.auth.model.JwtPurpose;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.utils.Pair;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 
 import java.text.ParseException;
 import java.util.Arrays;

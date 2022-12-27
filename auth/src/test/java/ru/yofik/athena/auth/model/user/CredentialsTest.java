@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import ru.yofik.athena.common.api.exceptions.InvalidDataException;
 import ru.yofik.athena.auth.domain.user.model.Credentials;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

@@ -19,7 +19,7 @@ import ru.yofik.athena.auth.domain.user.service.ResetPasswordCodeService;
 import ru.yofik.athena.auth.domain.user.service.UserService;
 import ru.yofik.athena.auth.infrastructure.config.properties.AuthProperties;
 import ru.yofik.athena.auth.utils.SecurityUtils;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 import ru.yofik.athena.common.api.exceptions.AuthenticationException;
 import ru.yofik.athena.common.api.exceptions.InvalidDataException;
 import ru.yofik.athena.common.api.exceptions.NotFoundException;

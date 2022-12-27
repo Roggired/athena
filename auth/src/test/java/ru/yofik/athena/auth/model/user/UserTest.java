@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import ru.yofik.athena.common.api.exceptions.InvalidDataException;
 import ru.yofik.athena.auth.domain.user.model.Role;
 import ru.yofik.athena.auth.domain.user.model.User;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 

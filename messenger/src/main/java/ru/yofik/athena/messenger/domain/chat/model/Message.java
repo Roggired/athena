@@ -1,8 +1,8 @@
 package ru.yofik.athena.messenger.domain.chat.model;
 
 import lombok.*;
+import ru.yofik.athena.common.utils.TimeUtils;
 import ru.yofik.athena.messenger.domain.user.model.User;
-import ru.yofik.athena.messenger.utils.DateUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,7 +26,7 @@ public class Message {
     private boolean pinned;
 
     public static Message newMessage(String text, User sender, Chat chat) {
-        var creationDate = DateUtils.nowUTC();
+        var creationDate = TimeUtils.nowUTC();
         return new Message(
                 0,
                 text,
@@ -47,7 +47,7 @@ public class Message {
 
     public Message update(String newText) {
         this.text = newText;
-        this.modificationDate = DateUtils.nowUTC();
+        this.modificationDate = TimeUtils.nowUTC();
         return this;
     }
 

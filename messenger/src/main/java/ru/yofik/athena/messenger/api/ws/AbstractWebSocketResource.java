@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.web.socket.*;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import ru.yofik.athena.messenger.infrastructure.SpringContext;
@@ -28,7 +27,7 @@ public abstract class AbstractWebSocketResource extends AbstractWebSocketHandler
             .create();
 
     protected WebSocketSessionBroker webSocketSessionBroker;
-    private final ConcurrentMap<String, Pair<SubscriptionKey, WebSocketSubscriptionType>> sessions = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, Long> userSessions = new ConcurrentHashMap<>();
 
     public AbstractWebSocketResource() {
         webSocketSessionBroker = SpringContext.getBean(WebSocketSessionBroker.class);
@@ -36,9 +35,9 @@ public abstract class AbstractWebSocketResource extends AbstractWebSocketHandler
 
     protected abstract void handleAthenaWSMessage(WebSocketSession session, AthenaWSMessage message) throws Exception;
 
-    protected void subscribe(WebSocketSession session, SubscriptionKey key, WebSocketSubscriptionType subscriptionType) {
-        sessions.put(session.getId(), Pair.of(key, subscriptionType));
-        webSocketSessionBroker.registerSession(key, subscriptionType, session);
+    protected void subscribe(Long userId, WebSocketSession session) {
+        userSessions.put(session.getId(), userId);
+        webSocketSessionBroker.registerSession(userId, session);
     }
 
     @Override
@@ -49,27 +48,27 @@ public abstract class AbstractWebSocketResource extends AbstractWebSocketHandler
     }
 
     @Override
-    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) throws Exception {
+    protected void handleBinaryMessage(WebSocketSession session, BinaryMessage message) {
         log.fatal("Binary messages cannot be handled by WebSocketResources");
     }
 
     @Override
-    protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
+    protected void handlePongMessage(WebSocketSession session, PongMessage message) {
         log.fatal("Pong messages cannot be handled by WebSocketResources");
     }
 
     @Override
-    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-        var pair = sessions.get(session.getId());
-        log.fatal("Transport error has occurred for session: " + ((pair == null) ? session.getId() : " key: " + pair.getLeft() + " subscriptionType: " + pair.getRight()));
+    public void handleTransportError(WebSocketSession session, Throwable exception) {
+        var userId = userSessions.get(session.getId());
+        log.fatal("Transport error has occurred for session: " + ((userId == null) ? session.getId() : " userId: " + userId));
     }
 
     @Override
-    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-        var pair = sessions.get(session.getId());
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        var userId = userSessions.get(session.getId());
 
-        if (pair != null) {
-            webSocketSessionBroker.removeSession(pair.getLeft(), pair.getRight());
+        if (userId != null) {
+            webSocketSessionBroker.removeSession(userId);
         }
     }
 

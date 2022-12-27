@@ -18,42 +18,31 @@ import java.util.Map;
 @ApplicationScope
 @Log4j2
 public class WebSocketSessionBroker {
-    private Map<WebSocketSubscriptionType, Map<SubscriptionKey, WebSocketSession>> subscriptions;
-
+    private final Map<Long, WebSocketSession> subscriptions = new HashMap<>();
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     public WebSocketSessionBroker(ThreadPoolTaskExecutor threadPoolTaskExecutor) {
         this.threadPoolTaskExecutor = threadPoolTaskExecutor;
     }
 
-    @PostConstruct
-    public void init() {
-        subscriptions = new HashMap<>();
-        Arrays.stream(WebSocketSubscriptionType.values())
-                .forEach(subscriptionType -> subscriptions.put(subscriptionType, new HashMap<>()));
-    }
-
     public synchronized void registerSession(
-            SubscriptionKey subscriptionKey,
-            WebSocketSubscriptionType subscriptionType,
+            Long userId,
             WebSocketSession webSocketSession
     ) {
-        subscriptions.get(subscriptionType).put(subscriptionKey, webSocketSession);
+        subscriptions.put(userId, webSocketSession);
     }
 
     public synchronized void removeSession(
-            SubscriptionKey subscriptionKey,
-            WebSocketSubscriptionType subscriptionType
+            Long userId
     ) {
-        subscriptions.get(subscriptionType).remove(subscriptionKey);
+        subscriptions.remove(userId);
     }
 
     public synchronized void sendToSession(
-            SubscriptionKey subscriptionKey,
-            WebSocketSubscriptionType subscriptionType,
+            Long userId,
             AthenaWSMessage athenaWSMessage
     ) {
-        var session = subscriptions.get(subscriptionType).get(subscriptionKey);
+        var session = subscriptions.get(userId);
 
         if (session != null) {
             threadPoolTaskExecutor.execute(() -> {
@@ -70,7 +59,7 @@ public class WebSocketSessionBroker {
         }
     }
 
-    public synchronized boolean isSubscribed(WebSocketSubscriptionType subscriptionType, SubscriptionKey subscriptionKey) {
-        return subscriptions.get(subscriptionType).containsKey(subscriptionKey);
+    public synchronized boolean isSubscribed(Long userId) {
+        return subscriptions.containsKey(userId);
     }
 }

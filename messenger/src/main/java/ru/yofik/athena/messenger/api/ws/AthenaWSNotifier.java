@@ -31,10 +31,7 @@ public class AthenaWSNotifier implements NotificationService {
 
     @Override
     public boolean isUserActive(long userId) {
-        return webSocketSessionBroker.isSubscribed(
-                WebSocketSubscriptionType.NOTIFICATION,
-                new NotificationSubscriptionKey(userId)
-        );
+        return webSocketSessionBroker.isSubscribed(userId);
     }
 
     private AthenaWSMessage createAthenaWSNotificationMessage(
@@ -54,11 +51,7 @@ public class AthenaWSNotifier implements NotificationService {
             List<Long> targetUserIds
     ) {
         for (var targetUserId : targetUserIds) {
-            webSocketSessionBroker.sendToSession(
-                    new NotificationSubscriptionKey(targetUserId),
-                    WebSocketSubscriptionType.NOTIFICATION,
-                    athenaWSMessage
-            );
+            webSocketSessionBroker.sendToSession(targetUserId, athenaWSMessage);
         }
     }
 }

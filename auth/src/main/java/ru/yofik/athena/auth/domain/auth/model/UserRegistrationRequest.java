@@ -1,7 +1,7 @@
 package ru.yofik.athena.auth.domain.auth.model;
 
 import lombok.*;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

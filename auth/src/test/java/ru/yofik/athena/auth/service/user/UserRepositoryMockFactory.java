@@ -7,7 +7,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import ru.yofik.athena.auth.domain.user.model.*;
 import ru.yofik.athena.auth.domain.user.repository.UserRepository;
-import ru.yofik.athena.auth.utils.TimeUtils;
+import ru.yofik.athena.common.utils.TimeUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;

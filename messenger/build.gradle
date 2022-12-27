@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'ru.yofik.athena'
-version = '0.3.2'
+version = '0.3.3'
 sourceCompatibility = '11'
 
 configurations {

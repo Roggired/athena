@@ -1,4 +1,4 @@
-package ru.yofik.athena.auth.utils;
+package ru.yofik.athena.common.utils;
 
 import java.time.Instant;
 import java.time.LocalDateTime;

@@ -1,5 +1,10 @@
 ## Versions Notes
 
+v0.3.3:
+- fix issues connected with WebSocket API. Now WebSocket API is fully available with new authentication schema
+- refactor ws-api module in messenger service. Remove redundant abstractions, simplify subscription logic to keep it
+as simple as possible
+
 v0.3.2:
 - **issue#60** Add request sign-up function
 - **issue#64** Add request sign-in function
