@@ -12,6 +12,7 @@ import ru.yofik.athena.common.api.AuthV1ResponseStatus;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v2/auth")

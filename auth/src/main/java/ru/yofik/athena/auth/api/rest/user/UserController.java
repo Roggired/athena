@@ -16,6 +16,7 @@ import ru.yofik.athena.common.domain.NewPage;
 
 import javax.validation.Valid;
 
+@CrossOrigin
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v2/users")
