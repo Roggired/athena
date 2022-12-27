@@ -1,6 +1,7 @@
 package ru.yofik.athena.auth.api.thymeleaf;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
