@@ -1,6 +1,8 @@
 package ru.yofik.athena.messenger.api.ws.notification;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.util.Assert;
 import org.springframework.web.socket.WebSocketSession;
 import ru.yofik.athena.common.security.AccessTokenAuthentication;
@@ -32,6 +34,12 @@ public class NotificationResource extends AbstractWebSocketResource {
         Assert.notNull(authentication, "ChatResource cannot get user!");
         var userId = (Long) authentication.getPrincipal();
         Assert.notNull(userId, "ChatResource cannot get user!");
+
+        var securityContext = SecurityContextHolder.getContext();
+        if (securityContext == null) {
+            securityContext = new SecurityContextImpl();
+        }
+        securityContext.setAuthentication(authentication);
 
         var user = userRepository.getUser(userId);
         subscribe(session, new NotificationSubscriptionKey(user.getId()), WebSocketSubscriptionType.NOTIFICATION);
